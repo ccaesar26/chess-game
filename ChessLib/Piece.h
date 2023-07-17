@@ -18,9 +18,11 @@ public:
 
 	Position GetPosition() const;
 
+	void SetPosition(Position pos);
+
 	BoardPosition GetBoardPosition() const override;
 
-	virtual void GetMovesPossible(Position currentPos, std::function<PiecePtr(Position)> GetPieceFromBoard, PositionPieceSet& possibleMoves) const = 0;
+	//virtual void GetMovesPossible(Position currentPos, std::function<PiecePtr(Position)> GetPieceFromBoard, PositionPieceSet& possibleMoves) const = 0;
 
 protected:
 

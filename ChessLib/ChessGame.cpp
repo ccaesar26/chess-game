@@ -212,14 +212,38 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 	if (m_board[initialPosition.row][initialPosition.col]->GetColor() != m_turn) throw "You can't move an enemy piece !";
 	if (m_board[finalPosition.row][finalPosition.col]->GetColor() == m_turn) throw "You can't capture you're own piece !";
 
-	PositionPieceSet piecePosibleMoves;
-	m_board[initialPosition.row][initialPosition.col]->GetMovesPossible(initialPosition, std::bind(&ChessGame::GetPiece, this, std::placeholders::_1), piecePosibleMoves);
+	PositionPieceSet piecePossibleMoves;
+	m_board[initialPosition.row][initialPosition.col]->GetMovesPossible(initialPosition, std::bind(&ChessGame::GetPiece, this, std::placeholders::_1), piecePossibleMoves);
 
-	if (piecePosibleMoves.find(finalPosition) != piecePosibleMoves.end())
+	if (piecePossibleMoves.find(finalPosition) == piecePossibleMoves.end())
 	{
-
+		throw "This piece isn't allowed to be moved on the final position !";
 	}
-	else throw " "; // Throw a message
+
+	Board newBoard = m_board;
+	PieceSet enemyPiecesAlive;
+
+	if (m_turn == EColor::White) enemyPiecesAlive = m_blackPiecesAlive;
+	else enemyPiecesAlive = m_whitePiecesAlive;
+
+	if (newBoard[finalPosition.row][finalPosition.col])
+	{
+		enemyPiecesAlive.erase(newBoard[finalPosition.row][finalPosition.col]);
+	}
+
+	newBoard[finalPosition.row][finalPosition.col] = newBoard[initialPosition.row][initialPosition.col];
+	
+	auto pieceOnFinalPos = std::dynamic_pointer_cast<Piece>(newBoard[finalPosition.row][finalPosition.col]);
+	if (pieceOnFinalPos) pieceOnFinalPos->SetPosition(finalPosition);
+	else throw "Dynamic pointer cast failed !";
+	
+	newBoard[initialPosition.row][initialPosition.col].reset();
+
+	if (IsKingInCheckState(m_turn) == true) throw "The king is in check after your move !";
+
+	m_board = newBoard;
+	if (m_turn == EColor::White) m_blackPiecesAlive = enemyPiecesAlive;
+	else m_whitePiecesAlive = enemyPiecesAlive;
 }
 
 PiecePtr ChessGame::GetPiece(Position pos) const
@@ -269,38 +293,3 @@ bool ChessGame::IsInMatrix(Position piecePosition)
 	}
 	return true;
 }
-
-
-//bool ChessGame::IsMovePossible(Position initialPosition, Position finalPosition)
-//{
-//	if (initialPosition == finalPosition)
-//	{
-//		return false;
-//	}
-//
-//	if (!IsInMatrix(finalPosition))
-//	{
-//		return false;
-//	}
-//
-//	PiecePtr currentPiece = m_board[initialPosition.row][initialPosition.col];
-//	PiecePtr toCapturePiece = m_board[finalPosition.row][finalPosition.col];
-//	if (toCapturePiece)
-//	{
-//		if (currentPiece->GetColor() == toCapturePiece->GetColor())
-//		{
-//			return false;
-//		}
-//	}
-//
-//	if (currentPiece->PieceMoveIsPossible(initialPosition, finalPosition, m_board) == false)
-//	{
-//		return false;
-//	}
-//	
-//	if (IsKingInCheckState(currentPiece->GetColor()))
-//	{
-//		return false;
-//	}
-//	return true;
-//}
