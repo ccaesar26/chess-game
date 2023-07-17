@@ -6,44 +6,50 @@ Pawn::Pawn(EColor color, Position position)
 
 void Pawn::GetMovesPossible(Position currentPos, std::function<PiecePtr(Position)> GetPieceFromBoard, PositionPieceSet& possibleMoves) const
 {
-	//throw std::logic_error("The method or operation is not implemented.");
-}
+	int movingWay = 1;
+	int initialLine = 1;
 
-//bool Pawn::PieceMoveIsPossible(Position initialPosition, Position finalPosition, const Matrix & board)
-//{
-//
-//	int movingWay=1;
-//	int initialLine=1;
-//
-//	if (m_color == EColor::White)
-//	{
-//		movingWay = -1;
-//		initialLine = 6;
-//	}
-//
-//	if (finalPosition.row == initialPosition.row + movingWay)
-//	{
-//		if (finalPosition.col == initialPosition.col)
-//		{
-//			if (board[finalPosition.row][finalPosition.col] != nullptr) return false;
-//		}
-//		else if (finalPosition.col == initialPosition.col - 1 || finalPosition.col == initialPosition.col + 1)
-//		{
-//			if (board[finalPosition.row][finalPosition.col] == nullptr) return false;
-//		}
-//		else return false;
-//	}
-//	else if (finalPosition.row == initialPosition.row + 2 * movingWay)
-//	{
-//		if (initialPosition.col == finalPosition.col && initialPosition.row==initialLine)
-//		{
-//			int nextRow = initialLine + movingWay;
-//			int nextTwoRows = initialLine + 2 * movingWay;
-//			if (board[nextRow][initialPosition.col] != nullptr || board[nextTwoRows][initialPosition.col] != nullptr) return false;
-//		}
-//		else return false;
-//	}
-//	else return false;
-//	
-//	return true;
-//}
+	if (m_color == EColor::White)
+	{
+		movingWay = -1;
+		initialLine = 6;
+	}
+
+	if (GetPieceFromBoard(Position(currentPos.row + movingWay, currentPos.col)) == nullptr)
+	{
+		possibleMoves.insert(Position(currentPos.row + movingWay, currentPos.col));
+	}
+
+	if (currentPos.col - 1 >= 0)
+	{
+		if (GetPieceFromBoard(Position(currentPos.row + movingWay, currentPos.col - 1)) != nullptr)
+		{
+			if (GetPieceFromBoard(Position(currentPos.row + movingWay, currentPos.col - 1))->GetColor() != m_color)
+			{
+				possibleMoves.insert(Position(currentPos.row + movingWay, currentPos.col - 1));
+			}
+		}
+	}
+
+	if (currentPos.col + 1 <= 7)
+	{
+		if (GetPieceFromBoard(Position(currentPos.row + movingWay, currentPos.col + 1)) != nullptr)
+		{
+			if (GetPieceFromBoard(Position(currentPos.row + movingWay, currentPos.col + 1))->GetColor() != m_color)
+			{
+				possibleMoves.insert(Position(currentPos.row + movingWay, currentPos.col + 1));
+			}
+		}
+	}
+
+	if (currentPos.row == initialLine)
+	{
+		if (possibleMoves.find(Position(currentPos.row + movingWay, currentPos.col)) != possibleMoves.end())
+		{
+			if (GetPieceFromBoard(Position(currentPos.row + 2 * movingWay, currentPos.col)) == nullptr)
+			{
+				possibleMoves.insert(Position(currentPos.row + 2 * movingWay, currentPos.col));
+			}
+		}
+	}
+}
