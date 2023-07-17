@@ -204,7 +204,22 @@ bool ChessGame::IsGameOver() const
 
 void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 {
-	// To do
+	if (IsInMatrix(initialPosition) == false) throw "Initial position doesn't exist in chess board !";
+	if (IsInMatrix(finalPosition) == false) throw "Final position doesn't exist in chess board !";
+
+	if (m_board[initialPosition.row][initialPosition.col] == nullptr) throw "There is no piece on the initial position !";
+
+	if (m_board[initialPosition.row][initialPosition.col]->GetColor() != m_turn) throw "You can't move an enemy piece !";
+	if (m_board[finalPosition.row][finalPosition.col]->GetColor() == m_turn) throw "You can't capture you're own piece !";
+
+	PositionPieceSet piecePosibleMoves;
+	m_board[initialPosition.row][initialPosition.col]->GetMovesPossible(initialPosition, std::bind(&ChessGame::GetPiece, this, std::placeholders::_1), piecePosibleMoves);
+
+	if (piecePosibleMoves.find(finalPosition) != piecePosibleMoves.end())
+	{
+
+	}
+	else throw " "; // Throw a message
 }
 
 PiecePtr ChessGame::GetPiece(Position pos) const
@@ -214,15 +229,17 @@ PiecePtr ChessGame::GetPiece(Position pos) const
 
 bool ChessGame::IsKingInCheckState(EColor color)
 {
-	/*Position kingPosition;
+	Position kingPosition;
+	PositionPieceSet movesOfEnemyPiece;
+
 	if (color == EColor::White)
 	{
 		kingPosition = m_whiteKingPosition;
 		for (auto iterator : m_blackPiecesAlive)
 		{
-			if (iterator->PieceMoveIsPossible(iterator->GetPosition(), kingPosition, m_board) == true)
+			iterator->GetMovesPossible(iterator->GetPosition(), std::bind(&ChessGame::GetPiece, this, std::placeholders::_1), movesOfEnemyPiece);
+			if (movesOfEnemyPiece.find(kingPosition) != movesOfEnemyPiece.end())
 			{
-				m_checkStateWhiteKing = true;
 				return true;
 			}
 		}
@@ -232,13 +249,13 @@ bool ChessGame::IsKingInCheckState(EColor color)
 		kingPosition = m_blackKingPosition;
 		for (auto iterator : m_whitePiecesAlive)
 		{
-			if (iterator->PieceMoveIsPossible(iterator->GetPosition(), kingPosition, m_board) == true)
+			iterator->GetMovesPossible(iterator->GetPosition(), std::bind(&ChessGame::GetPiece, this, std::placeholders::_1), movesOfEnemyPiece);
+			if (movesOfEnemyPiece.find(kingPosition) != movesOfEnemyPiece.end())
 			{
-				m_checkStateBlackKing = true;
 				return true;
 			}
 		}
-	}*/
+	}
 	return false;
 }
 

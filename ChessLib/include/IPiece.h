@@ -73,6 +73,8 @@ public:
 
 	virtual EColor GetColor() const = 0;
 
+	virtual Position GetPosition() const = 0;
+
 	virtual BoardPosition GetBoardPosition() const = 0;
 
 	virtual EName GetName() const = 0; 
