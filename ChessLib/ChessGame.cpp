@@ -163,7 +163,9 @@ void ChessGame::PlayTurn(BoardPosition initialPos, BoardPosition finalPos)
 {
 	//Position init;
 	// // To do
-
+	Position initial(8 - initialPos.row, initialPos.col - 'A');
+	Position final(8 - finalPos.row, finalPos.col - 'A');
+	MakeMove(initial, final);
 	//PiecePtr p = m_board[0][0];
 	//PositionPieceSet set = p->GetMovesPossible(init, std::bind(&ChessGame::GetPiece, this, std::placeholders::_1));
 }
@@ -210,7 +212,11 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 	if (m_board[initialPosition.row][initialPosition.col] == nullptr) throw "There is no piece on the initial position !";
 
 	if (m_board[initialPosition.row][initialPosition.col]->GetColor() != m_turn) throw "You can't move an enemy piece !";
-	if (m_board[finalPosition.row][finalPosition.col]->GetColor() == m_turn) throw "You can't capture you're own piece !";
+
+	if (m_board[finalPosition.row][finalPosition.col])
+	{
+		if (m_board[finalPosition.row][finalPosition.col]->GetColor() == m_turn) throw "You can't capture you're own piece !";
+	}
 
 	PositionPieceSet piecePossibleMoves;
 	m_board[initialPosition.row][initialPosition.col]->GetMovesPossible(initialPosition, std::bind(&ChessGame::GetPiece, this, std::placeholders::_1), piecePossibleMoves);
