@@ -2,6 +2,8 @@
 
 #include "IChessGame.h"
 
+using ArrayBoard = std::array<std::array<PiecePtr, 8>, 8>;
+
 class ChessGame : public IChessGame
 {
 
@@ -14,17 +16,15 @@ public:
 
 	bool IsGameOver() const override;
 
-	void PlayTurn(BoardPosition initialPos, BoardPosition finalPos) override;
+	void PlayTurn(Position initialPos, Position finalPos) override;
 
-	Board GetBoard() const override;
+	
 
-	PieceSet GetWhitePiecesAlive() override;
+	IPieceList GetWhitePiecesCaptured() override;
 
-	PieceSet GetBlackPiecesAlive() override;
+	IPieceList GetBlackPiecesCaptured() override;
 
-	PieceSet GetWhitePiecesCaptured() override;
-
-	PieceSet GetBlackPiecesCaptured() override;
+	IPiecePtr GetPiece(Position pos) const override;
 
 private:
 
@@ -33,8 +33,6 @@ private:
 	bool IsKingInCheckState(EColor color);
 
 	void MakeMove(Position initialPosition, Position finalPosition);
-
-	PiecePtr GetPiece(Position pos) const;
 
 private:
 
@@ -47,9 +45,9 @@ private:
 	Position m_blackKingPosition;
 	bool m_checkStateBlackKing;
 
-	PieceSet m_whitePiecesAlive;
-	PieceSet m_blackPiecesAlive;
+	IPieceList m_whitePiecesAlive;
+	IPieceList m_blackPiecesAlive;
 
-	PieceSet m_whitePiecesCaptured;
-	PieceSet m_blackPiecesCaptured;
+	IPieceList m_whitePiecesCaptured;
+	IPieceList m_blackPiecesCaptured;
 };

@@ -1,10 +1,10 @@
 #include "Rook.h"
 
 Rook::Rook(EColor color, Position position)
-	:Piece(color,EName::Rook,position)
+	:Piece(color,EType::Rook,position)
 {}
 
-void Rook::GetMovesPossible(Position currentPos, std::function<PiecePtr(Position)> GetPieceFromBoard, PositionPieceSet& possibleMoves) const
+void Rook::GetPossibleMoves(Position currentPos, std::function<IPiecePtr(Position)> GetPieceFromBoard, PositionPieceSet& possibleMoves) const
 {
 	for (int iRow = currentPos.row - 1; iRow >= 0; iRow--)
 	{

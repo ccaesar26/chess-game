@@ -1,13 +1,13 @@
 #include "Piece.h"
 
-Piece::Piece(EColor color, EName name, Position position)
+Piece::Piece(EColor color, EType name, Position position)
 	: m_color(color)
 	, m_name(name)
 	, m_position(position)
 {
 }
 
-EName Piece::GetName() const
+EType Piece::GetType() const
 {
 	return m_name;
 }
@@ -15,11 +15,6 @@ EName Piece::GetName() const
 EColor Piece::GetColor() const
 {
 	return m_color;
-}
-
-Position Piece::GetPosition() const
-{
-	return m_position;
 }
 
 void Piece::SetPosition(Position pos)

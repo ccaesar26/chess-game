@@ -1,12 +1,8 @@
 #pragma once
 
-#include "IPiece.h"
-
-using Board = std::array<std::array<PiecePtr, 8>, 8>;
+#include "IBoard.h"
 
 using IChessGamePtr = std::shared_ptr<class IChessGame>;
-
-using PieceSet = std::unordered_set<PiecePtr>;
 
 class IChessGame
 {
@@ -17,17 +13,17 @@ public:
 
 	virtual bool IsGameOver() const = 0;
 
-	virtual void PlayTurn(BoardPosition initialPos, BoardPosition finalPos) = 0;
+	virtual void MakeMove(Position initialPos, Position finalPos) = 0;
 
-	virtual Board GetBoard() const = 0;
+	virtual IBoard GetBoard() const = 0; 
 
-	virtual PieceSet GetWhitePiecesAlive() = 0;
+	virtual IPieceList GetWhitePiecesCaptured() = 0;
 
-	virtual PieceSet GetBlackPiecesAlive() = 0;
+	virtual IPieceList GetBlackPiecesCaptured() = 0;
 
-	virtual PieceSet GetWhitePiecesCaptured() = 0;
+	virtual IPiecePtr GetPiece(Position pos) const = 0;
 
-	virtual PieceSet GetBlackPiecesCaptured() = 0;
+	virtual PositionList GetMovesPossible(Position currentPos) const = 0;
 
 	~IChessGame() = default;
 

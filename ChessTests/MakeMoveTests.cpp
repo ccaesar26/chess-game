@@ -6,5 +6,5 @@ TEST(PawnMakeMove, PawnMakeMove1)
 {
 	ChessGame g;
 	g.PlayTurn(BoardPosition(2, 'D'), BoardPosition(4, 'D'));
-	EXPECT_EQ(g.GetBoard()[4][3]->GetName(), EName::Pawn);
+	EXPECT_EQ(g.GetBoard()[4][3]->GetName(), EType::Pawn);
 }

@@ -2,17 +2,16 @@
 
 #include "IPiece.h"
 
-using Board = std::array < std::array<PiecePtr, 8>, 8>;
-
+using PiecePtr = std::shared_ptr<class Piece>;
 
 class Piece : public IPiece
 {
 
 public:
 
-	Piece(EColor color, EName name, Position position);
+	Piece(EColor color, EType name, Position position);
 
-	EName GetName() const override;
+	EType GetType() const override;
 	
 	EColor GetColor() const override;
 
@@ -20,13 +19,12 @@ public:
 
 	void SetPosition(Position pos);
 
-	BoardPosition GetBoardPosition() const override;
+	
 
-	//virtual void GetMovesPossible(Position currentPos, std::function<PiecePtr(Position)> GetPieceFromBoard, PositionPieceSet& possibleMoves) const = 0;
+	virtual PositionList GetPossibleMoves(Position currentPos, std::function<PiecePtr(Position)> GetPieceFromBoard) const = 0;
 
 protected:
 
-	Position m_position;
 	EColor m_color;
-	EName m_name;
+	EType m_name;
 };

@@ -1,12 +1,12 @@
 #include "Queen.h"
 
 Queen::Queen(EColor color, Position position)
-	: Piece(color, EName::Queen, position)
+	: Piece(color, EType::Queen, position)
 {
 
 }
 
-void Queen::GetMovesPossible(Position currentPos, std::function<PiecePtr(Position)> GetPieceFromBoard, PositionPieceSet& possibleMoves) const
+void Queen::GetPossibleMoves(Position currentPos, std::function<IPiecePtr(Position)> GetPieceFromBoard, PositionPieceSet& possibleMoves) const
 {
 	// upper left
 	for (int i = currentPos.row - 1, j = currentPos.col - 1; i >= 0 && j >= 0; i--, j--)
