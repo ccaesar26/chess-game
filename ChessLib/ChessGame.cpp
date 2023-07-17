@@ -14,7 +14,7 @@ IChessGamePtr IChessGame::CreateBoard()
 // Constructor //
 
 ChessGame::ChessGame()
-	: m_turn(ETurn::WhitePlayer)
+	: m_turn(EColor::White)
 	, m_blackKingPosition(0, 4)
 	, m_whiteKingPosition(7,4)
 	, m_checkStateWhiteKing(false)
@@ -86,7 +86,7 @@ ChessGame::ChessGame()
 }
 
 ChessGame::ChessGame(std::array<std::array<char, 8>, 8> inputConfig,
-	bool checkStateBlackKing, bool checkStateWhiteKing, ETurn turn)
+	bool checkStateBlackKing, bool checkStateWhiteKing, EColor turn)
 {
 	m_checkStateWhiteKing = checkStateWhiteKing;
 	m_checkStateBlackKing = checkStateBlackKing;

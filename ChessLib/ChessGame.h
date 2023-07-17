@@ -2,12 +2,6 @@
 
 #include "IChessGame.h"
 
-enum class ETurn
-{
-	WhitePlayer,
-	BlackPlayer
-};
-
 class ChessGame : public IChessGame
 {
 
@@ -16,7 +10,7 @@ public:
 	ChessGame();
 
 	ChessGame(std::array<std::array<char, 8>, 8> inputConfig, 
-		bool checkStateBlackKing = false, bool checkStateWhiteKing = false, ETurn turn = ETurn::WhitePlayer);
+		bool checkStateBlackKing = false, bool checkStateWhiteKing = false, EColor turn = EColor::White);
 
 	bool IsGameOver() const override;
 
@@ -24,15 +18,11 @@ public:
 
 	Board GetBoard() const override;
 
-
 	PieceSet GetWhitePiecesAlive() override;
-
 
 	PieceSet GetBlackPiecesAlive() override;
 
-
 	PieceSet GetWhitePiecesCaptured() override;
-
 
 	PieceSet GetBlackPiecesCaptured() override;
 
@@ -49,7 +39,7 @@ private:
 private:
 
 	Board m_board;
-	ETurn m_turn;
+	EColor m_turn;
 
 	Position m_whiteKingPosition;
 	bool m_checkStateWhiteKing;
