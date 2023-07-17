@@ -22,6 +22,11 @@ Position Piece::GetPosition() const
 	return m_position;
 }
 
+void Piece::SetPosition(Position pos)
+{
+	m_position = pos;
+}
+
 BoardPosition Piece::GetBoardPosition() const
 {
 	BoardPosition p(8 - m_position.row, m_position.col + 'A');
