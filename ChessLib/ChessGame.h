@@ -19,12 +19,12 @@ public:
 		bool checkStateBlackKing = false, bool checkStateWhiteKing = false, EColor turn = EColor::White);
 
 	// Virtual Implementations //
-
-	bool IsGameOver() const override;
 	
 	PositionList GetPossibleMoves(Position currentPos) override;
 
 	void MakeMove(Position initialPosition, Position finalPosition) override;
+
+	bool IsGameOver() override;
 
 	// Getters //
 
@@ -39,8 +39,6 @@ public:
 	IBoardPtr GetBoard() const override;
 	
 private:
-
-	// Game Logic //
 
 	bool IsInMatrix(Position piecePosition);
 

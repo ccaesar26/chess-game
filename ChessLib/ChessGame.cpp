@@ -135,7 +135,7 @@ IPieceList ChessGame::GetBlackPiecesCaptured()
 	return m_blackPiecesCaptured;
 }
 
-bool ChessGame::IsGameOver() const
+bool ChessGame::IsGameOver()
 {
 	if (m_turn == EColor::White)
 	{
@@ -146,10 +146,8 @@ bool ChessGame::IsGameOver() const
 		if (m_checkStateBlackKing == false) return false;
 	}
 
-	// Verificam cele 2 cazuri // 
-
-	PiecePtr checkPiece1;
-	PiecePtr checkPiece2;
+	PiecePtr checkPiece1;  // Memorize the Pieces that puts my king in check //
+	PiecePtr checkPiece2;  // Memorize the Pieces that puts my king in check //
 	
 	for (int i = 0; i < 8; i++)
 	{
@@ -163,17 +161,40 @@ bool ChessGame::IsGameOver() const
 				{
 					if (m_turn == EColor::White)
 					{
-						if (pos == m_whiteKingPosition) return true;
+						if (pos == m_whiteKingPosition)
+						{
+							if (!checkPiece1) checkPiece1 = m_board[i][j];
+							else if (!checkPiece2) checkPiece2 == m_board[i][j];
+							else break;
+						}
 					}
 					else
 					{
-						if (pos == m_blackKingPosition) return true;
+						if (pos == m_blackKingPosition)
+						{
+							if (!checkPiece1) checkPiece1 = m_board[i][j];
+							else if (!checkPiece2) checkPiece2 == m_board[i][j];
+							else break;
+						}
 					}
 				}
 			}
 		}
 	}
 
+	// Verify the 3 cases // 
+
+	PositionList kingPossibleMoves;
+	if (m_turn == EColor::White) kingPossibleMoves = GetPossibleMoves(m_whiteKingPosition);
+	else kingPossibleMoves = GetPossibleMoves(m_blackKingPosition);
+
+	if (kingPossibleMoves.empty() == false) return false;
+	else
+	{
+		if (checkPiece1 && checkPiece2) return true;
+	}
+
+	
 
 	return false;
 }
