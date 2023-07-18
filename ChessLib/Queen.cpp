@@ -120,4 +120,5 @@ PositionList Queen::GetPossibleMoves(Position currentPos, std::function<PiecePtr
 	//	}
 	//	else possibleMoves.insert(toCheckPosition);
 	//}
+	return PositionList();
 }

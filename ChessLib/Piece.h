@@ -15,9 +15,9 @@ public:
 	
 	EColor GetColor() const override;
 
-	Position GetPosition() const;
+	//Position GetPosition() const;
 
-	void SetPosition(Position pos);
+	//void SetPosition(Position pos);
 
 	
 
@@ -26,5 +26,5 @@ public:
 protected:
 
 	EColor m_color;
-	EType m_name;
+	EType m_type;
 };

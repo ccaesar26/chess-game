@@ -242,16 +242,18 @@ IPiecePtr ChessGame::GetPiece(Position pos) const
 
 IBoardPtr ChessGame::GetBoard() const
 {
-	return std::make_shared(Board(m_board));
+	return std::make_shared<Board>(Board(m_board));
 }
 
-PositionList ChessGame::GetMovesPossible(Position currentPos) const
+PositionList ChessGame::GetPossibleMoves(Position currentPos) const
 {
 	//throw std::logic_error("The method or operation is not implemented.");
+	return {};
 }
 
 bool ChessGame::IsKingInCheckState(EColor color)
 {
+	return true;
 	/*Position kingPosition;
 	PositionPieceSet movesOfEnemyPiece;
 

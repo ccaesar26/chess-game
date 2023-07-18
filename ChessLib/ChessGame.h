@@ -11,12 +11,22 @@ class ChessGame : public IChessGame
 
 public:
 
+	// Constructors //
+
 	ChessGame();
 
 	ChessGame(std::array<std::array<char, 8>, 8> inputConfig, 
 		bool checkStateBlackKing = false, bool checkStateWhiteKing = false, EColor turn = EColor::White);
 
-	bool IsGameOver() const override;	
+	// Virtual Implementations //
+
+	void MakeMove(Position initialPosition, Position finalPosition) override;
+	
+	PositionList GetPossibleMoves(Position currentPos) const override;
+
+	bool IsGameOver() const override;
+
+	// Getters //
 
 	IPieceList GetWhitePiecesCaptured() override;
 
@@ -25,16 +35,14 @@ public:
 	IPiecePtr GetPiece(Position pos) const override;
 
 	IBoardPtr GetBoard() const override;
-
-	PositionList GetMovesPossible(Position currentPos) const override;
-
+	
 private:
+
+	// Game Logic //
 
 	bool IsInMatrix(Position piecePosition);
 
 	bool IsKingInCheckState(EColor color);
-
-	void MakeMove(Position initialPosition, Position finalPosition);
 
 private:
 
@@ -46,9 +54,6 @@ private:
 
 	Position m_blackKingPosition;
 	bool m_checkStateBlackKing;
-
-	IPieceList m_whitePiecesAlive;
-	IPieceList m_blackPiecesAlive;
 
 	IPieceList m_whitePiecesCaptured;
 	IPieceList m_blackPiecesCaptured;

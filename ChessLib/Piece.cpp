@@ -2,19 +2,24 @@
 
 Piece::Piece(EColor color, EType name)
 	: m_color(color)
-	, m_name(name)
+	, m_type(name)
 {
 }
 
 EType Piece::GetType() const
 {
-	return m_name;
+	return m_type;
 }
 
 EColor Piece::GetColor() const
 {
 	return m_color;
 }
+
+//Position Piece::GetPosition() const
+//{
+//	return Position();
+//}
 
 //void Piece::SetPosition(Position pos)
 //{

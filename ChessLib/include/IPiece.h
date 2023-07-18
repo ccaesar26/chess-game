@@ -46,7 +46,7 @@ public:
 };
 
 using IPiecePtr = std::shared_ptr<IPiece>;
-using IPieceList = std::vector<IPiece>;
+using IPieceList = std::vector<IPiecePtr>;
 
 inline Position::Position(int r, int c)
 	: row(r)

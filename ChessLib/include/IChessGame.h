@@ -23,7 +23,7 @@ public:
 
 	virtual IPiecePtr GetPiece(Position pos) const = 0;
 
-	virtual PositionList GetMovesPossible(Position currentPos) const = 0;
+	virtual PositionList GetPossibleMoves(Position currentPos) const = 0;
 
 	~IChessGame() = default;
 
