@@ -5,7 +5,7 @@ Bishop::Bishop(EColor color)
 {
 }
 
-PositionList Bishop::GetPossibleMoves(Position currentPos, std::function<PiecePtr(Position)> GetPieceFromBoard) const
+PositionList Bishop::GetPattern(Position currentPos, std::function<PiecePtr(Position)> GetPieceFromBoard) const
 {
 	return PositionList();
 }

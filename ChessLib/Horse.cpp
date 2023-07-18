@@ -6,7 +6,7 @@ Horse::Horse(EColor color)
 
 }
 
-PositionList Horse::GetPossibleMoves(Position currentPos, std::function<PiecePtr(Position)> GetPieceFromBoard) const
+PositionList Horse::GetPattern(Position currentPos, std::function<PiecePtr(Position)> GetPieceFromBoard) const
 {
 	return PositionList();
 }

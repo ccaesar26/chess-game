@@ -5,7 +5,7 @@ Pawn::Pawn(EColor color)
 {
 }
 
-PositionList Pawn::GetPossibleMoves(Position currentPos, std::function<PiecePtr(Position)> GetPieceFromBoard) const
+PositionList Pawn::GetPattern(Position currentPos, std::function<PiecePtr(Position)> GetPieceFromBoard) const
 {
 	return PositionList();
 }

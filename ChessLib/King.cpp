@@ -5,7 +5,7 @@ King::King(EColor color)
 {
 }
 
-PositionList King::GetPossibleMoves(Position currentPos, std::function<PiecePtr(Position)> GetPieceFromBoard) const
+PositionList King::GetPattern(Position currentPos, std::function<PiecePtr(Position)> GetPieceFromBoard) const
 {
 	return PositionList();
 }

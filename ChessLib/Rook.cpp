@@ -4,7 +4,7 @@ Rook::Rook(EColor color)
 	: Piece(color, EType::Rook)
 {}
 
-PositionList Rook::GetPossibleMoves(Position currentPos, std::function<PiecePtr(Position)> GetPieceFromBoard) const
+PositionList Rook::GetPattern(Position currentPos, std::function<PiecePtr(Position)> GetPieceFromBoard) const
 {
 	return PositionList();
 }
