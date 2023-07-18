@@ -1,17 +1,17 @@
-//#include "gtest/gtest.h"
-//
-//#include "ChessGame.h"
-//
-//TEST(InitialPiecesPlacementOnBoard, BlackRook)
-//{
-//	ChessGame g;
-//
-//	EXPECT_EQ(g.GetBoard()[0][0]->GetName(), EType::Rook);
-//	EXPECT_EQ(g.GetBoard()[0][0]->GetColor(), EColor::Black);
-//	EXPECT_EQ(g.GetBoard()[0][7]->GetName(), EType::Rook);
-//	EXPECT_EQ(g.GetBoard()[0][7]->GetColor(), EColor::Black);
-//}
-//
+#include "gtest/gtest.h"
+
+#include "ChessGame.h"
+
+TEST(InitialPiecesPlacementOnBoard, BlackRook)
+{
+	ChessGame g;
+	
+	EXPECT_EQ(g.GetIPiece('A', 8)->GetType(), EType::Rook);
+	EXPECT_EQ(g.GetIPiece('a', 8)->GetColor(), EColor::Black);
+	EXPECT_EQ(g.GetIPiece('h', 8)->GetType(), EType::Rook);
+	EXPECT_EQ(g.GetIPiece('h', 8)->GetColor(), EColor::Black);
+}
+
 //TEST(InitialPiecesPlacementOnBoard, BlackHorse)
 //{
 //	ChessGame g;

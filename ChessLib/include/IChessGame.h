@@ -21,7 +21,7 @@ public:
 
 	virtual IPieceList GetBlackPiecesCaptured() = 0;
 
-	virtual IPiecePtr GetIPiece(Position pos) const = 0;
+	virtual IPiecePtr GetIPiece(char col, int ln) const = 0
 
 	virtual PositionList GetPossibleMoves(Position currentPos) const = 0;
 
