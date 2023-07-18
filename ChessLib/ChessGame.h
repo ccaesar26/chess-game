@@ -24,8 +24,6 @@ public:
 	
 	PositionList GetPossibleMoves(Position currentPos) override;
 
-	void MakeMove(Position initialPosition, Position finalPosition) override;
-
 	// Getters //
 
 	IPieceList GetWhitePiecesCaptured() override;
@@ -45,6 +43,10 @@ private:
 	bool IsInMatrix(Position piecePosition);
 
 	bool IsKingInCheckState();
+
+	Position ConvertToPosition(char col, int ln);
+
+	void MakeMove(Position initialPosition, Position finalPosition);
 
 private:
 
