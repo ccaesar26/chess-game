@@ -19,8 +19,6 @@ public:
 
 	//void SetPosition(Position pos);
 
-	
-
 	virtual PositionList GetPossibleMoves(Position currentPos, std::function<PiecePtr(Position)> GetPieceFromBoard) const = 0;
 
 protected:
