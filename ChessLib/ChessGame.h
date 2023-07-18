@@ -44,7 +44,7 @@ private:
 
 	bool IsInMatrix(Position piecePosition);
 
-	bool IsKingInCheckState(EColor color);
+	bool IsKingInCheckState();
 
 private:
 
