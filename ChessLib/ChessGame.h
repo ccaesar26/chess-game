@@ -22,7 +22,9 @@ public:
 
 	IPieceList GetBlackPiecesCaptured() override;
 
-	IPiecePtr GetPiece(Position pos) const override;
+	IPiecePtr GetIPiece(Position pos) const override;
+
+	PiecePtr GetPiece(Position pos) const ;
 
 	IBoardPtr GetBoard() const override;
 
