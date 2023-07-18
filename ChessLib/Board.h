@@ -2,6 +2,8 @@
 #include "IBoard.h"
 #include "Piece.h"
 
+using ArrayBoard = std::array<std::array<PiecePtr, 8>, 8>;
+
 class Board : public IBoard
 {
 public:
@@ -10,6 +12,6 @@ public:
 	IPiecePtr GetElem(int i, int j) override;
 
 private:
-	std::array<std::array<PiecePtr, 8>, 8>& m_board;
+	ArrayBoard& m_board;
 };
 

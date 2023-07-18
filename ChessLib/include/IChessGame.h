@@ -15,7 +15,7 @@ public:
 
 	virtual void MakeMove(Position initialPos, Position finalPos) = 0;
 
-	virtual IBoard GetBoard() const = 0; 
+	virtual IBoardPtr GetBoard() const = 0; 
 
 	virtual IPieceList GetWhitePiecesCaptured() = 0;
 

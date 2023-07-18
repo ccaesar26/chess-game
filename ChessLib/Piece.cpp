@@ -1,9 +1,8 @@
 #include "Piece.h"
 
-Piece::Piece(EColor color, EType name, Position position)
+Piece::Piece(EColor color, EType name)
 	: m_color(color)
 	, m_name(name)
-	, m_position(position)
 {
 }
 
@@ -17,13 +16,13 @@ EColor Piece::GetColor() const
 	return m_color;
 }
 
-void Piece::SetPosition(Position pos)
-{
-	m_position = pos;
-}
+//void Piece::SetPosition(Position pos)
+//{
+//	m_position = pos;
+//}
 
-BoardPosition Piece::GetBoardPosition() const
-{
-	BoardPosition p(8 - m_position.row, m_position.col + 'A');
-	return p;
-}
+//BoardPosition Piece::GetBoardPosition() const
+//{
+//	BoardPosition p(8 - m_position.row, m_position.col + 'A');
+//	return p;
+//}

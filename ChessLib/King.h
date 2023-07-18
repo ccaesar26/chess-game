@@ -6,9 +6,9 @@ class King : public Piece
 
 public:
 	
-	King(EColor color, Position position);
+	King(EColor color);
 
-	//void GetMovesPossible(Position currentPos, std::function<IPiecePtr(Position)> GetPieceFromBoard, PositionPieceSet& possibleMoves) const override;
+	PositionList GetPossibleMoves(Position currentPos, std::function<PiecePtr(Position)> GetPieceFromBoard) const override;
 
 };
 

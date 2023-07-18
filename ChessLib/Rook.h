@@ -6,9 +6,9 @@ class Rook : public Piece
 
 public:
 
-	Rook(EColor color, Position position);
+	Rook(EColor color);
 
-	void GetPossibleMoves(Position currentPos, std::function<IPiecePtr(Position)> GetPieceFromBoard, PositionPieceSet& possibleMoves) const override;
+	PositionList GetPossibleMoves(Position currentPos, std::function<PiecePtr(Position)> GetPieceFromBoard) const override;
 
 };
 

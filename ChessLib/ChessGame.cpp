@@ -159,14 +159,14 @@ ChessGame::ChessGame(std::array<std::array<char, 8>, 8> inputConfig,
 
 // Public Methods //
 
-void ChessGame::PlayTurn(Position initialPos, Position finalPos)
-{
-	//Position init;
-	// // To do
-	
-	//PiecePtr p = m_board[0][0];
-	//PositionPieceSet set = p->GetMovesPossible(init, std::bind(&ChessGame::GetPiece, this, std::placeholders::_1));
-}
+//void ChessGame::PlayTurn(Position initialPos, Position finalPos)
+//{
+//	Position init;
+//	 // To do
+//	
+//	PiecePtr p = m_board[0][0];
+//	PositionPieceSet set = p->GetMovesPossible(init, std::bind(&ChessGame::GetPiece, this, std::placeholders::_1));
+//}
 
 IPieceList ChessGame::GetWhitePiecesCaptured()
 {
@@ -238,6 +238,16 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 IPiecePtr ChessGame::GetPiece(Position pos) const
 {
 	return m_board[pos.row][pos.col];
+}
+
+IBoardPtr ChessGame::GetBoard() const
+{
+	return std::make_shared(Board(m_board));
+}
+
+PositionList ChessGame::GetMovesPossible(Position currentPos) const
+{
+	//throw std::logic_error("The method or operation is not implemented.");
 }
 
 bool ChessGame::IsKingInCheckState(EColor color)

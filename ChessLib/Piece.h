@@ -9,7 +9,7 @@ class Piece : public IPiece
 
 public:
 
-	Piece(EColor color, EType name, Position position);
+	Piece(EColor color, EType name);
 
 	EType GetType() const override;
 	

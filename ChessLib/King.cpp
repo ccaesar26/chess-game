@@ -1,8 +1,14 @@
 #include "King.h"
 
-King::King(EColor color, Position position)
-	:Piece(color,EType::King,position)
-{}
+King::King(EColor color)
+	: Piece(color, EType::King)
+{
+}
+
+PositionList King::GetPossibleMoves(Position currentPos, std::function<PiecePtr(Position)> GetPieceFromBoard) const
+{
+	return PositionList();
+}
 
 //void King::GetMovesPossible(Position currentPos, std::function<IPiecePtr(Position)> GetPieceFromBoard, PositionPieceSet& possibleMoves) const
 //{

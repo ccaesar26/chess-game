@@ -1,8 +1,14 @@
 #include "Pawn.h"
 
-Pawn::Pawn(EColor color, Position position)
-	:Piece(color, EType::Pawn, position)
-{}
+Pawn::Pawn(EColor color)
+	: Piece(color, EType::Pawn)
+{
+}
+
+PositionList Pawn::GetPossibleMoves(Position currentPos, std::function<PiecePtr(Position)> GetPieceFromBoard) const
+{
+	return PositionList();
+}
 
 //void Pawn::GetMovesPossible(Position currentPos, std::function<IPiecePtr(Position)> GetPieceFromBoard, PositionPieceSet& possibleMoves) const
 //{

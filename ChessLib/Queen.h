@@ -6,9 +6,9 @@ class Queen : public Piece
 
 public:
 
-    Queen(EColor color, Position position);
+    Queen(EColor color);
 
-    void GetPossibleMoves(Position currentPos, std::function<IPiecePtr(Position)> GetPieceFromBoard, PositionPieceSet& possibleMoves) const override;
+    PositionList GetPossibleMoves(Position currentPos, std::function<PiecePtr(Position)> GetPieceFromBoard) const override;
 
 };
 

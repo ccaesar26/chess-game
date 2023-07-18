@@ -5,9 +5,9 @@
 class Horse : public Piece
 {
 public:
-    Horse(EColor color, Position position);
+    Horse(EColor color);
 
-	// void GetMovesPossible(Position currentPos, std::function<IPiecePtr(Position)> GetPieceFromBoard, PositionPieceSet& possibleMoves) const override;
+	PositionList GetPossibleMoves(Position currentPos, std::function<PiecePtr(Position)> GetPieceFromBoard) const override;
 
 };
 

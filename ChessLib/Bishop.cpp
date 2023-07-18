@@ -1,8 +1,13 @@
 #include "Bishop.h"
 
-Bishop::Bishop(EColor color, Position position)
-	: Piece(color, EType::Bishop, position)
+Bishop::Bishop(EColor color)
+	: Piece(color, EType::Bishop)
 {
+}
+
+PositionList Bishop::GetPossibleMoves(Position currentPos, std::function<PiecePtr(Position)> GetPieceFromBoard) const
+{
+	return PositionList();
 }
 
 // void Bishop::GetMovesPossible(Position currentPos, std::function<IPiecePtr(Position)> GetPieceFromBoard, PositionPieceSet& possibleMoves) const

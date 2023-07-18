@@ -6,9 +6,9 @@ class Bishop : public Piece
 
 public:
 
-    Bishop(EColor color, Position position);
+    Bishop(EColor color);
 
-    //void GetMovesPossible(Position currentPos, std::function<IPiecePtr(Position)> GetPieceFromBoard, PositionPieceSet& possibleMoves) const override;
+    PositionList GetPossibleMoves(Position currentPos, std::function<PiecePtr(Position)> GetPieceFromBoard) const override;
 
 };
 

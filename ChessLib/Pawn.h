@@ -6,9 +6,9 @@ class Pawn : public Piece
 
 public:
 	
-	Pawn(EColor color, Position position);
+	Pawn(EColor color);
 
-	//void GetMovesPossible(Position currentPos, std::function<IPiecePtr(Position)> GetPieceFromBoard, PositionPieceSet& possibleMoves) const override;
+	PositionList GetPossibleMoves(Position currentPos, std::function<PiecePtr(Position)> GetPieceFromBoard) const override;
 
 };
 

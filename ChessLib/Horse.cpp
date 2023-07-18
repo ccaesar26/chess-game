@@ -1,9 +1,14 @@
 #include "Horse.h"
 
-Horse::Horse(EColor color, Position position)
-	: Piece(color, EType::Horse, position)
+Horse::Horse(EColor color)
+	: Piece(color, EType::Horse)
 {
 
+}
+
+PositionList Horse::GetPossibleMoves(Position currentPos, std::function<PiecePtr(Position)> GetPieceFromBoard) const
+{
+	return PositionList();
 }
 
 //void Horse::GetMovesPossible(Position currentPos, std::function<IPiecePtr(Position)> GetPieceFromBoard, PositionPieceSet& possibleMoves) const

@@ -1,8 +1,10 @@
 #pragma once
 
 #include "IChessGame.h"
+#include "Piece.h"
+#include "Board.h"
 
-using ArrayBoard = std::array<std::array<PiecePtr, 8>, 8>;
+
 
 class ChessGame : public IChessGame
 {
@@ -14,17 +16,17 @@ public:
 	ChessGame(std::array<std::array<char, 8>, 8> inputConfig, 
 		bool checkStateBlackKing = false, bool checkStateWhiteKing = false, EColor turn = EColor::White);
 
-	bool IsGameOver() const override;
-
-	void PlayTurn(Position initialPos, Position finalPos) override;
-
-	
+	bool IsGameOver() const override;	
 
 	IPieceList GetWhitePiecesCaptured() override;
 
 	IPieceList GetBlackPiecesCaptured() override;
 
 	IPiecePtr GetPiece(Position pos) const override;
+
+	IBoardPtr GetBoard() const override;
+
+	PositionList GetMovesPossible(Position currentPos) const override;
 
 private:
 
@@ -36,7 +38,7 @@ private:
 
 private:
 
-	Board m_board;
+	ArrayBoard m_board;
 	EColor m_turn;
 
 	Position m_whiteKingPosition;

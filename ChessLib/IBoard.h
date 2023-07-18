@@ -2,6 +2,8 @@
 
 #include "IPiece.h"
 
+using IBoardPtr = std::shared_ptr<class IBoard>;
+
 class IBoard
 {
 public:
