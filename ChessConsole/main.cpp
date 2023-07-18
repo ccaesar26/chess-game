@@ -4,6 +4,8 @@
 
 int main()
 {
+
+
 	//std::shared_ptr<class IChessGame> Table = IChessGame::CreateBoard();
 	std::vector<int> v;
 	for (int i = 0; i <= 10; i++)

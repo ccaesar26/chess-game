@@ -137,7 +137,12 @@ IPieceList ChessGame::GetBlackPiecesCaptured()
 
 bool ChessGame::IsGameOver() const
 {
-	// To do
+	//if()
+
+
+
+
+
 	return false;
 }
 
@@ -153,7 +158,7 @@ IBoardPtr ChessGame::GetBoard() const
 	return std::make_shared<Board>(Board(m_board));
 }
 
-bool ChessGame::IsKingInCheckState(EColor color)
+bool ChessGame::IsKingInCheckState()
 {
 	for (int i = 0; i < 8; i++)
 	{
@@ -206,7 +211,7 @@ PositionList ChessGame::GetPossibleMoves(Position currentPos)
 		m_board[pos.row][pos.col] = m_board[currentPos.row][currentPos.col];
 		m_board[currentPos.row][currentPos.col].reset();
 
-		if (IsKingInCheckState(currentPiece->GetColor()) == true)
+		if (IsKingInCheckState() == true)
 		{
 			possibleMoves.erase(std::find(possibleMoves.begin(), possibleMoves.end(), pos));
 			i--;
@@ -242,7 +247,7 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 	if (m_turn == EColor::White) m_turn = EColor::Black;
 	else m_turn = EColor::White;
 
-	if (IsKingInCheckState(m_turn) == true)  
+	if (IsKingInCheckState() == true)  
 	{
 		if (m_turn == EColor::White) m_checkStateWhiteKing = true;
 		else m_checkStateBlackKing = true;
