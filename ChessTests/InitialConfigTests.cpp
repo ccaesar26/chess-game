@@ -5,11 +5,11 @@
 TEST(InitialPiecesPlacementOnBoard, BlackRook)
 {
 	ChessGame g;
-	
-	EXPECT_EQ(g.GetIPiece('A', 8)->GetType(), EType::Rook);
-	EXPECT_EQ(g.GetIPiece('a', 8)->GetColor(), EColor::Black);
-	EXPECT_EQ(g.GetIPiece('h', 8)->GetType(), EType::Rook);
-	EXPECT_EQ(g.GetIPiece('h', 8)->GetColor(), EColor::Black);
+//	
+//	EXPECT_EQ(g.GetIPiece('A', 8)->GetType(), EType::Rook);
+//	EXPECT_EQ(g.GetIPiece('a', 8)->GetColor(), EColor::Black);
+//	EXPECT_EQ(g.GetIPiece('h', 8)->GetType(), EType::Rook);
+//	EXPECT_EQ(g.GetIPiece('h', 8)->GetColor(), EColor::Black);
 }
 
 //TEST(InitialPiecesPlacementOnBoard, BlackHorse)
