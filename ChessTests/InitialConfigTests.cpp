@@ -108,7 +108,7 @@ TEST(InitialPiecesPlacementOnBoard, WhiteKing)
 TEST(InitialPiecesPlacementOnBoard, WhitePawn)
 {
 	ChessGame g;
-
+	
 	for (int i = 0; i < 8; i++)
 	{
 		EXPECT_EQ(g.GetIPiece(i + 'a', 2)->GetType(), EType::Pawn);
