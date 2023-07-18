@@ -269,7 +269,7 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 
 IPiecePtr ChessGame::GetIPiece(char col, int ln) const
 {
-	if (col > 'a')
+	if (col >= 'a')
 	{
 		return m_board[8 - ln][col - 'a'];
 	}
