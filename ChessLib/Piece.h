@@ -15,10 +15,6 @@ public:
 	
 	EColor GetColor() const override;
 
-	//Position GetPosition() const;
-
-	//void SetPosition(Position pos);
-
 	virtual PositionList GetPattern(Position currentPos, std::function<PiecePtr(Position)> GetPieceFromBoard) const = 0;
 
 protected:

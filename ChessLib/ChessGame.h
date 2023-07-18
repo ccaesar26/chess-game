@@ -20,11 +20,11 @@ public:
 
 	// Virtual Implementations //
 
-	void MakeMove(Position initialPosition, Position finalPosition) override;
-	
-	PositionList GetPossibleMoves(Position currentPos) const override;
-
 	bool IsGameOver() const override;
+	
+	PositionList GetPossibleMoves(Position currentPos) override;
+
+	void MakeMove(Position initialPosition, Position finalPosition) override;
 
 	// Getters //
 

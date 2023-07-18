@@ -144,6 +144,87 @@ bool ChessGame::IsGameOver() const
 
 // Private Methods //
 
+IPiecePtr ChessGame::GetIPiece(Position pos) const
+{
+	return m_board[pos.row][pos.col];
+}
+
+PiecePtr ChessGame::GetPiece(Position pos) const
+{
+	return m_board[pos.row][pos.col];
+}
+
+IBoardPtr ChessGame::GetBoard() const
+{
+	return std::make_shared<Board>(Board(m_board));
+}
+
+bool ChessGame::IsKingInCheckState(EColor color)
+{
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			if (m_board[i][j]->GetColor() != m_turn)
+			{
+				Position piecePosition(i, j);
+				PositionList enemyPiecePositions = m_board[i][j]->GetPattern(piecePosition, std::bind(&ChessGame::GetPiece, this, std::placeholders::_1));
+				if (m_turn == EColor::White)
+				{
+					for (auto pos : enemyPiecePositions)
+					{
+						if (pos == m_whiteKingPosition) return true;
+					}
+				}
+				else
+				{
+					for (auto pos : enemyPiecePositions)
+					{
+						if (pos == m_blackKingPosition) return true;
+					}
+				}
+			}
+		}
+	}
+	return false;
+}
+
+PositionList ChessGame::GetPossibleMoves(Position currentPos)
+{
+	PositionList possibleMoves;
+	PiecePtr currentPiece = m_board[currentPos.row][currentPos.col];
+
+	if (currentPiece)
+	{
+		if (currentPiece->GetColor() == m_turn)
+		{
+			possibleMoves = currentPiece->GetPattern(currentPos, std::bind(&ChessGame::GetPiece, this, std::placeholders::_1));
+		}
+	}
+
+	for (int i = 0; i < possibleMoves.size(); i++)
+	{
+		Position pos = possibleMoves[i];  // The pos variable is for iterating the possible moves //
+
+		PiecePtr currentPieceCopy = m_board[currentPos.row][currentPos.col];
+		PiecePtr finalPieceCopy = m_board[pos.row][pos.col];
+
+		m_board[pos.row][pos.col] = m_board[currentPos.row][currentPos.col];
+		m_board[currentPos.row][currentPos.col].reset();
+
+		if (IsKingInCheckState(currentPiece->GetColor()) == true)
+		{
+			possibleMoves.erase(std::find(possibleMoves.begin(), possibleMoves.end(), pos));
+			i--;
+		}
+		
+		m_board[currentPos.row][currentPos.col] = currentPieceCopy;
+		m_board[pos.row][pos.col] = finalPieceCopy;
+
+	}
+	return possibleMoves;
+}
+
 void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 {
 	/*if (IsInMatrix(initialPosition) == false) throw "Initial position doesn't exist in chess board !";
@@ -178,11 +259,11 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 	}
 
 	newBoard[finalPosition.row][finalPosition.col] = newBoard[initialPosition.row][initialPosition.col];
-	
+
 	auto pieceOnFinalPos = std::dynamic_pointer_cast<Piece>(newBoard[finalPosition.row][finalPosition.col]);
 	if (pieceOnFinalPos) pieceOnFinalPos->SetPosition(finalPosition);
 	else throw "Dynamic pointer cast failed !";
-	
+
 	newBoard[initialPosition.row][initialPosition.col].reset();
 
 	if (IsKingInCheckState(m_turn) == true) throw "The king is in check after your move !";
@@ -209,12 +290,6 @@ PiecePtr ChessGame::GetPiece(Position pos) const
 IBoardPtr ChessGame::GetBoard() const
 {
 	return std::make_shared<Board>(Board(m_board));
-}
-
-PositionList ChessGame::GetPossibleMoves(Position currentPos) const
-{
-	//throw std::logic_error("The method or operation is not implemented.");
-	return {};
 }
 
 bool ChessGame::IsKingInCheckState(EColor color)
