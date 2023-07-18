@@ -33,7 +33,7 @@ PositionList King::GetPattern(Position currentPos, std::function<PiecePtr(Positi
 			{
 				finalPositions.push_back(toCheckPosition);
 			}
-			break;
+			continue;
 		}
 		finalPositions.push_back(toCheckPosition);
 	}

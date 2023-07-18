@@ -211,31 +211,48 @@ IBoardPtr ChessGame::GetBoard() const
 	return std::make_shared<Board>(Board(m_board));
 }
 
+void ChessGame::MakeMovement(char initialColumn, int initialRow, char finalColumn, int finalRow)
+{
+	MakeMove(ConvertToPosition(initialColumn, initialRow), ConvertToPosition(finalColumn, finalRow));
+}
+
 bool ChessGame::IsKingInCheckState()
 {
 	for (int i = 0; i < 8; i++)
 	{
 		for (int j = 0; j < 8; j++)
 		{
-			if (m_board[i][j]->GetColor() != m_turn)
+			if (m_board[i][j])
 			{
-				Position piecePosition(i, j);
-				PositionList enemyPiecePositions = m_board[i][j]->GetPattern(piecePosition, std::bind(&ChessGame::GetPiece, this, std::placeholders::_1));
-				for (auto pos : enemyPiecePositions)
+				if (m_board[i][j]->GetColor() != m_turn)
 				{
-					if (m_turn == EColor::White)
+					Position piecePosition(i, j);
+					PositionList enemyPiecePositions = m_board[i][j]->GetPattern(piecePosition, std::bind(&ChessGame::GetPiece, this, std::placeholders::_1));
+					for (auto pos : enemyPiecePositions)
 					{
-						if (pos == m_whiteKingPosition) return true;
-					}
-					else
-					{
-						if (pos == m_blackKingPosition) return true;
+						if (m_turn == EColor::White)
+						{
+							if (pos == m_whiteKingPosition) return true;
+						}
+						else 
+						{
+							if (pos == m_blackKingPosition) return true;
+						}
 					}
 				}
 			}
 		}
 	}
 	return false;
+}
+
+Position ChessGame::ConvertToPosition(char col, int ln)
+{
+	if (col >= 'a')
+	{
+		return Position(8 - ln, col - 'a');
+	}
+	return Position(8 - ln, col - 'A');
 }
 
 PositionList ChessGame::GetPossibleMoves(Position currentPos)
@@ -306,7 +323,7 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 
 IPiecePtr ChessGame::GetIPiece(char col, int ln) const
 {
-	if (col > 'a')
+	if (col >= 'a')
 	{
 		return m_board[8 - ln][col - 'a'];
 	}
