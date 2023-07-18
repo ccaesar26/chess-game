@@ -221,50 +221,32 @@ PositionList ChessGame::GetPossibleMoves(Position currentPos)
 
 void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 {
-	/*if (IsInMatrix(initialPosition) == false) throw "Initial position doesn't exist in chess board !";
-	if (IsInMatrix(finalPosition) == false) throw "Final position doesn't exist in chess board !";
-
-	if (m_board[initialPosition.row][initialPosition.col] == nullptr) throw "There is no piece on the initial position !";
-
-	if (m_board[initialPosition.row][initialPosition.col]->GetColor() != m_turn) throw "You can't move an enemy piece !";
+	PositionList possibleMoves = GetPossibleMoves(initialPosition);
+	if (std::find(possibleMoves.begin(), possibleMoves.end(), finalPosition) == possibleMoves.end()) throw "Your move is not possible !";
 
 	if (m_board[finalPosition.row][finalPosition.col])
 	{
-		if (m_board[finalPosition.row][finalPosition.col]->GetColor() == m_turn) throw "You can't capture you're own piece !";
+		if (m_turn == EColor::White) m_blackPiecesCaptured.push_back(m_board[finalPosition.row][finalPosition.col]);
+		else m_whitePiecesCaptured.push_back(m_board[finalPosition.row][finalPosition.col]);
 	}
 
-	PositionPieceSet piecePossibleMoves;
-	m_board[initialPosition.row][initialPosition.col]->GetMovesPossible(initialPosition, std::bind(&ChessGame::GetPiece, this, std::placeholders::_1), piecePossibleMoves);
+	m_board[finalPosition.row][finalPosition.col] = m_board[initialPosition.row][initialPosition.col];
+	m_board[initialPosition.row][initialPosition.col].reset();
 
-	if (piecePossibleMoves.find(finalPosition) == piecePossibleMoves.end())
+	if (m_board[finalPosition.row][finalPosition.col]->GetType() == EType::King)
 	{
-		throw "This piece isn't allowed to be moved on the final position !";
+		if (m_turn == EColor::White) m_whiteKingPosition = finalPosition;
+		else m_blackKingPosition = finalPosition;
 	}
 
-	Board newBoard = m_board;
-	PieceSet enemyPiecesAlive;
+	if (m_turn == EColor::White) m_turn = EColor::Black;
+	else m_turn = EColor::White;
 
-	if (m_turn == EColor::White) enemyPiecesAlive = m_blackPiecesAlive;
-	else enemyPiecesAlive = m_whitePiecesAlive;
-
-	if (newBoard[finalPosition.row][finalPosition.col])
+	if (IsKingInCheckState(m_turn) == true)  
 	{
-		enemyPiecesAlive.erase(newBoard[finalPosition.row][finalPosition.col]);
+		if (m_turn == EColor::White) m_checkStateWhiteKing = true;
+		else m_checkStateBlackKing = true;
 	}
-
-	newBoard[finalPosition.row][finalPosition.col] = newBoard[initialPosition.row][initialPosition.col];
-
-	auto pieceOnFinalPos = std::dynamic_pointer_cast<Piece>(newBoard[finalPosition.row][finalPosition.col]);
-	if (pieceOnFinalPos) pieceOnFinalPos->SetPosition(finalPosition);
-	else throw "Dynamic pointer cast failed !";
-
-	newBoard[initialPosition.row][initialPosition.col].reset();
-
-	if (IsKingInCheckState(m_turn) == true) throw "The king is in check after your move !";
-
-	m_board = newBoard;
-	if (m_turn == EColor::White) m_blackPiecesAlive = enemyPiecesAlive;
-	else m_whitePiecesAlive = enemyPiecesAlive;*/
 }
 
 IPiecePtr ChessGame::GetIPiece(char col, int ln) const
