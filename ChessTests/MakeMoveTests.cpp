@@ -8,7 +8,7 @@ TEST(PawnMakeMove, PawnMakeMove1)
 {
 	ChessGame g;
 	g.MakeMovement('d', 2, 'd', 4);
-	EXPECT_EQ(g.GetIPiece('d', 2).use_count(), 0);
+	EXPECT_EQ(g.GetIPiece('d', 2).get(), nullptr);
 	EXPECT_EQ(g.GetIPiece('d', 4)->GetType(), EType::Pawn);
 }
 
@@ -17,21 +17,21 @@ TEST(PawnMakeMove, PawnMakeMove2)
 	ChessGame g;
 	g.SwitchTurn();
 	g.MakeMovement('d', 7, 'd', 6);
-	EXPECT_EQ(g.GetIPiece('d', 7).use_count(), 0);
+	EXPECT_EQ(g.GetIPiece('d', 7).get(), nullptr);
 	EXPECT_EQ(g.GetIPiece('d', 6)->GetType(), EType::Pawn);
 }
 
 TEST(PawnMakeMove, PawnCapture1)
 {
-	/*ChessGame g;
+	ChessGame g;
 	g.MakeMovement('e', 2, 'e', 4);
 	g.MakeMovement('f', 7, 'f', 5);
 	PiecePtr captured = g.GetPiece(Position(3, 5));
 	g.MakeMovement('e', 4, 'f', 5);
 	EXPECT_EQ(g.GetIPiece('f', 5)->GetColor(), EColor::White);
-	EXPECT_EQ(g.GetIPiece('f', 5).use_count(), 0);
+	EXPECT_EQ(g.GetIPiece('e', 4).get(), nullptr);
 	EXPECT_EQ(g.GetBlackPiecesCaptured().size(), 1);
-	EXPECT_EQ(g.GetBlackPiecesCaptured().front(), captured);*/
+	EXPECT_EQ(g.GetBlackPiecesCaptured().front(), captured);
 }
 
 TEST(HorseMakeMove, HorseMakeMove1)

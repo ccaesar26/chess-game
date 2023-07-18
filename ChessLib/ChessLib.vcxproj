@@ -147,7 +147,7 @@
     <ClInclude Include="Board.h" />
     <ClInclude Include="ChessGame.h" />
     <ClInclude Include="Horse.h" />
-    <ClInclude Include="IBoard.h" />
+    <ClInclude Include="include\IBoard.h" />
     <ClInclude Include="include\IChessGame.h" />
     <ClInclude Include="include\IPiece.h" />
     <ClInclude Include="King.h" />
