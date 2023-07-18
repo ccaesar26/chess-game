@@ -147,34 +147,48 @@ bool ChessGame::IsGameOver()
 	}
 
 	PiecePtr checkPiece1;  // Memorize the Pieces that puts my king in check //
+	Position checkPiece1Pos;
+
 	PiecePtr checkPiece2;  // Memorize the Pieces that puts my king in check //
 	
 	for (int i = 0; i < 8; i++)
 	{
 		for (int j = 0; j < 8; j++)
 		{
-			if (m_board[i][j]->GetColor() != m_turn)
+			if (m_board[i][j])
 			{
-				Position piecePosition(i, j);
-				PositionList enemyPiecePositions = m_board[i][j]->GetPattern(piecePosition, std::bind(&ChessGame::GetPiece, this, std::placeholders::_1));
-				for (auto pos : enemyPiecePositions)
+				if (m_board[i][j]->GetColor() != m_turn)
 				{
-					if (m_turn == EColor::White)
+					Position piecePosition(i, j);
+					PositionList enemyPiecePositions = m_board[i][j]->GetPattern(piecePosition, std::bind(&ChessGame::GetPiece, this, std::placeholders::_1));
+					for (auto pos : enemyPiecePositions)
 					{
-						if (pos == m_whiteKingPosition)
+						if (m_turn == EColor::White)
 						{
-							if (!checkPiece1) checkPiece1 = m_board[i][j];
-							else if (!checkPiece2) checkPiece2 == m_board[i][j];
-							else break;
+							if (pos == m_whiteKingPosition)
+							{
+								if (!checkPiece1)
+								{
+									checkPiece1 = m_board[i][j];
+									checkPiece1Pos.row = i;
+									checkPiece1Pos.col = j;
+								}
+								else if (!checkPiece2) checkPiece2 == m_board[i][j];
+								else break;
+							}
 						}
-					}
-					else
-					{
-						if (pos == m_blackKingPosition)
+						else
 						{
-							if (!checkPiece1) checkPiece1 = m_board[i][j];
-							else if (!checkPiece2) checkPiece2 == m_board[i][j];
-							else break;
+							if (pos == m_blackKingPosition)
+							{
+								if (!checkPiece1)
+								{
+									checkPiece1 = m_board[i][j];
+
+								}
+								else if (!checkPiece2) checkPiece2 == m_board[i][j];
+								else break;
+							}
 						}
 					}
 				}
@@ -183,6 +197,8 @@ bool ChessGame::IsGameOver()
 	}
 
 	// Verify the 3 cases // 
+
+	// Case 1 // 
 
 	PositionList kingPossibleMoves;
 	if (m_turn == EColor::White) kingPossibleMoves = GetPossibleMoves(m_whiteKingPosition);
@@ -194,7 +210,29 @@ bool ChessGame::IsGameOver()
 		if (checkPiece1 && checkPiece2) return true;
 	}
 
-	
+	// Case 2 //
+
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			if (m_board[i][j])
+			{
+				if (m_board[i][j]->GetColor() == m_turn)
+				{
+					Position piecePosition(i, j);
+					PositionList ownPiecePositions = m_board[i][j]->GetPattern(piecePosition, std::bind(&ChessGame::GetPiece, this, std::placeholders::_1));
+					for (auto pos : ownPiecePositions)
+					{
+						if (pos == checkPiece1Pos) return false;
+					}
+				}
+			}
+		}
+	}
+
+	// Case 3 //
+
 
 	return false;
 }
