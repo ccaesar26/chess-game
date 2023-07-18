@@ -158,6 +158,11 @@ IBoardPtr ChessGame::GetBoard() const
 	return std::make_shared<Board>(Board(m_board));
 }
 
+void ChessGame::MakeMovement(char initialColumn, int initialRow, char finalColumn, int finalRow)
+{
+	MakeMove(ConvertToPosition(initialColumn, initialRow), ConvertToPosition(finalColumn, finalRow));
+}
+
 bool ChessGame::IsKingInCheckState()
 {
 	for (int i = 0; i < 8; i++)

@@ -24,6 +24,8 @@ public:
 	
 	PositionList GetPossibleMoves(Position currentPos) override;
 
+	void MakeMovement(char initialColumn, int initialRow, char finalColumn, int finalRow) override;
+
 	// Getters //
 
 	IPieceList GetWhitePiecesCaptured() override;
@@ -36,6 +38,7 @@ public:
 
 	IBoardPtr GetBoard() const override;
 	
+
 private:
 
 	// Game Logic //

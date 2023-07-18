@@ -13,7 +13,7 @@ public:
 
 	virtual bool IsGameOver() const = 0;
 
-	virtual void MakeMove(Position initialPos, Position finalPos) = 0;
+	virtual void MakeMovement(char initialColumn, int initialRow, char finalColumn, int finalRow) = 0;
 
 	virtual IBoardPtr GetBoard() const = 0; 
 
