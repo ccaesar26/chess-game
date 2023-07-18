@@ -7,32 +7,36 @@ King::King(EColor color)
 
 PositionList King::GetPattern(Position currentPos, std::function<PiecePtr(Position)> GetPieceFromBoard) const
 {
-	return PositionList();
-}
+	PositionList finalPositions;
 
-//void King::GetMovesPossible(Position currentPos, std::function<IPiecePtr(Position)> GetPieceFromBoard, PositionPieceSet& possibleMoves) const
-//{
-//	std::array<Position, 8> possibleMovements = {
-//		Position(currentPos.row + 1, currentPos.col - 1),
-//		Position(currentPos.row + 1, currentPos.col    ),
-//		Position(currentPos.row + 1, currentPos.col + 1),
-//		Position(currentPos.row - 1, currentPos.col - 1),
-//		Position(currentPos.row - 1, currentPos.col    ),
-//		Position(currentPos.row - 1, currentPos.col + 1),
-//		Position(currentPos.row    , currentPos.col - 1),
-//		Position(currentPos.row    , currentPos.col + 1)
-//	};
-//
-//	for (auto toCheckPosition : possibleMovements)
-//	{
-//		if (GetPieceFromBoard(toCheckPosition))
-//		{
-//			if (GetPieceFromBoard(toCheckPosition)->GetColor() != m_color)
-//			{
-//				possibleMoves.insert(toCheckPosition);
-//			}
-//			break;
-//		}
-//		possibleMoves.insert(toCheckPosition);
-//	}
-//}
+	std::array<Position, 8> possibleMovements = {
+		Position(currentPos.row + 1, currentPos.col - 1),
+		Position(currentPos.row + 1, currentPos.col),
+		Position(currentPos.row + 1, currentPos.col + 1),
+		Position(currentPos.row - 1, currentPos.col - 1),
+		Position(currentPos.row - 1, currentPos.col),
+		Position(currentPos.row - 1, currentPos.col + 1),
+		Position(currentPos.row    , currentPos.col - 1),
+		Position(currentPos.row    , currentPos.col + 1)
+	};
+
+	for (auto toCheckPosition : possibleMovements)
+	{
+		if (toCheckPosition.row < 0 || toCheckPosition.row > 7 ||
+			toCheckPosition.col < 0 || toCheckPosition.col > 7)
+		{
+			continue;
+		}
+		if (GetPieceFromBoard(toCheckPosition))
+		{
+			if (GetPieceFromBoard(toCheckPosition)->GetColor() != m_color)
+			{
+				finalPositions.push_back(toCheckPosition);
+			}
+			break;
+		}
+		finalPositions.push_back(toCheckPosition);
+	}
+
+	return finalPositions;
+}
