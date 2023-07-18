@@ -221,7 +221,7 @@ bool ChessGame::IsGameOver()
 				if (m_board[i][j]->GetColor() == m_turn)
 				{
 					Position piecePosition(i, j);
-					PositionList ownPiecePositions = m_board[i][j]->GetPattern(piecePosition, std::bind(&ChessGame::GetPiece, this, std::placeholders::_1));
+					PositionList ownPiecePositions = GetPossibleMoves(piecePosition);
 					for (auto pos : ownPiecePositions)
 					{
 						if (pos == checkPiece1Pos) return false;
@@ -234,7 +234,7 @@ bool ChessGame::IsGameOver()
 	// Case 3 //
 
 
-	return false;
+	return true;
 }
 
 // Private Methods //
