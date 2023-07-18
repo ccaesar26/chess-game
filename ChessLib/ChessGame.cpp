@@ -231,8 +231,57 @@ bool ChessGame::IsGameOver()
 		}
 	}
 
-	// Case 3 //
+	// Case 3 // 
 
+	Position kingPosition;
+	if (m_turn == EColor::White) kingPosition = m_whiteKingPosition;
+	else kingPosition = m_blackKingPosition;
+
+	PositionList toBlockPositions;
+
+	int movingRow;
+	int movingCol;
+
+	if (checkPiece1->GetType() == EType::King || checkPiece1->GetType() == EType::Pawn || checkPiece1->GetType() == EType::Horse) return true;
+
+	if (kingPosition.row < checkPiece1Pos.row) movingRow = -1;
+	else if (kingPosition.row > checkPiece1Pos.row) movingRow = 1;
+	else movingRow = 0;
+
+	if (kingPosition.col < checkPiece1Pos.col) movingCol = -1;
+	else if (kingPosition.col > checkPiece1Pos.col) movingCol = 1;
+	else movingCol = 0;
+
+	int i_row = checkPiece1Pos.row + movingRow;
+	int i_col = checkPiece1Pos.col + movingCol;
+
+	while (i_row != kingPosition.row && i_col != kingPosition.col)
+	{
+		toBlockPositions.push_back(Position(i_row, i_col));
+		i_row += movingRow;
+		i_col += movingCol;
+	}
+
+	if (toBlockPositions.empty() == true) return true;
+
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			if (m_board[i][j])
+			{
+				if (m_board[i][j]->GetColor() == m_turn)
+				{
+					PositionList possibleMoves;
+					possibleMoves = GetPossibleMoves(Position(i, j));
+					for (auto pos : toBlockPositions)
+					{
+						if (std::find(possibleMoves.begin(), possibleMoves.end(), pos) != possibleMoves.end()) return false;
+					}
+				}
+			}
+		}
+	}
 
 	return true;
 }
