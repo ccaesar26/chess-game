@@ -5,7 +5,7 @@
 #include <vector>
 #include <functional>
 
-using PositionList = std::vector<Position>;
+using PositionList = std::vector<struct Position>;
 
 enum class EColor
 {
