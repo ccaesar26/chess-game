@@ -4,10 +4,26 @@
 
 int main()
 {
+	std::shared_ptr<class IChessGame> g = IChessGame::CreateBoard();
+	std::array<std::array<std::shared_ptr<IPiece>, 8>, 8> arr;
+	for (int j = 8; j > 0; j--)
+	{
+		for (int i = 'A'; i <= 'H'; i++)
+		{
+			if (g->GetIPiece(i, j))
+			{
+				std::cout << int(g->GetIPiece(i, j)->GetType()) << ' ';
+			}
+			else
+			{
+				std::cout << "_ ";
+			}
+		}
+		std::cout << std::endl;
+	}
 
-
-	//std::shared_ptr<class IChessGame> Table = IChessGame::CreateBoard();
-	std::vector<int> v;
+	//
+	/*std::vector<int> v;
 	for (int i = 0; i <= 10; i++)
 	{
 		v.push_back(i);
@@ -27,5 +43,5 @@ int main()
 	{
 		std::cout << i << ' ';
 	}
-	return 0;
+	return 0;*/
 }

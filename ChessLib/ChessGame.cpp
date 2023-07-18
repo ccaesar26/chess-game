@@ -169,22 +169,25 @@ bool ChessGame::IsKingInCheckState()
 	{
 		for (int j = 0; j < 8; j++)
 		{
-			if (m_board[i][j]->GetColor() != m_turn)
+			if (m_board[i][j])
 			{
-				Position piecePosition(i, j);
-				PositionList enemyPiecePositions = m_board[i][j]->GetPattern(piecePosition, std::bind(&ChessGame::GetPiece, this, std::placeholders::_1));
-				if (m_turn == EColor::White)
+				if (m_board[i][j]->GetColor() != m_turn)
 				{
-					for (auto pos : enemyPiecePositions)
+					Position piecePosition(i, j);
+					PositionList enemyPiecePositions = m_board[i][j]->GetPattern(piecePosition, std::bind(&ChessGame::GetPiece, this, std::placeholders::_1));
+					if (m_turn == EColor::White)
 					{
-						if (pos == m_whiteKingPosition) return true;
+						for (auto pos : enemyPiecePositions)
+						{
+							if (pos == m_whiteKingPosition) return true;
+						}
 					}
-				}
-				else
-				{
-					for (auto pos : enemyPiecePositions)
+					else
 					{
-						if (pos == m_blackKingPosition) return true;
+						for (auto pos : enemyPiecePositions)
+						{
+							if (pos == m_blackKingPosition) return true;
+						}
 					}
 				}
 			}
