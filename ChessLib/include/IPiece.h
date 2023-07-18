@@ -41,8 +41,6 @@ public:
 
 	virtual EType GetType() const = 0; 
 
-	// virtual void GetMovesPossible(Position currentPos, std::function<IPiecePtr(Position)> GetPieceFromBoard, PositionPieceSet& possibleMoves) const = 0;
-
 };
 
 using IPiecePtr = std::shared_ptr<IPiece>;

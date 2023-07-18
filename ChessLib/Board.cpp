@@ -6,8 +6,11 @@ Board::Board(std::array<std::array<PiecePtr, 8>, 8> boardArr)
 	
 }
 
-IPiecePtr Board::GetElem(int i, int j)
+IPiecePtr Board::At(char column, int row)
 {
-	//throw std::logic_error("The method or operation is not implemented.");
-	return /*std::make_shared<IPiece>*/(m_board[i][j]);
+	if (column >= 'a')
+	{
+		return m_board[8 - row][column - 'a'];
+	}
+	return m_board[8 - row][column - 'A'];
 }

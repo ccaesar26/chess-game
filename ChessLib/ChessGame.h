@@ -38,6 +38,7 @@ public:
 
 	IBoardPtr GetBoard() const override;
 	
+	void SwitchTurn();
 
 private:
 

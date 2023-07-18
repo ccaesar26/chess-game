@@ -21,6 +21,7 @@ int main()
 		}
 		std::cout << std::endl;
 	}
+	std::cout << g->GetIPiece('f', 5).get();
 
 	//
 	/*std::vector<int> v;
