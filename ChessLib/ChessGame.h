@@ -32,7 +32,7 @@ public:
 
 	IPieceList GetBlackPiecesCaptured() override;
 
-	IPiecePtr GetIPiece(Position pos) const override;
+	IPiecePtr GetIPiece(char col, int ln) const;
 
 	PiecePtr GetPiece(Position pos) const ;
 
