@@ -141,13 +141,7 @@ bool ChessGame::IsGameOver() const
 	return false;
 }
 
-
 // Private Methods //
-
-IPiecePtr ChessGame::GetIPiece(Position pos) const
-{
-	return m_board[pos.row][pos.col];
-}
 
 PiecePtr ChessGame::GetPiece(Position pos) const
 {
@@ -280,46 +274,6 @@ IPiecePtr ChessGame::GetIPiece(char col, int ln) const
 		return m_board[8 - ln][col - 'a'];
 	}
 	return m_board[8 - ln][col - 'A'];
-}
-
-PiecePtr ChessGame::GetPiece(Position pos) const
-{
-	return m_board[pos.row][pos.col];
-}
-
-IBoardPtr ChessGame::GetBoard() const
-{
-	return std::make_shared<Board>(Board(m_board));
-}
-
-bool ChessGame::IsKingInCheckState(EColor color)
-{
-	for (int i = 0; i < 8; i++)
-	{
-		for (int j = 0; j < 8; j++)
-		{
-			if (m_board[i][j]->GetColor() != m_turn)
-			{
-				Position piecePosition(i, j);
-				PositionList enemyPiecePositions = m_board[i][j]->GetPattern(piecePosition, std::bind(&ChessGame::GetPiece, this, std::placeholders::_1));
-				if (m_turn == EColor::White)
-				{
-					for (auto pos : enemyPiecePositions)
-					{
-						if (pos == m_whiteKingPosition) return true;
-					}
-				}
-				else
-				{
-					for (auto pos : enemyPiecePositions)
-					{
-						if (pos == m_blackKingPosition) return true;
-					}
-				}
-			}
-		}
-	}
-	return false;
 }
 
 bool ChessGame::IsInMatrix(Position piecePosition)
