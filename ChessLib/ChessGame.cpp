@@ -188,6 +188,15 @@ bool ChessGame::IsKingInCheckState()
 	return false;
 }
 
+Position ChessGame::ConvertToPosition(char col, int ln)
+{
+	if (col >= 'a')
+	{
+		return Position(8 - ln, col - 'a');
+	}
+	return Position(8 - ln, col - 'A');
+}
+
 PositionList ChessGame::GetPossibleMoves(Position currentPos)
 {
 	PositionList possibleMoves;
