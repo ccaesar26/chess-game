@@ -137,10 +137,42 @@ IPieceList ChessGame::GetBlackPiecesCaptured()
 
 bool ChessGame::IsGameOver() const
 {
-	//if()
+	if (m_turn == EColor::White)
+	{
+		if (m_checkStateWhiteKing == false) return false;
+	}
+	else
+	{
+		if (m_checkStateBlackKing == false) return false;
+	}
 
+	// Verificam cele 2 cazuri // 
 
-
+	PiecePtr checkPiece1;
+	PiecePtr checkPiece2;
+	
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			if (m_board[i][j]->GetColor() != m_turn)
+			{
+				Position piecePosition(i, j);
+				PositionList enemyPiecePositions = m_board[i][j]->GetPattern(piecePosition, std::bind(&ChessGame::GetPiece, this, std::placeholders::_1));
+				for (auto pos : enemyPiecePositions)
+				{
+					if (m_turn == EColor::White)
+					{
+						if (pos == m_whiteKingPosition) return true;
+					}
+					else
+					{
+						if (pos == m_blackKingPosition) return true;
+					}
+				}
+			}
+		}
+	}
 
 
 	return false;
@@ -168,16 +200,13 @@ bool ChessGame::IsKingInCheckState()
 			{
 				Position piecePosition(i, j);
 				PositionList enemyPiecePositions = m_board[i][j]->GetPattern(piecePosition, std::bind(&ChessGame::GetPiece, this, std::placeholders::_1));
-				if (m_turn == EColor::White)
+				for (auto pos : enemyPiecePositions)
 				{
-					for (auto pos : enemyPiecePositions)
+					if (m_turn == EColor::White)
 					{
 						if (pos == m_whiteKingPosition) return true;
 					}
-				}
-				else
-				{
-					for (auto pos : enemyPiecePositions)
+					else
 					{
 						if (pos == m_blackKingPosition) return true;
 					}
