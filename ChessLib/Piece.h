@@ -6,8 +6,8 @@ using PiecePtr = std::shared_ptr<class Piece>;
 
 class Piece : public IPiece
 {
-
 public:
+	static PiecePtr Produce(EType type, EColor color);
 
 	Piece(EColor color, EType name);
 

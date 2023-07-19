@@ -5,12 +5,21 @@
 #include <vector>
 #include <functional>
 
-using PositionList = std::vector<struct Position>;
+struct Position
+{
+	int row, col;
+
+	Position(int r = 0, int c = 0);
+
+	bool operator==(const Position& P) const;
+};
+
+using PositionList = std::vector<Position>;
 
 enum class EColor
 {
-	White,
-	Black
+	White, // 0
+	Black  // 1
 };
 
 enum class EType
@@ -23,24 +32,11 @@ enum class EType
 	Pawn
 };
 
-struct Position
-{
-	int row, col;
-
-	Position(int r = 0, int c = 0);
-
-	bool operator==(const Position& P) const;
-};
-
 class IPiece
 {
-
 public:
-
 	virtual EColor GetColor() const = 0;
-
 	virtual EType GetType() const = 0; 
-
 };
 
 using IPiecePtr = std::shared_ptr<IPiece>;
