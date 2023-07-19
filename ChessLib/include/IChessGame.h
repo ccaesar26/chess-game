@@ -28,7 +28,7 @@ public:
 	virtual ~IChessGame() = default;
 };
 
-BoardPosition::BoardPosition(char c, int r)
+inline BoardPosition::BoardPosition(char c, int r)
 	: col(c)
 	, row(r)
 {

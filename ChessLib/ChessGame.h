@@ -10,46 +10,48 @@ using CharBoard = std::array<std::array<char, 8>, 8>;
 
 class ChessGame : public IChessGame
 {
-
 public:
 
 	// Constructors //
+
 	ChessGame();
 	ChessGame(const CharBoard& inputConfig, EColor turn = EColor::White);
 
-	
+	// Virtual Implementations //
+
+	IPiecePtr GetIPiece(char col, int ln) const override;
+	std::vector<BoardPosition> GetMoves(char col, int row) const override;
+	IPieceList GetCapturedPieces(EColor color) const override;
+	EColor GetCurrentPlayer() const override;
 
 	bool IsGameOver() const override;
 
-	EColor GetCurrentPlayer() const override;
+	void MakeMovement(char initialColumn, int initialRow, char finalColumn, int finalRow) override;
 
-	IPieceList GetCapturedPieces(EColor color) const override;
-
-	std::vector<BoardPosition> GetMoves(char col, int row) const override;
-
-	IPiecePtr GetIPiece(char col, int ln) const;
+	// Game's Logic //
 
 	PiecePtr GetPiece(Position pos, const ArrayBoard& board) const;
 	
-
-//private:
-
-	bool IsInMatrix(Position piecePosition);
-
-	bool CanBeCaptured(const ArrayBoard& board, Position toCapturePos) const;
-
-	static Position ConvertToPosition(char col, int ln);
-
-	static BoardPosition ConvertToBoardPosition(Position pos);
-
-	void MakeMove(Position initialPosition, Position finalPosition);
-
-	PositionList GetPossibleMoves(Position currentPos) const;
+private:
 
 	void SwitchTurn();
 
-	void MakeMovement(char initialColumn, int initialRow, char finalColumn, int finalRow) override;
+	bool CanBeCaptured(const ArrayBoard& board, Position toCapturePos) const;
+
+	PositionList GetPossibleMoves(Position currentPos) const;
+
+	void MakeMove(Position initialPosition, Position finalPosition);
+
+	// Static Methods //
+
+	static bool IsInMatrix(Position piecePosition);
+
+	static Position ConvertToPosition(char col, int ln);
+	static BoardPosition ConvertToBoardPosition(Position pos);
+
 private:
+
+	// Private Members //
 
 	ArrayBoard m_board;
 	EColor m_turn;

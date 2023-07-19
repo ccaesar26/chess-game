@@ -11,9 +11,8 @@ public:
 
 	Piece(EColor color, EType name);
 
-	EType GetType() const override;
-	
 	EColor GetColor() const override;
+	EType GetType() const override;
 
 	virtual PositionList GetPattern(Position currentPos, std::function<PiecePtr(Position)> GetPieceFromBoard) const = 0;
 

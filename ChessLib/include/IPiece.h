@@ -14,8 +14,6 @@ struct Position
 	bool operator==(const Position& P) const;
 };
 
-using PositionList = std::vector<Position>;
-
 enum class EColor
 {
 	White, // 0
@@ -39,9 +37,6 @@ public:
 	virtual EType GetType() const = 0; 
 };
 
-using IPiecePtr = std::shared_ptr<IPiece>;
-using IPieceList = std::vector<IPiecePtr>;
-
 inline Position::Position(int r, int c)
 	: row(r)
 	, col(c)
@@ -51,3 +46,7 @@ inline bool Position::operator==(const Position& P) const
 {
 	return (row == P.row && col == P.col);
 }
+
+using PositionList = std::vector<Position>;
+using IPiecePtr = std::shared_ptr<IPiece>;
+using IPieceList = std::vector<IPiecePtr>;
