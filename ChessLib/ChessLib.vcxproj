@@ -144,10 +144,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Bishop.h" />
-    <ClInclude Include="Board.h" />
     <ClInclude Include="ChessGame.h" />
     <ClInclude Include="Horse.h" />
-    <ClInclude Include="include\IBoard.h" />
     <ClInclude Include="include\IChessGame.h" />
     <ClInclude Include="include\IPiece.h" />
     <ClInclude Include="King.h" />
@@ -158,7 +156,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Bishop.cpp" />
-    <ClCompile Include="Board.cpp" />
     <ClCompile Include="ChessGame.cpp" />
     <ClCompile Include="Horse.cpp" />
     <ClCompile Include="King.cpp" />

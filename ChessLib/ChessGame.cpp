@@ -294,11 +294,6 @@ PiecePtr ChessGame::GetPiece(Position pos) const
 	return m_board[pos.row][pos.col];
 }
 
-IBoardPtr ChessGame::GetBoard() const
-{
-	return std::make_shared<Board>(m_board);
-}
-
 void ChessGame::SwitchTurn()
 {
 	if (m_turn == EColor::White)

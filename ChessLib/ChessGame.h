@@ -2,9 +2,10 @@
 
 #include "IChessGame.h"
 #include "Piece.h"
-#include "Board.h"
 
+#include <array>
 
+using ArrayBoard = std::array<std::array<PiecePtr, 8>, 8>;
 
 class ChessGame : public IChessGame
 {
@@ -34,9 +35,7 @@ public:
 
 	IPiecePtr GetIPiece(char col, int ln) const;
 
-	PiecePtr GetPiece(Position pos) const ;
-
-	IBoardPtr GetBoard() const override;
+	PiecePtr GetPiece(Position pos) const;
 	
 	void SwitchTurn();
 

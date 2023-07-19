@@ -1,6 +1,6 @@
 #pragma once
 
-#include "IBoard.h"
+#include "IPiece.h"
 
 using IChessGamePtr = std::shared_ptr<class IChessGame>;
 
@@ -15,10 +15,7 @@ public:
 
 	virtual void MakeMovement(char initialColumn, int initialRow, char finalColumn, int finalRow) = 0;
 
-	virtual IBoardPtr GetBoard() const = 0; 
-
 	virtual IPieceList GetWhitePiecesCaptured() = 0;
-
 	virtual IPieceList GetBlackPiecesCaptured() = 0;
 
 	virtual IPiecePtr GetIPiece(char col, int ln) const = 0;
