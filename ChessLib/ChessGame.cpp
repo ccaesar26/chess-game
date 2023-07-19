@@ -337,11 +337,17 @@ bool ChessGame::IsKingInCheckState()
 					{
 						if (m_turn == EColor::White)
 						{
-							if (pos == m_whiteKingPosition) return true;
+							if (pos == m_whiteKingPosition)
+							{
+								return true;
+							}
 						}
 						else 
 						{
-							if (pos == m_blackKingPosition) return true;
+							if (pos == m_blackKingPosition)
+							{
+								return true;
+							}
 						}
 					}
 				}
@@ -383,8 +389,20 @@ PositionList ChessGame::GetPossibleMoves(Position currentPos)
 		m_board[pos.row][pos.col] = m_board[currentPos.row][currentPos.col];
 		m_board[currentPos.row][currentPos.col].reset();
 
+		if (m_board[pos.row][pos.col]->GetType() == EType::King)
+		{
+			if (m_turn == EColor::White) m_whiteKingPosition = pos;
+			else m_blackKingPosition = pos;
+		}
+
 		if (IsKingInCheckState() == true)
 		{
+			if (m_board[pos.row][pos.col]->GetType() == EType::King)
+			{
+				if (m_turn == EColor::White) m_whiteKingPosition = currentPos;
+				else m_blackKingPosition = currentPos;
+			}
+
 			possibleMoves.erase(std::find(possibleMoves.begin(), possibleMoves.end(), pos));
 			i--;
 		}
