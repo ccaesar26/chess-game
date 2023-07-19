@@ -155,6 +155,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="InitialConfigTests.cpp" />
+    <ClCompile Include="KingInCheckState.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MakeMoveTests.cpp" />
   </ItemGroup>

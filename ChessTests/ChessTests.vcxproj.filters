@@ -33,5 +33,8 @@
     <ClCompile Include="MakeMoveTests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="KingInCheckState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

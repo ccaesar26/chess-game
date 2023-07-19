@@ -184,7 +184,8 @@ bool ChessGame::IsGameOver()
 								if (!checkPiece1)
 								{
 									checkPiece1 = m_board[i][j];
-
+									checkPiece1Pos.row = i;
+									checkPiece1Pos.col = j;
 								}
 								else if (!checkPiece2) checkPiece2 == m_board[i][j];
 								else break;

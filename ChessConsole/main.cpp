@@ -82,9 +82,9 @@ int main()
 {
 	std::shared_ptr<class IChessGame> g = IChessGame::CreateBoard();
 	
+	printBoard(g);
 	while (!g->IsGameOver())
 	{
-		printBoard(g);
 		std::cout << std::endl;
 		std::cout << "Input desired movement (X0 X0) : " << std::endl;
 		try
@@ -98,8 +98,8 @@ int main()
 		{
 			std::cout << std::endl << " ! Move not valid. Try again !" << std::endl;
 		}
+		printBoard(g);
 	}
-	printBoard(g);
 
 	//
 	/*std::vector<int> v;
