@@ -34,6 +34,14 @@ public:
 	
 private:
 
+	PieceList GetCheckPieces(Position& checkPos) const;
+
+	bool CheckPieceCanBeCaptured(const Position& checkPiecePos) const;
+
+	Position GetMovingDirections(const Position& checkPiecePos) const;
+
+	PositionList GetToBlockPositions(const Position& checkPiecePos) const;
+
 	void SwitchTurn();
 
 	bool CanBeCaptured(const ArrayBoard& board, Position toCapturePos) const;

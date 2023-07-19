@@ -3,6 +3,7 @@
 #include "IPiece.h"
 
 using PiecePtr = std::shared_ptr<class Piece>;
+using PieceList = std::vector<PiecePtr>;
 
 class Piece : public IPiece
 {

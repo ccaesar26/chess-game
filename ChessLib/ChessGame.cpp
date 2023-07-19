@@ -125,112 +125,35 @@ bool ChessGame::IsGameOver() const
 		return false;
 	}
 
-	PiecePtr checkPiece1;
-	PiecePtr checkPiece2;
-	Position checkPiece1Pos;
-	
-	for (int i = 0; i < 8; i++)
-	{
-		for (int j = 0; j < 8; j++)
-		{
-			if (m_board[i][j] && m_board[i][j]->GetColor() != m_turn)
-			{
-				Position piecePosition(i, j);
-				PositionList enemyPiecePositions = m_board[i][j]->GetPattern(piecePosition, 
-					std::bind(&ChessGame::GetPiece, this, std::placeholders::_1, m_board));
-
-				for (auto pos : enemyPiecePositions)
-				{
-					if (pos == m_kingPositions[(int)m_turn])
-					{
-						if (!checkPiece1)
-						{
-							checkPiece1 = m_board[i][j];
-							checkPiece1Pos.row = i;
-							checkPiece1Pos.col = j;
-						}
-						else if (!checkPiece2) 
-						{
-							checkPiece2 == m_board[i][j];
-						}
-						else 
-						{
-							break;
-						}
-					}
-				}
-				
-			}
-		}
-	}
-
-	// Verify the 3 cases // 
-
-	// Case 1 // 
+	Position checkPiecePos;
+	PieceList checkPieces = GetCheckPieces(checkPiecePos);
 
 	PositionList kingPossibleMoves = GetPossibleMoves(m_kingPositions[(int)m_turn]);
 
-	if (kingPossibleMoves.empty() == false)
-		return false;
-	else
+	if (!kingPossibleMoves.empty())
 	{
-		if (checkPiece1 && checkPiece2) 
-			return true;
+		return false;
+	}
+	if (checkPieces.size() > 1)
+	{
+		return true;
 	}
 
-	// Case 2 //
-
-	for (int i = 0; i < 8; i++)
+	if (CheckPieceCanBeCaptured(checkPiecePos))
 	{
-		for (int j = 0; j < 8; j++)
-		{
-			if (m_board[i][j] && m_board[i][j]->GetColor() == m_turn)
-			{
-				Position piecePosition(i, j);
-				PositionList ownPiecePositions = GetPossibleMoves(piecePosition);
-				for (auto pos : ownPiecePositions)
-				{
-					if (pos == checkPiece1Pos) return false;
-				}
-			}
-		}
+		return false;
 	}
 
 	// Case 3 // 
 
-	Position kingPosition = m_kingPositions[(int)m_turn];
-
-	PositionList toBlockPositions;
-
-	int movingRow;
-	int movingCol;
-
-	if (checkPiece1->GetType() == EType::King || checkPiece1->GetType() == EType::Pawn || checkPiece1->GetType() == EType::Horse) 
-		return true;
-
-	if (kingPosition.row < checkPiece1Pos.row) 
-		movingRow = -1;
-	else if (kingPosition.row > checkPiece1Pos.row) 
-		movingRow = 1;
-	else 
-		movingRow = 0;
-
-	if (kingPosition.col < checkPiece1Pos.col) 
-		movingCol = -1;
-	else if (kingPosition.col > checkPiece1Pos.col) 
-		movingCol = 1;
-	else 
-		movingCol = 0;
-
-	int i_row = checkPiece1Pos.row + movingRow;
-	int i_col = checkPiece1Pos.col + movingCol;
-
-	while (i_row != kingPosition.row && i_col != kingPosition.col)
+	if (checkPieces.at(0)->GetType() == EType::King ||
+		checkPieces.at(0)->GetType() == EType::Pawn ||
+		checkPieces.at(0)->GetType() == EType::Horse)
 	{
-		toBlockPositions.push_back(Position(i_row, i_col));
-		i_row += movingRow;
-		i_col += movingCol;
+		return true;
 	}
+
+	
 
 	if (toBlockPositions.empty() == true) 
 		return true;
@@ -264,6 +187,125 @@ void ChessGame::MakeMovement(char initialColumn, int initialRow, char finalColum
 PiecePtr ChessGame::GetPiece(Position pos, const ArrayBoard& board) const
 {
 	return board[pos.row][pos.col];
+}
+
+PieceList ChessGame::GetCheckPieces(Position& checkPos) const
+{
+	PieceList checkPieces;
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			if (m_board[i][j] && m_board[i][j]->GetColor() != m_turn)
+			{
+				PositionList enemyPiecePositions = m_board[i][j]->GetPattern(Position(i, j),
+					std::bind(&ChessGame::GetPiece, this, std::placeholders::_1, m_board));
+
+				for (auto pos : enemyPiecePositions)
+				{
+					if (pos == m_kingPositions[(int)m_turn])
+					{
+						if (checkPieces.empty())
+						{
+							checkPieces.push_back(m_board[i][j]);
+							checkPos = Position(i, j);
+						}
+						else
+						{
+							checkPieces.push_back(m_board[i][j]);
+							break;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+bool ChessGame::CheckPieceCanBeCaptured(const Position& checkPiecePos) const
+{
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			if (m_board[i][j] && m_board[i][j]->GetColor() == m_turn)
+			{
+				PositionList ownPiecePositions = GetPossibleMoves(Position(i, j));
+				for (auto pos : ownPiecePositions)
+				{
+					if (pos == checkPiecePos)
+					{
+						return true;
+					}
+				}
+			}
+		}
+	}
+	return false;
+}
+
+Position ChessGame::GetMovingDirections(const Position& checkPiecePos) const
+{
+	int movingRow;
+	int movingCol;
+
+	Position kingPosition = m_kingPositions[(int)m_turn];
+
+	if (kingPosition.row < checkPiecePos.row)
+	{
+		movingRow = -1;
+	}
+	else if (kingPosition.row > checkPiecePos.row)
+	{
+		movingRow = 1;
+	}
+	else
+	{
+		movingRow = 0;
+	}
+
+	if (kingPosition.col < checkPiecePos.col)
+	{
+		movingCol = -1;
+	}
+	else if (kingPosition.col > checkPiecePos.col)
+	{
+		movingCol = 1;
+	}
+	else
+	{
+		movingCol = 0;
+	}
+
+	return Position(movingRow, movingCol);
+}
+
+PositionList ChessGame::GetToBlockPositions(const Position& checkPiecePos) const
+{
+	Position kingPosition = m_kingPositions[(int)m_turn];
+	PositionList toBlockPositions;
+	Position movingDirections = GetMovingDirections(checkPiecePos);
+
+	/*for (
+		int i = checkPiecePos.row + movingDirections.row, 
+			 j = checkPiecePos.col + movingDirections.col;
+		i != kingPosition.row && j != kingPosition.col; 
+		i += movingDirections.row, j += movingDirections.col)
+	{
+
+	}*/
+
+	// de rescris while -> for
+
+	int i_row = checkPiecePos.row + movingRow;
+	int i_col = checkPiecePos.col + movingCol;
+
+	while (i_row != kingPosition.row && i_col != kingPosition.col)
+	{
+		toBlockPositions.push_back(Position(i_row, i_col));
+		i_row += movingRow;
+		i_col += movingCol;
+	}
 }
 
 void ChessGame::SwitchTurn()
