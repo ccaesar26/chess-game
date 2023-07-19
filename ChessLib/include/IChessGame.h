@@ -25,6 +25,8 @@ public:
 
 	virtual PositionList GetPossibleMoves(Position currentPos) = 0;
 
+	virtual EColor GetCurrentPlayer() const = 0;
+
 	~IChessGame() = default;
 
 };

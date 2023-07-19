@@ -310,6 +310,11 @@ void ChessGame::SwitchTurn()
 	}
 }
 
+EColor ChessGame::GetCurrentPlayer() const
+{
+	return m_turn;
+}
+
 void ChessGame::MakeMovement(char initialColumn, int initialRow, char finalColumn, int finalRow)
 {
 	MakeMove(ConvertToPosition(initialColumn, initialRow), ConvertToPosition(finalColumn, finalRow));

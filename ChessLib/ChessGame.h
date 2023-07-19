@@ -40,6 +40,9 @@ public:
 	
 	void SwitchTurn();
 
+
+	EColor GetCurrentPlayer() const override;
+
 private:
 
 	bool IsInMatrix(Position piecePosition);
