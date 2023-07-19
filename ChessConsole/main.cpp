@@ -2,26 +2,104 @@
 #include <vector>
 #include <iostream>
 
-int main()
+void printBoard(std::shared_ptr<class IChessGame> g)
 {
-	std::shared_ptr<class IChessGame> g = IChessGame::CreateBoard();
-	std::array<std::array<std::shared_ptr<IPiece>, 8>, 8> arr;
+	std::cout << "     A   B   C   D   E   F   G   H " << std::endl;
+	std::cout << "   |-------------------------------|" << std::endl;
 	for (int j = 8; j > 0; j--)
 	{
+		std::cout << " " << j << " |";
 		for (int i = 'A'; i <= 'H'; i++)
 		{
 			if (g->GetIPiece(i, j))
-			{
-				std::cout << int(g->GetIPiece(i, j)->GetType()) << ' ';
+			{ 
+				std::cout << ' ';
+				if (g->GetIPiece(i, j)->GetColor() == EColor::Black)
+				{
+					switch (g->GetIPiece(i, j)->GetType())
+					{
+					case EType::Rook:
+						std::cout << 'R';
+						break;
+					case EType::Horse:
+						std::cout << 'H';
+						break;
+					case EType::Bishop:
+						std::cout << 'B';
+						break;
+					case EType::Queen:
+						std::cout << 'Q';
+						break;
+					case EType::King:
+						std::cout << 'K';
+						break;
+					case EType::Pawn:
+						std::cout << 'P';
+						break;
+					default:
+						break;
+					}
+				}
+				else
+				{
+					switch (g->GetIPiece(i, j)->GetType())
+					{
+					case EType::Rook:
+						std::cout << 'r';
+						break;
+					case EType::Horse:
+						std::cout << 'h';
+						break;
+					case EType::Bishop:
+						std::cout << 'b';
+						break;
+					case EType::Queen:
+						std::cout << 'q';
+						break;
+					case EType::King:
+						std::cout << 'k';
+						break;
+					case EType::Pawn:
+						std::cout << 'p';
+						break;
+					default:
+						break;
+					}
+				}
 			}
 			else
 			{
-				std::cout << "_ ";
+				std::cout << "  ";
 			}
+			std::cout << " |";
 		}
 		std::cout << std::endl;
+		std::cout << "   |-------------------------------|" << std::endl;
 	}
-	std::cout << g->GetIPiece('f', 5).get();
+}
+
+int main()
+{
+	std::shared_ptr<class IChessGame> g = IChessGame::CreateBoard();
+	
+	while (!g->IsGameOver())
+	{
+		printBoard(g);
+		std::cout << std::endl;
+		std::cout << "Input desired movement (X0 X0) : " << std::endl;
+		try
+		{
+			char ic, fc;
+			int ir, fr;
+			std::cin >> ic >> ir >> fc >> fr;
+			g->MakeMovement(ic, ir, fc, fr);
+		}
+		catch (...)
+		{
+			std::cout << std::endl << " ! Move not valid. Try again !" << std::endl;
+		}
+	}
+	printBoard(g);
 
 	//
 	/*std::vector<int> v;
@@ -43,6 +121,6 @@ int main()
 	for (auto i : v)
 	{
 		std::cout << i << ' ';
-	}
-	return 0;*/
+	}*/
+	return 0;
 }
