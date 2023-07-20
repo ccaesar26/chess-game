@@ -12,6 +12,8 @@ struct Position
 	Position(int r = 0, int c = 0);
 
 	bool operator==(const Position& P) const;
+
+	bool operator!=(const Position& P) const;
 };
 
 enum class EColor
@@ -45,6 +47,11 @@ inline Position::Position(int r, int c)
 inline bool Position::operator==(const Position& P) const
 {
 	return (row == P.row && col == P.col);
+}
+
+inline bool Position::operator!=(const Position& P) const
+{
+	return (row != P.row || col != P.col);
 }
 
 using PositionList = std::vector<Position>;
