@@ -70,7 +70,9 @@ ChessGame::ChessGame(const CharBoard& inputConfig, EColor turn)
 		for (int j = 0; j< 8; j++)
 		{
 			if (inputConfig[i][j] == ' ')
+			{
 				continue;
+			}
 
 			EType type = GetType(inputConfig[i][j]);
 			EColor color = GetColor(inputConfig[i][j]);
@@ -83,7 +85,9 @@ ChessGame::ChessGame(const CharBoard& inputConfig, EColor turn)
 		}
 	}
 	if (CanBeCaptured(m_board, m_kingPositions[(int)turn]))
+	{
 		m_checkState = true;
+	}
 }
 
 // Virtual Implementations //
@@ -144,8 +148,6 @@ bool ChessGame::IsGameOver() const
 		return false;
 	}
 
-	// Case 3 // 
-
 	if (checkPieces.at(0)->GetType() == EType::King ||
 		checkPieces.at(0)->GetType() == EType::Pawn ||
 		checkPieces.at(0)->GetType() == EType::Horse)
@@ -153,27 +155,17 @@ bool ChessGame::IsGameOver() const
 		return true;
 	}
 
-	
+	PositionList toBlockPositions = GetToBlockPositions(checkPiecePos);
 
-	if (toBlockPositions.empty() == true) 
-		return true;
- 
-	for (int i = 0; i < 8; i++)
+	if (toBlockPositions.empty())
 	{
-		for (int j = 0; j < 8; j++)
-		{
-			if (m_board[i][j] && m_board[i][j]->GetColor() == m_turn)
-			{
-				PositionList possibleMoves = GetPossibleMoves(Position(i, j));
-				for (auto pos : toBlockPositions)
-				{
-					if (std::find(possibleMoves.begin(), possibleMoves.end(), pos) != possibleMoves.end()) 
-						return false;
-				}
-			}
-		}
+		return true;
 	}
-
+	if (KingsWayCanBeBlocked(toBlockPositions))
+	{
+		return false;
+	}
+	
 	return true;
 }
 
@@ -286,26 +278,36 @@ PositionList ChessGame::GetToBlockPositions(const Position& checkPiecePos) const
 	PositionList toBlockPositions;
 	Position movingDirections = GetMovingDirections(checkPiecePos);
 
-	/*for (
-		int i = checkPiecePos.row + movingDirections.row, 
-			 j = checkPiecePos.col + movingDirections.col;
-		i != kingPosition.row && j != kingPosition.col; 
-		i += movingDirections.row, j += movingDirections.col)
+	for (int i = checkPiecePos.row + movingDirections.row, j = checkPiecePos.col + movingDirections.col
+		;	 i != kingPosition.row && j != kingPosition.col
+		;  	 i += movingDirections.row, j += movingDirections.col)
 	{
-
-	}*/
-
-	// de rescris while -> for
-
-	int i_row = checkPiecePos.row + movingRow;
-	int i_col = checkPiecePos.col + movingCol;
-
-	while (i_row != kingPosition.row && i_col != kingPosition.col)
-	{
-		toBlockPositions.push_back(Position(i_row, i_col));
-		i_row += movingRow;
-		i_col += movingCol;
+		toBlockPositions.push_back(Position(i, j));
 	}
+
+	return toBlockPositions;
+}
+
+bool ChessGame::KingsWayCanBeBlocked(const PositionList& toBlockPositions) const
+{
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			if (m_board[i][j] && m_board[i][j]->GetColor() == m_turn)
+			{
+				PositionList possibleMoves = GetPossibleMoves(Position(i, j));
+				for (auto pos : toBlockPositions)
+				{
+					if (std::find(possibleMoves.begin(), possibleMoves.end(), pos) != possibleMoves.end())
+					{
+						return true;
+					}
+				}
+			}
+		}
+	}
+	return false;
 }
 
 void ChessGame::SwitchTurn()
@@ -337,7 +339,9 @@ bool ChessGame::CanBeCaptured(const ArrayBoard& board, Position toCapturePos) co
 				for (auto pos : enemyPiecePositions)
 				{
 					if (pos == toCapturePos)
+					{
 						return true;
+					}
 				}
 			}
 		}
@@ -375,7 +379,9 @@ PositionList ChessGame::GetPossibleMoves(Position currentPos) const
 		boardAfterMove[currentPos.row][currentPos.col].reset();
 
 		if (boardAfterMove[pos.row][pos.col]->GetType() == EType::King)
+		{
 			kingPosition = pos;
+		}
 
 		if (CanBeCaptured(boardAfterMove, kingPosition))
 		{
@@ -391,14 +397,20 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 {
 	PositionList possibleMoves = GetPossibleMoves(initialPosition);
 	if (std::find(possibleMoves.begin(), possibleMoves.end(), finalPosition) == possibleMoves.end()) 
-		throw "Your move is not possible !";
+	{
+		throw "Your move is not possible !"; 
+	}
 
 	if (m_board[finalPosition.row][finalPosition.col])
 	{
 		if (m_turn == EColor::White) 
+		{
 			m_blackPiecesCaptured.push_back(m_board[finalPosition.row][finalPosition.col]);
-		else 
+		}
+		else
+		{
 			m_whitePiecesCaptured.push_back(m_board[finalPosition.row][finalPosition.col]);
+		}
 	}
 
 	m_board[finalPosition.row][finalPosition.col] = m_board[initialPosition.row][initialPosition.col];
@@ -412,7 +424,9 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 	SwitchTurn();
 
 	if (CanBeCaptured(m_board, m_kingPositions[(int)m_turn]) == true)
+	{
 		m_checkState = true;
+	}
 }
 
 // Static Methods //

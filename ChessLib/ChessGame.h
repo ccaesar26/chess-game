@@ -41,6 +41,8 @@ private:
 	Position GetMovingDirections(const Position& checkPiecePos) const;
 
 	PositionList GetToBlockPositions(const Position& checkPiecePos) const;
+	
+	bool KingsWayCanBeBlocked(const PositionList& toBlockPositions) const;
 
 	void SwitchTurn();
 
