@@ -11,121 +11,22 @@ PositionList Queen::GetPattern(Position currentPos, std::function<PiecePtr(Posit
 	PositionList finalPositions;
 
 	// upper left
-	for (int i = currentPos.row - 1, j = currentPos.col - 1; i >= 0 && j >= 0; i--, j--)
-	{
-		Position toCheckPosition(i, j);
-		if (GetPieceFromBoard(toCheckPosition))
-		{
-			if (GetPieceFromBoard(toCheckPosition)->GetColor() != m_color)
-			{
-				finalPositions.push_back(toCheckPosition);
-			}
-			break;
-		}
-		finalPositions.push_back(toCheckPosition);
-	}
+	AddFinalPositionsByDirections(currentPos, Position(-1, -1), GetPieceFromBoard, finalPositions);
 	// upper right
-	for (int i = currentPos.row - 1, j = currentPos.col + 1; i >= 0 && j < 8; i--, j++)
-	{
-		Position toCheckPosition(i, j);
-		if (GetPieceFromBoard(toCheckPosition))
-		{
-			if (GetPieceFromBoard(toCheckPosition)->GetColor() != m_color)
-			{
-				finalPositions.push_back(toCheckPosition);
-			}
-			break;
-		}
-		finalPositions.push_back(toCheckPosition);
-	}
+	AddFinalPositionsByDirections(currentPos, Position(-1, 1), GetPieceFromBoard, finalPositions);
 	// lower left
-	for (int i = currentPos.row + 1, j = currentPos.col - 1; i < 8 && j >= 0; i++, j--)
-	{
-		Position toCheckPosition(i, j);
-		if (GetPieceFromBoard(toCheckPosition))
-		{
-			if (GetPieceFromBoard(toCheckPosition)->GetColor() != m_color)
-			{
-				finalPositions.push_back(toCheckPosition);
-			}
-			break;
-		}
-		finalPositions.push_back(toCheckPosition);
-	}
+	AddFinalPositionsByDirections(currentPos, Position(1, -1), GetPieceFromBoard, finalPositions);
 	// lower right
-	for (int i = currentPos.row + 1, j = currentPos.col + 1; i < 8 && j < 8; i++, j++)
-	{
-		Position toCheckPosition(i, j);
-		if (GetPieceFromBoard(toCheckPosition))
-		{
-			if (GetPieceFromBoard(toCheckPosition)->GetColor() != m_color)
-			{
-				finalPositions.push_back(toCheckPosition);
-			}
-			break;
-		}
-		finalPositions.push_back(toCheckPosition);
-	}
+	AddFinalPositionsByDirections(currentPos, Position(1, 1), GetPieceFromBoard, finalPositions);
 
 	// up
-	for (int i = currentPos.row - 1; i >= 0; i--)
-	{
-		Position toCheckPosition(i, currentPos.col);
-		if (GetPieceFromBoard(toCheckPosition))
-		{
-			if (GetPieceFromBoard(toCheckPosition)->GetColor() != m_color)
-			{
-				finalPositions.push_back(toCheckPosition);
-			}
-			break;
-		}
-		finalPositions.push_back(toCheckPosition);
-	}
-
+	AddFinalPositionsByDirections(currentPos, Position(-1, 0), GetPieceFromBoard, finalPositions);
 	// down
-	for (int i = currentPos.row + 1; i < 8; i++)
-	{
-		Position toCheckPosition(i, currentPos.col);
-		if (GetPieceFromBoard(toCheckPosition))
-		{
-			if (GetPieceFromBoard(toCheckPosition)->GetColor() != m_color)
-			{
-				finalPositions.push_back(toCheckPosition);
-			}
-			break;
-		}
-		finalPositions.push_back(toCheckPosition);
-	}
-
+	AddFinalPositionsByDirections(currentPos, Position(1, 0), GetPieceFromBoard, finalPositions);
 	// left
-	for (int j = currentPos.col - 1; j >= 0; j--)
-	{
-		Position toCheckPosition(currentPos.row, j);
-		if (GetPieceFromBoard(toCheckPosition))
-		{
-			if (GetPieceFromBoard(toCheckPosition)->GetColor() != m_color)
-			{
-				finalPositions.push_back(toCheckPosition);
-			}
-			break;
-		}
-		finalPositions.push_back(toCheckPosition);
-	}
-
+	AddFinalPositionsByDirections(currentPos, Position(0, -1), GetPieceFromBoard, finalPositions);
 	// right
-	for (int j = currentPos.col + 1; j < 8; j++)
-	{
-		Position toCheckPosition(currentPos.row, j);
-		if (GetPieceFromBoard(toCheckPosition))
-		{
-			if (GetPieceFromBoard(toCheckPosition)->GetColor() != m_color)
-			{
-				finalPositions.push_back(toCheckPosition);
-			}
-			break;
-		}
-		finalPositions.push_back(toCheckPosition);
-	}
+	AddFinalPositionsByDirections(currentPos, Position(0, 1), GetPieceFromBoard, finalPositions);
 
 	return finalPositions;
 }

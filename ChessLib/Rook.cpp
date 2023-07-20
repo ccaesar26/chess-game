@@ -9,64 +9,13 @@ PositionList Rook::GetPattern(Position currentPos, std::function<PiecePtr(Positi
 	PositionList finalPositions;
 
 	// up
-	for (int i = currentPos.row - 1; i >= 0; i--)
-	{
-		Position toCheckPosition(i, currentPos.col);
-		if (GetPieceFromBoard(toCheckPosition))
-		{
-			if (GetPieceFromBoard(toCheckPosition)->GetColor() != m_color)
-			{
-				finalPositions.push_back(toCheckPosition);
-			}
-			break;
-		}
-		finalPositions.push_back(toCheckPosition);
-	}
-	
+	AddFinalPositionsByDirections(currentPos, Position(-1,  0), GetPieceFromBoard, finalPositions);
 	// down
-	for (int i = currentPos.row + 1; i < 8; i++)
-	{
-		Position toCheckPosition(i, currentPos.col);
-		if (GetPieceFromBoard(toCheckPosition))
-		{
-			if (GetPieceFromBoard(toCheckPosition)->GetColor() != m_color)
-			{
-				finalPositions.push_back(toCheckPosition);
-			}
-			break;
-		}
-		finalPositions.push_back(toCheckPosition);
-	}
-
+	AddFinalPositionsByDirections(currentPos, Position( 1,  0), GetPieceFromBoard, finalPositions);
 	// left
-	for (int j = currentPos.col - 1; j >= 0; j--)
-	{
-		Position toCheckPosition(currentPos.row, j);
-		if (GetPieceFromBoard(toCheckPosition))
-		{
-			if (GetPieceFromBoard(toCheckPosition)->GetColor() != m_color)
-			{
-				finalPositions.push_back(toCheckPosition);
-			}
-			break;
-		}
-		finalPositions.push_back(toCheckPosition);
-	}
-
+	AddFinalPositionsByDirections(currentPos, Position( 0, -1), GetPieceFromBoard, finalPositions);
 	// right
-	for (int j = currentPos.col + 1; j < 8; j++)
-	{
-		Position toCheckPosition(currentPos.row, j);
-		if (GetPieceFromBoard(toCheckPosition))
-		{
-			if (GetPieceFromBoard(toCheckPosition)->GetColor() != m_color)
-			{
-				finalPositions.push_back(toCheckPosition);
-			}
-			break;
-		}
-		finalPositions.push_back(toCheckPosition);
-	}
+	AddFinalPositionsByDirections(currentPos, Position( 0,  1), GetPieceFromBoard, finalPositions);
 
 	return finalPositions;
 }
