@@ -212,6 +212,7 @@ PieceList ChessGame::GetCheckPieces(Position& checkPos) const
 			}
 		}
 	}
+	return checkPieces;
 }
 
 bool ChessGame::CheckPieceCanBeCaptured(const Position& checkPiecePos) const

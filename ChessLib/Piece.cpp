@@ -72,7 +72,7 @@ void Piece::AddFinalPositionsByDirections(const Position& currentPos, Position m
 {
 	Position limit;
 	limit.row = movingWay.row < 0 ? -1 : 8;
-	limit.col = movingWay.row < 0 ? -1 : 8;
+	limit.col = movingWay.col < 0 ? -1 : 8;
 
 	for (int i = currentPos.row + movingWay.row, j = currentPos.col + movingWay.col
 		;	 i != limit.row && j != limit.col
