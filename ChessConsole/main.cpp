@@ -78,6 +78,15 @@ void printBoard(std::shared_ptr<class IChessGame> g)
 	}
 }
 
+bool inputIsDraw(char ic, char ir, char fc, char fr)
+{
+	if ((ic == 'D' || ic == 'd') && (ir == 'R' || ir == 'r') && (fc == 'A' || fc == 'a') && (fr == 'W' || fr == 'w'))
+	{
+		return true;
+	}
+	return false;
+}
+
 int main()
 {
 	std::shared_ptr<class IChessGame> g = IChessGame::CreateBoard();
@@ -86,12 +95,39 @@ int main()
 	while (!g->IsGameOver())
 	{
 		std::cout << std::endl;
+		std::cout << "Current turn: ";
+		switch (g->GetCurrentPlayer())
+		{
+		case EColor::White:
+			std::cout << "White's turn";
+			break;
+		case EColor::Black:
+			std::cout << "Black's turn";
+			break;
+		default:
+			break;
+		}
+		std::cout << std::endl;
+		std::cout << "-> To request DRAW, type 'DRAW' below" << std::endl;
 		std::cout << "Input desired movement (X0 X0) : " << std::endl;
 		try
 		{
-			char ic, fc;
-			int ir, fr;
+			char ic, ir, fc, fr;
 			std::cin >> ic >> ir >> fc >> fr;
+			if (inputIsDraw(ic, ir, fc, fr))
+			{
+				std::cout << "The opponent requested a draw. Do you accept? (y/n) ...";
+				std::cin >> ic;
+				if (ic == 'y')
+				{
+					g->EndGameByDraw();
+					break;
+				} 
+				else
+				{
+					continue;
+				}
+			}
 			g->MakeMovement(ic, ir, fc, fr);
 		}
 		catch (...)

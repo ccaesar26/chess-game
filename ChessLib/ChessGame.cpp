@@ -45,7 +45,7 @@ IChessGamePtr IChessGame::CreateBoard()
 ChessGame::ChessGame()
 	: m_turn(EColor::White)
 	, m_kingPositions({Position(7 ,4), Position(0, 4)})
-	, m_checkState(false)
+	, m_state(EGameState::MovingPiece)
 {
 	for (int j = 0; j < 8; j++)
 	{
@@ -62,9 +62,10 @@ ChessGame::ChessGame()
 	}
 }
 
-ChessGame::ChessGame(const CharBoard& inputConfig, EColor turn)
+ChessGame::ChessGame(const CharBoard& inputConfig, EColor turn) 
+	: m_turn(turn)
+	, m_state(EGameState::MovingPiece)
 {
-	m_turn = turn;
 	for (int i = 0; i < 8; i++)
 	{
 		for (int j = 0; j< 8; j++)
@@ -86,7 +87,7 @@ ChessGame::ChessGame(const CharBoard& inputConfig, EColor turn)
 	}
 	if (CanBeCaptured(m_board, m_kingPositions[(int)turn]))
 	{
-		m_checkState = true;
+		m_state = EGameState::CheckState;
 	}
 }
 
@@ -101,7 +102,7 @@ IPiecePtr ChessGame::GetIPiece(char col, int ln) const
 	return m_board[8 - ln][col - 'A'];
 }
 
-std::vector<BoardPosition> ChessGame::GetMoves(char col, int row) const
+std::vector<BoardPosition> ChessGame::GetMoves(char col, char row) const
 {
 	std::vector<BoardPosition> possibleBoardPositions;
 	PositionList possiblePositions = GetPossibleMoves(ConvertToPosition(col, row));
@@ -124,7 +125,12 @@ EColor ChessGame::GetCurrentPlayer() const
 
 bool ChessGame::IsGameOver() const
 {
-	if (!m_checkState)
+	if (m_state == EGameState::Draw || m_state == EGameState::WonByWhitePlayer || m_state == EGameState::WonByBlackPlayer)
+	{
+		return true;
+	}
+
+	if (m_state != EGameState::CheckState)
 	{
 		return false;
 	}
@@ -169,7 +175,7 @@ bool ChessGame::IsGameOver() const
 	return true;
 }
 
-void ChessGame::MakeMovement(char initialColumn, int initialRow, char finalColumn, int finalRow)
+void ChessGame::MakeMovement(char initialColumn, char initialRow, char finalColumn, char finalRow)
 {
 	MakeMove(ConvertToPosition(initialColumn, initialRow), ConvertToPosition(finalColumn, finalRow));
 }
@@ -421,6 +427,13 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 	{
 		m_kingPositions[(int)m_turn] = finalPosition;
 	}
+	else if (m_board[finalPosition.row][finalPosition.col]->GetType() == EType::Pawn)
+	{
+		if (m_board[finalPosition.row][finalPosition.col]->GetColor() == EColor::White && finalPosition.row == 0)
+		{
+
+		}
+	}
 
 	SwitchTurn();
 
@@ -441,16 +454,16 @@ bool ChessGame::IsInMatrix(Position piecePosition)
 	}
 	return true;
 }
-Position ChessGame::ConvertToPosition(char col, int ln)
+Position ChessGame::ConvertToPosition(char col, char row)
 {
 	if (col >= 'a')
 	{
-		return Position(8 - ln, col - 'a');
+		return Position(8 - row - '0', col - 'a');
 	}
-	return Position(8 - ln, col - 'A');
+	return Position(8 - row - '0', col - 'A');
 }
 
 BoardPosition ChessGame::ConvertToBoardPosition(Position pos)
 {
-	return BoardPosition(pos.col + 'A', 8 - pos.row);
+	return BoardPosition(pos.col + 'A', 8 - pos.row + '0');
 }

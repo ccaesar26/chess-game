@@ -8,6 +8,16 @@
 using ArrayBoard = std::array<std::array<PiecePtr, 8>, 8>;
 using CharBoard = std::array<std::array<char, 8>, 8>;
 
+enum class EGameState
+{
+	MovingPiece,
+	Draw,
+	WonByWhitePlayer,
+	WonByBlackPlayer,
+	UpgradePawn,
+	CheckState
+};
+
 class ChessGame : public IChessGame
 {
 public:
@@ -20,18 +30,20 @@ public:
 	// Virtual Implementations //
 
 	IPiecePtr GetIPiece(char col, int ln) const override;
-	std::vector<BoardPosition> GetMoves(char col, int row) const override;
+	std::vector<BoardPosition> GetMoves(char col, char row) const override;
 	IPieceList GetCapturedPieces(EColor color) const override;
 	EColor GetCurrentPlayer() const override;
 
 	bool IsGameOver() const override;
 
-	void MakeMovement(char initialColumn, int initialRow, char finalColumn, int finalRow) override;
+	void MakeMovement(char initialColumn, char initialRow, char finalColumn, char finalRow) override;
+
+	void EndGameByDraw() override;
 
 	// Game's Logic //
 
 	PiecePtr GetPiece(Position pos, const ArrayBoard& board) const;
-	
+
 private:
 
 	PieceList GetCheckPieces(Position& checkPos) const;
@@ -56,7 +68,7 @@ private:
 
 	static bool IsInMatrix(Position piecePosition);
 
-	static Position ConvertToPosition(char col, int ln);
+	static Position ConvertToPosition(char col, char row);
 	static BoardPosition ConvertToBoardPosition(Position pos);
 
 private:
@@ -67,8 +79,9 @@ private:
 	EColor m_turn;
 
 	PositionList m_kingPositions;
-	bool m_checkState;
 
 	IPieceList m_whitePiecesCaptured;
 	IPieceList m_blackPiecesCaptured;
+
+	EGameState m_state;
 };
