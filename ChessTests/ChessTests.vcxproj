@@ -154,7 +154,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="GetPatternHorse.cpp" />
+    <ClCompile Include="TestHorsePossibleMoves.cpp" />
     <ClCompile Include="InitialConfigTests.cpp" />
     <ClCompile Include="KingInCheckState.cpp" />
     <ClCompile Include="main.cpp" />
