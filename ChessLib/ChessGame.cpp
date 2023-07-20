@@ -183,9 +183,48 @@ PiecePtr ChessGame::GetPiece(Position pos, const ArrayBoard& board) const
 	return board[pos.row][pos.col];
 }
 
-ArrayBoard ChessGame::GetBoard() const
+PositionList ChessGame::GetPossibleMoves(Position currentPos) const
 {
-	return m_board;
+	PositionList possibleMoves;
+	PiecePtr currentPiece = m_board[currentPos.row][currentPos.col];
+
+	if (currentPiece)
+	{
+		if (currentPiece->GetColor() == m_turn)
+		{
+			possibleMoves = currentPiece->GetPattern(currentPos,
+				std::bind(&ChessGame::GetPiece, this, std::placeholders::_1, m_board));
+		}
+	}
+
+	for (int i = 0; i < possibleMoves.size(); i++)
+	{
+		Position pos = possibleMoves[i];  // The pos variable is for iterating the possible moves //
+
+		PiecePtr currentPieceCopy = m_board[currentPos.row][currentPos.col];
+		PiecePtr finalPieceCopy = m_board[pos.row][pos.col];
+
+		// Create alternative board  My code //
+
+		ArrayBoard boardAfterMove = m_board;
+		Position kingPosition = m_kingPositions[(int)m_turn];
+
+		boardAfterMove[pos.row][pos.col] = boardAfterMove[currentPos.row][currentPos.col];
+		boardAfterMove[currentPos.row][currentPos.col].reset();
+
+		if (boardAfterMove[pos.row][pos.col]->GetType() == EType::King)
+		{
+			kingPosition = pos;
+		}
+
+		if (CanBeCaptured(boardAfterMove, kingPosition))
+		{
+			possibleMoves.erase(std::find(possibleMoves.begin(), possibleMoves.end(), pos));
+			i--;
+		}
+	}
+
+	return possibleMoves;
 }
 
 PieceList ChessGame::GetCheckPieces(Position& checkPos) const
@@ -355,50 +394,6 @@ bool ChessGame::CanBeCaptured(const ArrayBoard& board, Position toCapturePos) co
 		}
 	}
 	return false;
-}
-
-PositionList ChessGame::GetPossibleMoves(Position currentPos) const
-{
-	PositionList possibleMoves;
-	PiecePtr currentPiece = m_board[currentPos.row][currentPos.col];
-
-	if (currentPiece)
-	{
-		if (currentPiece->GetColor() == m_turn)
-		{
-			possibleMoves = currentPiece->GetPattern(currentPos, 
-				std::bind(&ChessGame::GetPiece, this, std::placeholders::_1, m_board));
-		}
-	}
-
-	for (int i = 0; i < possibleMoves.size(); i++)
-	{
-		Position pos = possibleMoves[i];  // The pos variable is for iterating the possible moves //
-
-		PiecePtr currentPieceCopy = m_board[currentPos.row][currentPos.col];
-		PiecePtr finalPieceCopy = m_board[pos.row][pos.col];
-
-		// Create alternative board  My code //
-
-		ArrayBoard boardAfterMove = m_board;
-		Position kingPosition = m_kingPositions[(int)m_turn];
-
-		boardAfterMove[pos.row][pos.col] = boardAfterMove[currentPos.row][currentPos.col];
-		boardAfterMove[currentPos.row][currentPos.col].reset();
-
-		if (boardAfterMove[pos.row][pos.col]->GetType() == EType::King)
-		{
-			kingPosition = pos;
-		}
-
-		if (CanBeCaptured(boardAfterMove, kingPosition))
-		{
-			possibleMoves.erase(std::find(possibleMoves.begin(), possibleMoves.end(), pos));
-			i--;
-		}
-	}
-	
-	return possibleMoves;
 }
 
 void ChessGame::MakeMove(Position initialPosition, Position finalPosition)

@@ -32,10 +32,6 @@ public:
 
 	PiecePtr GetPiece(Position pos, const ArrayBoard& board) const;
 
-	ArrayBoard GetBoard() const;
-
-	bool CanBeCaptured(const ArrayBoard& board, Position toCapturePos) const;
-
 	PositionList GetPossibleMoves(Position currentPos) const;
 	
 private:
@@ -51,6 +47,8 @@ private:
 	bool KingsWayCanBeBlocked(const PositionList& toBlockPositions) const;
 
 	void SwitchTurn();
+
+	bool CanBeCaptured(const ArrayBoard& board, Position toCapturePos) const;
 
 	void MakeMove(Position initialPosition, Position finalPosition);
 
