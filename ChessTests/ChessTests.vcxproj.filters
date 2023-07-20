@@ -36,5 +36,8 @@
     <ClCompile Include="KingInCheckState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GetPatternHorse.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

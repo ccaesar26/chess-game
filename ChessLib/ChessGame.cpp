@@ -65,6 +65,8 @@ ChessGame::ChessGame()
 ChessGame::ChessGame(const CharBoard& inputConfig, EColor turn)
 {
 	m_turn = turn;
+	m_kingPositions.resize(2);
+
 	for (int i = 0; i < 8; i++)
 	{
 		for (int j = 0; j< 8; j++)
@@ -179,6 +181,11 @@ void ChessGame::MakeMovement(char initialColumn, int initialRow, char finalColum
 PiecePtr ChessGame::GetPiece(Position pos, const ArrayBoard& board) const
 {
 	return board[pos.row][pos.col];
+}
+
+ArrayBoard ChessGame::GetBoard() const
+{
+	return m_board;
 }
 
 PieceList ChessGame::GetCheckPieces(Position& checkPos) const
