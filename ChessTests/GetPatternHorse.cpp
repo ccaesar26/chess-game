@@ -12,7 +12,7 @@ bool ComparePositionLists(const PositionList& piecePossibleMoves, const Position
 	return true;
 }
 
-TEST(HorsePossibleMoves, Test1)
+TEST(TestHorsePossibleMoves, Test_Moves_On_Empty_Squares)
 {
 	// Declare board //
 
@@ -40,7 +40,7 @@ TEST(HorsePossibleMoves, Test1)
 	ComparePositionLists(horsepossibleMoves, expectedHorseMoves);
 }
 
-TEST(HorsePossibleMoves, Test2)
+TEST(TestHorsePossibleMoves, Test_Moves_On_Ocupied_Squares_With_Same_Color)
 {
 	// Declare board // 
 
@@ -66,7 +66,7 @@ TEST(HorsePossibleMoves, Test2)
 	EXPECT_EQ(horsepossibleMoves.size(), 0);
 }
 
-TEST(HorsePossibleMoves, Test3)
+TEST(TestHorsePossibleMoves, Test_Moves_On_Ocupied_Squares_With_Enemy_Color)
 {
 	// Declare board // 
 
@@ -94,7 +94,7 @@ TEST(HorsePossibleMoves, Test3)
 	ComparePositionLists(horsepossibleMoves, expectedHorseMoves);
 }
 
-TEST(HorsePossibleMoves, Test4)
+TEST(TestHorsePossibleMoves, Test_Moves_From_Right_Down_Corner)
 {
 	// Declare board // 
 
@@ -122,7 +122,7 @@ TEST(HorsePossibleMoves, Test4)
 	ComparePositionLists(horsepossibleMoves, expectedHorseMoves);
 }
 
-TEST(HorsePossibleMoves, Test5)
+TEST(TestHorsePossibleMoves, Test_Moves_From_Left_Down_Corner)
 {
 	// Declare board // 
 
@@ -150,7 +150,7 @@ TEST(HorsePossibleMoves, Test5)
 	ComparePositionLists(horsepossibleMoves, expectedHorseMoves);
 }
 
-TEST(HorsePossibleMoves, Test6)
+TEST(TestHorsePossibleMoves, Test_Moves_From_Left_Top_Corner)
 {
 	// Declare board // 
 
@@ -178,7 +178,7 @@ TEST(HorsePossibleMoves, Test6)
 	ComparePositionLists(horsepossibleMoves, expectedHorseMoves);
 }
 
-TEST(HorsePossibleMoves, Test7)
+TEST(TestHorsePossibleMoves, Test_Moves_From_Right_Top_Corner)
 {
 	// Declare board // 
 
@@ -206,7 +206,7 @@ TEST(HorsePossibleMoves, Test7)
 	ComparePositionLists(horsepossibleMoves, expectedHorseMoves);
 }
 
-TEST(HorsePossibleMoves, Test8)
+TEST(TestHorsePossibleMoves, Test_Moves_While_King_In_Check_From_Rook)
 {
 	// Declare board // 
 
@@ -234,7 +234,7 @@ TEST(HorsePossibleMoves, Test8)
 	ComparePositionLists(horsepossibleMoves, expectedHorseMoves);
 }
 
-TEST(HorsePossibleMoves, Test9)
+TEST(TestHorsePossibleMoves, Test_Moves_While_King_In_Check_From_Bishop)
 {
 	// Declare board // 
 
@@ -262,7 +262,7 @@ TEST(HorsePossibleMoves, Test9)
 	ComparePositionLists(horsepossibleMoves, expectedHorseMoves);
 }
 
-TEST(HorsePossibleMoves, Test10)
+TEST(TestHorsePossibleMoves, Test_Moves_While_King_In_Check_From_Horse)
 {
 	// Declare board // 
 
@@ -290,7 +290,7 @@ TEST(HorsePossibleMoves, Test10)
 	ComparePositionLists(horsepossibleMoves, expectedHorseMoves);
 }
 
-TEST(HorsePossibleMoves, Test11)
+TEST(TestHorsePossibleMoves, Test_Can_Not_Move_Because_King_Is_Pinned_By_Rook)
 {
 	// Declare board // 
 
@@ -316,7 +316,7 @@ TEST(HorsePossibleMoves, Test11)
 	EXPECT_EQ(horsepossibleMoves.size(), 0);
 }
 
-TEST(HorsePossibleMoves, Test12)
+TEST(TestHorsePossibleMoves, Test_Can_Not_Move_Because_King_Is_Pinned_By_Bishop)
 {
 	// Declare board // 
 
@@ -342,7 +342,7 @@ TEST(HorsePossibleMoves, Test12)
 	EXPECT_EQ(horsepossibleMoves.size(), 0);
 }
 
-TEST(HorsePossibleMoves, Test13)
+TEST(TestHorsePossibleMoves, Test_Can_Not_Move_Because_King_Is_In_Check_From_Horse)
 {
 	// Declare board // 
 
@@ -368,7 +368,7 @@ TEST(HorsePossibleMoves, Test13)
 	EXPECT_EQ(horsepossibleMoves.size(), 0);
 }
 
-TEST(HorsePossibleMoves, Test14)
+TEST(TestHorsePossibleMoves, Test_Can_Not_Move)
 {
 	// Declare board // 
 
