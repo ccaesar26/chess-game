@@ -27,6 +27,8 @@ TEST(HorsePossibleMoves, Test1)
 	PositionList horsepossibleMoves = game.GetPossibleMoves(Position(4,3));
 	PositionList expectedHorseMoves = { Position(2,2),Position(2, 4) ,Position(3, 1) ,Position(3, 5), Position(5, 1) ,Position(5, 5),Position(6, 2),Position(6, 4) };
 
+	EXPECT_EQ(horsepossibleMoves.size(), expectedHorseMoves.size());
+
 	for (int i = 0; i < expectedHorseMoves.size(); i++)
 	{
 		EXPECT_EQ(horsepossibleMoves[i], expectedHorseMoves[i]);
@@ -84,6 +86,8 @@ TEST(HorsePossibleMoves, Test3)
 	PositionList horsepossibleMoves = game.GetPossibleMoves(Position(4, 3));
 	PositionList expectedHorseMoves = { Position(2,2),Position(2, 4) ,Position(3, 1) ,Position(3, 5), Position(5, 1) ,Position(5, 5),Position(6, 2),Position(6, 4) };
 
+	EXPECT_EQ(horsepossibleMoves.size(), expectedHorseMoves.size());
+
 	for (int i = 0; i < expectedHorseMoves.size(); i++)
 	{
 		EXPECT_EQ(horsepossibleMoves[i], expectedHorseMoves[i]);
@@ -114,6 +118,8 @@ TEST(HorsePossibleMoves, Test4)
 
 	PositionList horsepossibleMoves = game.GetPossibleMoves(Position(7, 7));
 	PositionList expectedHorseMoves = { Position(5,6),Position(6, 5) };
+
+	EXPECT_EQ(horsepossibleMoves.size(), expectedHorseMoves.size());
 
 	for (int i = 0; i < expectedHorseMoves.size(); i++)
 	{
@@ -146,6 +152,8 @@ TEST(HorsePossibleMoves, Test5)
 	PositionList horsepossibleMoves = game.GetPossibleMoves(Position(7, 0));
 	PositionList expectedHorseMoves = { Position(5,1),Position(6, 2) };
 
+	EXPECT_EQ(horsepossibleMoves.size(), expectedHorseMoves.size());
+
 	for (int i = 0; i < expectedHorseMoves.size(); i++)
 	{
 		EXPECT_EQ(horsepossibleMoves[i], expectedHorseMoves[i]);
@@ -176,6 +184,8 @@ TEST(HorsePossibleMoves, Test6)
 
 	PositionList horsepossibleMoves = game.GetPossibleMoves(Position(0, 0));
 	PositionList expectedHorseMoves = { Position(1,2),Position(2, 1) };
+
+	EXPECT_EQ(horsepossibleMoves.size(), expectedHorseMoves.size());
 
 	for (int i = 0; i < expectedHorseMoves.size(); i++)
 	{
@@ -208,6 +218,8 @@ TEST(HorsePossibleMoves, Test7)
 	PositionList horsepossibleMoves = game.GetPossibleMoves(Position(0, 7));
 	PositionList expectedHorseMoves = { Position(1,5),Position(2, 6) };
 
+	EXPECT_EQ(horsepossibleMoves.size(), expectedHorseMoves.size());
+
 	for (int i = 0; i < expectedHorseMoves.size(); i++)
 	{
 		EXPECT_EQ(horsepossibleMoves[i], expectedHorseMoves[i]);
@@ -238,6 +250,8 @@ TEST(HorsePossibleMoves, Test8)
 
 	PositionList horsepossibleMoves = game.GetPossibleMoves(Position(3, 4));
 	PositionList expectedHorseMoves = { Position(2,2),Position(4, 2) };
+
+	EXPECT_EQ(horsepossibleMoves.size(), expectedHorseMoves.size());
 
 	for (int i = 0; i < expectedHorseMoves.size(); i++)
 	{
@@ -270,6 +284,8 @@ TEST(HorsePossibleMoves, Test9)
 	PositionList horsepossibleMoves = game.GetPossibleMoves(Position(1, 5));
 	PositionList expectedHorseMoves = { Position(2,7),Position(3, 6) };
 
+	EXPECT_EQ(horsepossibleMoves.size(), expectedHorseMoves.size());
+
 	for (int i = 0; i < expectedHorseMoves.size(); i++)
 	{
 		EXPECT_EQ(horsepossibleMoves[i], expectedHorseMoves[i]);
@@ -300,6 +316,8 @@ TEST(HorsePossibleMoves, Test10)
 
 	PositionList horsepossibleMoves = game.GetPossibleMoves(Position(4, 1));
 	PositionList expectedHorseMoves = { Position(6,2) };
+
+	EXPECT_EQ(horsepossibleMoves.size(), expectedHorseMoves.size());
 
 	for (int i = 0; i < expectedHorseMoves.size(); i++)
 	{
