@@ -154,11 +154,16 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="TestBishopPossibleMoves.cpp" />
     <ClCompile Include="TestHorsePossibleMoves.cpp" />
     <ClCompile Include="InitialConfigTests.cpp" />
     <ClCompile Include="KingInCheckState.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MakeMoveTests.cpp" />
+    <ClCompile Include="Utility.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Utility.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
