@@ -275,3 +275,34 @@ TEST(HorsePossibleMoves, Test9)
 		EXPECT_EQ(horsepossibleMoves[i], expectedHorseMoves[i]);
 	}
 }
+
+TEST(HorsePossibleMoves, Test10)
+{
+	// Declare board // 
+
+	std::array<std::array<char, 8>, 8> alternativeBoard =
+	{
+		//   0    1    2    3    4    5    6    7
+
+			'K', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 0
+			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 1		
+			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 2
+			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 3
+			' ', 'h', ' ', ' ', ' ', ' ', ' ', ' ',   // 4
+			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 5
+			' ', ' ', 'H', ' ', ' ', ' ', ' ', ' ',   // 6
+			'k', ' ', ' ', ' ', ' ', ' ', ' ', ' '    // 7
+	};
+
+	// Tests //
+
+	ChessGame game(alternativeBoard, EColor::White);
+
+	PositionList horsepossibleMoves = game.GetPossibleMoves(Position(4, 1));
+	PositionList expectedHorseMoves = { Position(6,2) };
+
+	for (int i = 0; i < expectedHorseMoves.size(); i++)
+	{
+		EXPECT_EQ(horsepossibleMoves[i], expectedHorseMoves[i]);
+	}
+}
