@@ -249,7 +249,7 @@ void ChessGame::UpgradePawn(std::string upgradeType)
 
 	if (CanBeCaptured(m_board, m_kingPositions[(int)m_turn]) == true)
 	{
-		m_state == EGameState::CheckState;
+		m_state = EGameState::CheckState;
 	}
 }
 
@@ -564,7 +564,7 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 
 	if (CanBeCaptured(m_board, m_kingPositions[(int)m_turn]) == true)
 	{
-		m_state == EGameState::CheckState;
+		m_state = EGameState::CheckState;
 	}
 }
 
