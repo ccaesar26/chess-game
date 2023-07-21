@@ -31,3 +31,30 @@ TEST(TestQueenPossibleMoves, Test_Moves_On_Empty_Squares)
 
 	EXPECT_EQ(ComparePositionLists(queenPossibleMoves, queenExpectedMoves), true);
 }
+
+TEST(TestQueenPossibleMoves, Test_Moves_On_Ocupied_Squares_With_Same_Color)
+{
+	// Declare board //
+
+	std::array<std::array<char, 8>, 8> alternativeBoard =
+	{
+		//   0    1    2    3    4    5    6    7
+
+			'K', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 0
+			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 1		
+			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 2
+			' ', ' ', 'p', 'p', 'p', ' ', ' ', ' ',   // 3
+			' ', ' ', 'p', 'q', 'p', ' ', ' ', ' ',   // 4
+			' ', ' ', 'p', 'p', 'p', ' ', ' ', ' ',   // 5
+			'k', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 6
+			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '    // 7
+	};
+
+	// Tests //
+
+	ChessGame game(alternativeBoard, EColor::White);
+
+	PositionList queenPossibleMoves = game.GetPossibleMoves(Position(4, 3));
+
+	EXPECT_EQ(queenPossibleMoves.size(), 0);
+}
