@@ -171,3 +171,31 @@ TEST(TestBishopPossibleMoves, Test_Moves_While_King_In_Check_From_Bishop_2)
 
 	EXPECT_EQ(ComparePositionLists(bishopPossibleMoves, bishopExpectedMoves), true);
 }
+
+TEST(TestBishopPossibleMoves, Test_Moves_While_King_In_Check_From_Horse)
+{
+	// Declare board //
+
+	std::array<std::array<char, 8>, 8> alternativeBoard =
+	{
+		//   0    1    2    3    4    5    6    7
+
+			'K', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 0
+			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 1		
+			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 2
+			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 3
+			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 4
+			' ', 'H', ' ', ' ', ' ', ' ', ' ', ' ',   // 5
+			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 6
+			'k', ' ', ' ', 'b', ' ', ' ', ' ', ' '    // 7
+	};
+
+	// Tests //
+
+	ChessGame game(alternativeBoard, EColor::White);
+
+	PositionList bishopPossibleMoves = game.GetPossibleMoves(Position(7, 3));
+	PositionList bishopExpectedMoves = { Position(5,1) };
+
+	EXPECT_EQ(ComparePositionLists(bishopPossibleMoves, bishopExpectedMoves), true);
+}
