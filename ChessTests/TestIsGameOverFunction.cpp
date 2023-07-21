@@ -52,7 +52,7 @@ TEST(TestIsGameOver, King_In_Check_From_Two_Pieces_2)
 	EXPECT_EQ(game.IsGameOver(), true);
 }
 
-TEST(TestIsGameOver, King_In_Check_From_One_Piece)
+TEST(TestIsGameOver, King_In_Check_From_One_Piece_1)
 {
 	// Declare board //
 
@@ -75,4 +75,29 @@ TEST(TestIsGameOver, King_In_Check_From_One_Piece)
 	ChessGame game(alternativeBoard, EColor::White);
 
 	EXPECT_EQ(game.IsGameOver(), false);
+}
+
+TEST(TestIsGameOver, King_In_Check_From_One_Piece_2)
+{
+	// Declare board //
+
+	std::array<std::array<char, 8>, 8> alternativeBoard =
+	{
+		//   0    1    2    3    4    5    6    7
+
+			'K', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 0
+			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 1		
+			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 2
+			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 3
+			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 4
+			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 5
+			'R', ' ', ' ', ' ', ' ', ' ', ' ', 'Q',   // 6
+			' ', ' ', ' ', ' ', ' ', ' ', ' ', 'k'    // 7
+	};
+
+	// Tests //
+
+	ChessGame game(alternativeBoard, EColor::White);
+
+	EXPECT_EQ(game.IsGameOver(), true);
 }
