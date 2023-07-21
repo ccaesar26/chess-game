@@ -161,6 +161,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MakeMoveTests.cpp" />
     <ClCompile Include="TestKingPossibleMoves.cpp" />
+    <ClCompile Include="TestPawnPossibleMoves.cpp" />
     <ClCompile Include="TestRookPossibleMoves.cpp" />
     <ClCompile Include="Utility.cpp" />
   </ItemGroup>
