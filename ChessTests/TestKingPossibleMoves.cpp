@@ -169,6 +169,34 @@ TEST(TestKingPossibleMoves, Test_Moves_From_Bottom_Right_Corner)
 	EXPECT_EQ(ComparePositionLists(kingPossibleMoves, kingExpectedMoves), true);
 }
 
+TEST(TestKingPossibleMoves, Test_Moves_From_Bottom_Left_Corner)
+{
+	// Declare board //
+
+	std::array<std::array<char, 8>, 8> alternativeBoard =
+	{
+		//   0    1    2    3    4    5    6    7
+
+			'K', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 0
+			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 1		
+			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 2
+			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 3
+			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 4
+			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 5
+			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 6
+			'k', ' ', ' ', ' ', ' ', ' ', ' ', ' '    // 7
+	};
+
+	// Tests //
+
+	ChessGame game(alternativeBoard, EColor::White);
+
+	PositionList kingPossibleMoves = game.GetPossibleMoves(Position(7, 0));
+	PositionList kingExpectedMoves = { Position(6,0),Position(6,1),Position(7,1) };
+
+	EXPECT_EQ(ComparePositionLists(kingPossibleMoves, kingExpectedMoves), true);
+}
+
 TEST(TestKingPossibleMoves, Test_Moves_While_King_In_Check_From_Rook)
 {
 	// Declare board //
