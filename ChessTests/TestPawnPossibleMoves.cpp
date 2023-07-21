@@ -197,3 +197,30 @@ TEST(TestPawnPossibleMoves, Test_White_Moves_While_King_Is_Pinned_By_Rook)
 
 	EXPECT_EQ(pawnPossibleMoves.size(),0);
 }
+
+TEST(TestPawnPossibleMoves, Test_White_Moves_While_King_Is_Pinned_By_Bishop)
+{
+	// Declare board //
+
+	std::array<std::array<char, 8>, 8> alternativeBoard =
+	{
+		//   0    1    2    3    4    5    6    7
+
+			'K', ' ', ' ', ' ', ' ', ' ', ' ', 'B',   // 0
+			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 1		
+			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 2
+			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 3
+			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 4
+			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 5
+			' ', 'p', ' ', ' ', ' ', ' ', ' ', ' ',   // 6
+			'k', ' ', ' ', ' ', ' ', ' ', ' ', ' '    // 7
+	};
+
+	// Tests //
+
+	ChessGame game(alternativeBoard, EColor::Black);
+
+	PositionList pawnPossibleMoves = game.GetPossibleMoves(Position(6, 1));
+
+	EXPECT_EQ(pawnPossibleMoves.size(), 0);
+}
