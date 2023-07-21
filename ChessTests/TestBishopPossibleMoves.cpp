@@ -28,7 +28,7 @@ TEST(TestBishopPossibleMoves, Test_Moves_On_Empty_Squares)
 	PositionList bishopExpectedMoves = { Position(3,2),Position(2, 1) ,Position(1, 0) ,Position(3,4),Position(2, 5) ,Position(1, 6) , Position(0, 7)
 	,Position(5, 2),Position(6, 1),Position(7, 0),Position(5, 4),Position(6, 5),Position(7, 6) };
 
-	ComparePositionLists(bishopPossibleMoves, bishopExpectedMoves);
+	EXPECT_EQ(ComparePositionLists(bishopPossibleMoves, bishopExpectedMoves),true);
 }
 
 TEST(TestBishopPossibleMoves, Test_Moves_On_Ocupied_Squares_With_Same_Color)
@@ -56,7 +56,7 @@ TEST(TestBishopPossibleMoves, Test_Moves_On_Ocupied_Squares_With_Same_Color)
 	PositionList bishopPossibleMoves = game.GetPossibleMoves(Position(4, 3));
 	PositionList bishopExpectedMoves = { Position(3,4),Position(2,5),Position(1,6), Position(5,2),Position(5,4),Position(6,5) };
 
-	ComparePositionLists(bishopPossibleMoves, bishopExpectedMoves);
+	EXPECT_EQ(ComparePositionLists(bishopPossibleMoves, bishopExpectedMoves), true);
 }
 
 TEST(TestBishopPossibleMoves, Test_Moves_On_Ocupied_Squares_With_Enemy_Color)
@@ -85,7 +85,7 @@ TEST(TestBishopPossibleMoves, Test_Moves_On_Ocupied_Squares_With_Enemy_Color)
 	PositionList bishopExpectedMoves = { Position(3,2),Position(3,4),Position(2,5),Position(1,6),Position(0,7),
 		Position(5,2),Position(6,1),Position(5,4),Position(6,5),Position(7,6) };
 
-	ComparePositionLists(bishopPossibleMoves, bishopExpectedMoves);
+	EXPECT_EQ(ComparePositionLists(bishopPossibleMoves, bishopExpectedMoves), true);
 }
 
 TEST(TestBishopPossibleMoves, Test_Moves_While_King_In_Check_From_Rook)
@@ -113,5 +113,61 @@ TEST(TestBishopPossibleMoves, Test_Moves_While_King_In_Check_From_Rook)
 	PositionList bishopPossibleMoves = game.GetPossibleMoves(Position(3, 6));
 	PositionList bishopExpectedMoves = { Position(0,3), Position(6,3) };
 
-	ComparePositionLists(bishopPossibleMoves, bishopExpectedMoves);
+	EXPECT_EQ(ComparePositionLists(bishopPossibleMoves, bishopExpectedMoves), true);
+}
+
+TEST(TestBishopPossibleMoves, Test_Moves_While_King_In_Check_From_Bishop_1)
+{
+	// Declare board //
+
+	std::array<std::array<char, 8>, 8> alternativeBoard =
+	{
+		//   0    1    2    3    4    5    6    7
+
+			'K', ' ', ' ', ' ', ' ', ' ', ' ', 'B',   // 0
+			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 1		
+			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 2
+			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 3
+			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 4
+			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 5
+			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 6
+			'k', ' ', ' ', ' ', ' ', ' ', 'b', ' '    // 7
+	};
+
+	// Tests //
+
+	ChessGame game(alternativeBoard, EColor::White);
+
+	PositionList bishopPossibleMoves = game.GetPossibleMoves(Position(7, 6));
+	PositionList bishopExpectedMoves = { Position(4,3) };
+
+	EXPECT_EQ(ComparePositionLists(bishopPossibleMoves, bishopExpectedMoves), true);
+}
+
+TEST(TestBishopPossibleMoves, Test_Moves_While_King_In_Check_From_Bishop_2)
+{
+	// Declare board //
+
+	std::array<std::array<char, 8>, 8> alternativeBoard =
+	{
+		//   0    1    2    3    4    5    6    7
+
+			'K', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 0
+			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 1		
+			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 2
+			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 3
+			' ', ' ', ' ', 'B', ' ', ' ', ' ', ' ',   // 4
+			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 5
+			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 6
+			'k', ' ', ' ', ' ', ' ', ' ', 'b', ' '    // 7
+	};
+
+	// Tests //
+
+	ChessGame game(alternativeBoard, EColor::White);
+
+	PositionList bishopPossibleMoves = game.GetPossibleMoves(Position(7, 6));
+	PositionList bishopExpectedMoves = { Position(4,3) };
+
+	EXPECT_EQ(ComparePositionLists(bishopPossibleMoves, bishopExpectedMoves), true);
 }

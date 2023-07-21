@@ -27,7 +27,7 @@ TEST(TestHorsePossibleMoves, Test_Moves_On_Empty_Squares)
 	PositionList horsepossibleMoves = game.GetPossibleMoves(Position(4,3));
 	PositionList expectedHorseMoves = { Position(2,2),Position(2, 4) ,Position(3, 1) ,Position(3, 5), Position(5, 1) ,Position(5, 5),Position(6, 2),Position(6, 4) };
 
-	ComparePositionLists(horsepossibleMoves, expectedHorseMoves);
+	EXPECT_EQ(ComparePositionLists(horsepossibleMoves, expectedHorseMoves), true);
 }
 
 TEST(TestHorsePossibleMoves, Test_Moves_On_Ocupied_Squares_With_Same_Color)
@@ -81,7 +81,7 @@ TEST(TestHorsePossibleMoves, Test_Moves_On_Ocupied_Squares_With_Enemy_Color)
 	PositionList horsepossibleMoves = game.GetPossibleMoves(Position(4, 3));
 	PositionList expectedHorseMoves = { Position(2,2),Position(2, 4) ,Position(3, 1) ,Position(3, 5), Position(5, 1) ,Position(5, 5),Position(6, 2),Position(6, 4) };
 
-	ComparePositionLists(horsepossibleMoves, expectedHorseMoves);
+	EXPECT_EQ(ComparePositionLists(horsepossibleMoves, expectedHorseMoves), true);
 }
 
 TEST(TestHorsePossibleMoves, Test_Moves_From_Right_Down_Corner)
@@ -109,7 +109,7 @@ TEST(TestHorsePossibleMoves, Test_Moves_From_Right_Down_Corner)
 	PositionList horsepossibleMoves = game.GetPossibleMoves(Position(7, 7));
 	PositionList expectedHorseMoves = { Position(5,6),Position(6, 5) };
 
-	ComparePositionLists(horsepossibleMoves, expectedHorseMoves);
+	EXPECT_EQ(ComparePositionLists(horsepossibleMoves, expectedHorseMoves), true);
 }
 
 TEST(TestHorsePossibleMoves, Test_Moves_From_Left_Down_Corner)
@@ -137,7 +137,7 @@ TEST(TestHorsePossibleMoves, Test_Moves_From_Left_Down_Corner)
 	PositionList horsepossibleMoves = game.GetPossibleMoves(Position(7, 0));
 	PositionList expectedHorseMoves = { Position(5,1),Position(6, 2) };
 
-	ComparePositionLists(horsepossibleMoves, expectedHorseMoves);
+	EXPECT_EQ(ComparePositionLists(horsepossibleMoves, expectedHorseMoves), true);
 }
 
 TEST(TestHorsePossibleMoves, Test_Moves_From_Left_Top_Corner)
@@ -165,7 +165,7 @@ TEST(TestHorsePossibleMoves, Test_Moves_From_Left_Top_Corner)
 	PositionList horsepossibleMoves = game.GetPossibleMoves(Position(0, 0));
 	PositionList expectedHorseMoves = { Position(1,2),Position(2, 1) };
 
-	ComparePositionLists(horsepossibleMoves, expectedHorseMoves);
+	EXPECT_EQ(ComparePositionLists(horsepossibleMoves, expectedHorseMoves), true);
 }
 
 TEST(TestHorsePossibleMoves, Test_Moves_From_Right_Top_Corner)
@@ -193,7 +193,7 @@ TEST(TestHorsePossibleMoves, Test_Moves_From_Right_Top_Corner)
 	PositionList horsepossibleMoves = game.GetPossibleMoves(Position(0, 7));
 	PositionList expectedHorseMoves = { Position(1,5),Position(2, 6) };
 
-	ComparePositionLists(horsepossibleMoves, expectedHorseMoves);
+	EXPECT_EQ(ComparePositionLists(horsepossibleMoves, expectedHorseMoves), true);
 }
 
 TEST(TestHorsePossibleMoves, Test_Moves_While_King_In_Check_From_Rook)
@@ -221,7 +221,7 @@ TEST(TestHorsePossibleMoves, Test_Moves_While_King_In_Check_From_Rook)
 	PositionList horsepossibleMoves = game.GetPossibleMoves(Position(3, 4));
 	PositionList expectedHorseMoves = { Position(2,2),Position(4, 2) };
 
-	ComparePositionLists(horsepossibleMoves, expectedHorseMoves);
+	EXPECT_EQ(ComparePositionLists(horsepossibleMoves, expectedHorseMoves), true);
 }
 
 TEST(TestHorsePossibleMoves, Test_Moves_While_King_In_Check_From_Bishop)
@@ -249,7 +249,7 @@ TEST(TestHorsePossibleMoves, Test_Moves_While_King_In_Check_From_Bishop)
 	PositionList horsepossibleMoves = game.GetPossibleMoves(Position(1, 5));
 	PositionList expectedHorseMoves = { Position(2,7),Position(3, 6) };
 
-	ComparePositionLists(horsepossibleMoves, expectedHorseMoves);
+	EXPECT_EQ(ComparePositionLists(horsepossibleMoves, expectedHorseMoves), true);
 }
 
 TEST(TestHorsePossibleMoves, Test_Moves_While_King_In_Check_From_Horse)
@@ -277,7 +277,7 @@ TEST(TestHorsePossibleMoves, Test_Moves_While_King_In_Check_From_Horse)
 	PositionList horsepossibleMoves = game.GetPossibleMoves(Position(4, 1));
 	PositionList expectedHorseMoves = { Position(6,2) };
 
-	ComparePositionLists(horsepossibleMoves, expectedHorseMoves);
+	EXPECT_EQ(ComparePositionLists(horsepossibleMoves, expectedHorseMoves), true);                       
 }
 
 TEST(TestHorsePossibleMoves, Test_Can_Not_Move_Because_King_Is_Pinned_By_Rook)
