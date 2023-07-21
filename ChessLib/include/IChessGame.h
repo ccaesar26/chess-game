@@ -28,6 +28,16 @@ public:
 	virtual void MakeMovement(char initialColumn, char initialRow, char finalColumn, char finalRow) = 0;
 
 	virtual void UpgradePawn(std::string upgradeType) = 0;
+	virtual void RequestDraw() = 0;
+	virtual void AcceptDrawProposal() = 0;
+	virtual void DeclineDrawProposal() = 0;
+
+	virtual bool IsDraw() const = 0;
+	virtual bool IsWaitingForDrawResponse() const = 0;
+	virtual bool IsWonByWhitePlayer() const = 0;
+	virtual bool IsWonByBlackPlayer() const = 0;
+	virtual bool IsWaitingForUpgrade() const = 0;
+	virtual bool IsCheckState() const = 0;
 
 	virtual ~IChessGame() = default;
 };

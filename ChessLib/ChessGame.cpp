@@ -1,7 +1,7 @@
 #include "ChessGame.h"
 #include "Piece.h"
 
-#include <ctype.h>
+#include <cctype>
 
 // Local Static Functions //
 
@@ -171,13 +171,131 @@ bool ChessGame::IsGameOver() const
 	{
 		return false;
 	}
-	
+
 	return true;
 }
 
 void ChessGame::MakeMovement(char initialColumn, char initialRow, char finalColumn, char finalRow)
 {
 	MakeMove(ConvertToPosition(initialColumn, initialRow), ConvertToPosition(finalColumn, finalRow));
+	if (IsGameOver())
+	{
+		if (m_turn == EColor::White)
+		{
+			m_state = EGameState::WonByBlackPlayer;
+		}
+		else
+		{
+			m_state = EGameState::WonByWhitePlayer;
+		}
+	}
+}
+
+void ChessGame::UpgradePawn(std::string upgradeType)
+{
+	for (auto i = 0; i < upgradeType.size(); i++)
+	{
+		tolower(upgradeType[i]);
+	}
+
+	Position upgradePos;
+	if (m_turn == EColor::White)
+	{
+		for (int i = 0; i < 8; i++)
+		{
+			if (m_board[0][i] && m_board[0][i]->GetType() == EType::Pawn)
+			{
+				upgradePos.row = 0;
+				upgradePos.col = i;
+			}
+		}
+	}
+	else
+	{
+		for (int i = 0; i < 8; i++)
+		{
+			if (m_board[0][i] && m_board[7][i]->GetType() == EType::Pawn)
+			{
+				upgradePos.row = 7;
+				upgradePos.col = i;
+			}
+		}
+	}
+
+	if (upgradeType == "queen")
+	{
+		m_board[upgradePos.row][upgradePos.col] = Piece::Produce(EType::Queen, m_turn);
+	}
+	else if (upgradeType == "bishop")
+	{
+		m_board[upgradePos.row][upgradePos.col] = Piece::Produce(EType::Bishop, m_turn);
+	}
+	else if (upgradeType == "rook")
+	{
+		m_board[upgradePos.row][upgradePos.col] = Piece::Produce(EType::Rook, m_turn);
+	}
+	else if(upgradeType == "horse")
+	{
+		m_board[upgradePos.row][upgradePos.col] = Piece::Produce(EType::Horse, m_turn);
+	}
+	else
+	{
+		throw "Upgrade not possible";
+	}
+
+	m_state = EGameState::MovingPiece;
+
+	SwitchTurn();
+
+	if (CanBeCaptured(m_board, m_kingPositions[(int)m_turn]) == true)
+	{
+		m_state == EGameState::CheckState;
+	}
+}
+
+void ChessGame::RequestDraw()
+{
+	m_state = EGameState::WaitingForDrawResponse;
+}
+
+void ChessGame::AcceptDrawProposal()
+{
+	m_state = EGameState::Draw;
+}
+
+void ChessGame::DeclineDrawProposal()
+{
+	m_state = EGameState::MovingPiece;
+}
+
+bool ChessGame::IsDraw() const
+{
+	return m_state == EGameState::Draw ? true : false;
+}
+
+bool ChessGame::IsWonByWhitePlayer() const
+{
+	return m_state == EGameState::WonByWhitePlayer ? true : false;
+}
+
+bool ChessGame::IsWonByBlackPlayer() const
+{
+	return m_state == EGameState::WonByBlackPlayer ? true : false;
+}
+
+bool ChessGame::IsWaitingForUpgrade() const
+{
+	return m_state == EGameState::UpgradePawn ? true : false;
+}
+
+bool ChessGame::IsWaitingForDrawResponse() const
+{
+	return m_state == EGameState::WaitingForDrawResponse ? true : false;
+}
+
+bool ChessGame::IsCheckState() const
+{
+	return m_state == EGameState::CheckState ? true : false;
 }
 
 // Game's Logic //
@@ -186,6 +304,7 @@ PiecePtr ChessGame::GetPiece(Position pos, const ArrayBoard& board) const
 {
 	return board[pos.row][pos.col];
 }
+
 
 PieceList ChessGame::GetCheckPieces(Position& checkPos) const
 {
@@ -402,6 +521,11 @@ PositionList ChessGame::GetPossibleMoves(Position currentPos) const
 
 void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 {
+	if (m_state == EGameState::UpgradePawn)
+	{
+		throw "You must upgrade pawn";
+	}
+
 	PositionList possibleMoves = GetPossibleMoves(initialPosition);
 	if (std::find(possibleMoves.begin(), possibleMoves.end(), finalPosition) == possibleMoves.end()) 
 	{
@@ -431,7 +555,8 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 	{
 		if (m_board[finalPosition.row][finalPosition.col]->GetColor() == EColor::White && finalPosition.row == 0)
 		{
-
+			m_state = EGameState::UpgradePawn;
+			return;
 		}
 	}
 
@@ -439,7 +564,7 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 
 	if (CanBeCaptured(m_board, m_kingPositions[(int)m_turn]) == true)
 	{
-		m_checkState = true;
+		m_state == EGameState::CheckState;
 	}
 }
 
@@ -458,9 +583,9 @@ Position ChessGame::ConvertToPosition(char col, char row)
 {
 	if (col >= 'a')
 	{
-		return Position(8 - row - '0', col - 'a');
+		return Position(8 - (row - '0'), col - 'a');
 	}
-	return Position(8 - row - '0', col - 'A');
+	return Position(8 - (row - '0'), col - 'A');
 }
 
 BoardPosition ChessGame::ConvertToBoardPosition(Position pos)

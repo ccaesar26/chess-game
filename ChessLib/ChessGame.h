@@ -15,7 +15,8 @@ enum class EGameState
 	WonByWhitePlayer,
 	WonByBlackPlayer,
 	UpgradePawn,
-	CheckState
+	CheckState,
+	WaitingForDrawResponse
 };
 
 class ChessGame : public IChessGame
@@ -38,7 +39,25 @@ public:
 
 	void MakeMovement(char initialColumn, char initialRow, char finalColumn, char finalRow) override;
 
-	void EndGameByDraw() override;
+	void UpgradePawn(std::string upgradeType) override;
+
+	void RequestDraw() override;
+
+	void AcceptDrawProposal() override;
+
+	void DeclineDrawProposal() override;
+
+	bool IsDraw() const override;
+
+	bool IsWonByWhitePlayer() const override;
+
+	bool IsWonByBlackPlayer() const override;
+
+	bool IsWaitingForUpgrade() const override;
+
+	bool IsWaitingForDrawResponse() const override;
+
+	bool IsCheckState() const override;
 
 	// Game's Logic //
 

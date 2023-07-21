@@ -78,6 +78,24 @@ void printBoard(std::shared_ptr<class IChessGame> g)
 	}
 }
 
+void printTurn(EColor turn)
+{
+	std::cout << std::endl;
+	std::cout << "Current turn: ";
+	switch (turn)
+	{
+	case EColor::White:
+		std::cout << "White's turn";
+		break;
+	case EColor::Black:
+		std::cout << "Black's turn";
+		break;
+	default:
+		break;
+	}
+	std::cout << std::endl;
+}
+
 bool inputIsDraw(char ic, char ir, char fc, char fr)
 {
 	if ((ic == 'D' || ic == 'd') && (ir == 'R' || ir == 'r') && (fc == 'A' || fc == 'a') && (fr == 'W' || fr == 'w'))
@@ -91,72 +109,75 @@ int main()
 {
 	std::shared_ptr<class IChessGame> g = IChessGame::CreateBoard();
 	
+	char ic, ir, fc, fr;
+	std::string upg;
+	
 	printBoard(g);
 	while (!g->IsGameOver())
 	{
-		std::cout << std::endl;
-		std::cout << "Current turn: ";
-		switch (g->GetCurrentPlayer())
-		{
-		case EColor::White:
-			std::cout << "White's turn";
-			break;
-		case EColor::Black:
-			std::cout << "Black's turn";
-			break;
-		default:
-			break;
-		}
-		std::cout << std::endl;
+		printTurn(g->GetCurrentPlayer());
 		std::cout << "-> To request DRAW, type 'DRAW' below" << std::endl;
 		std::cout << "Input desired movement (X0 X0) : " << std::endl;
+		
 		try
 		{
-			char ic, ir, fc, fr;
 			std::cin >> ic >> ir >> fc >> fr;
+
 			if (inputIsDraw(ic, ir, fc, fr))
+			{
+				g->RequestDraw();
+			}
+
+			if (g->IsWaitingForDrawResponse())
 			{
 				std::cout << "The opponent requested a draw. Do you accept? (y/n) ...";
 				std::cin >> ic;
-				if (ic == 'y')
+				switch (ic)
 				{
-					g->EndGameByDraw();
-					break;
-				} 
-				else
-				{
+				case 'y':
+					g->AcceptDrawProposal();
 					continue;
+				case 'n':
+					g->DeclineDrawProposal();
+					std::cout << std::endl << "Input desired movement (X0 X0) : " << std::endl;
+					std::cin >> ic >> ir >> fc >> fr;
+					break;
+				default:
+					throw "no valid input";
+					break;
 				}
 			}
+			
 			g->MakeMovement(ic, ir, fc, fr);
+
+			if (g->IsWaitingForUpgrade())
+			{
+				std::cout << "-> What upgrade do you want for your Pawn? " << std::endl;
+				std::cout << "-> Available upgrade: queen, rook, horse, bishop " << std::endl;
+				std::cout << "-> Enter your choice... ";
+				std::cin >> upg;
+				g->UpgradePawn(upg);
+			}
 		}
 		catch (...)
 		{
-			std::cout << std::endl << " ! Move not valid. Try again !" << std::endl;
+			std::cout << std::endl << "* err *" << std::endl << std::endl;
 		}
 		printBoard(g);
 	}
 
-	//
-	/*std::vector<int> v;
-	for (int i = 0; i <= 10; i++)
+	std::cout << std::endl;
+	if (g->IsDraw())
 	{
-		v.push_back(i);
+		std::cout << "Game ended in DRAW " << std::endl;
 	}
-
-	
-	for (int i = 0; i < v.size(); i++)
+	else if (g->IsWonByBlackPlayer())
 	{
-		if (v[i] % 2 == 0 || v[i] % 3 == 0)
-		{
-			v.erase(std::find(v.begin(), v.end(), v[i]));
-			i--;
-		}	
+		std::cout << "Game won by Black Player" << std::endl;
 	}
-
-	for (auto i : v)
+	else if (g->IsWonByWhitePlayer())
 	{
-		std::cout << i << ' ';
-	}*/
+		std::cout << "Game won by White Player" << std::endl;
+	}
 	return 0;
 }
