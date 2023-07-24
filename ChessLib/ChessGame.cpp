@@ -460,11 +460,13 @@ PositionList ChessGame::GetToBlockPositions(const Position& checkPiecePos) const
 	PositionList toBlockPositions;
 	Position movingDirections = GetMovingDirections(checkPiecePos);
 
-	for (int i = checkPiecePos.row + movingDirections.row, j = checkPiecePos.col + movingDirections.col
-		;	 i != kingPosition.row && j != kingPosition.col
-		;  	 i += movingDirections.row, j += movingDirections.col)
+	Position iterator_pos(checkPiecePos.row + movingDirections.row, checkPiecePos.col + movingDirections.col);
+
+	while (iterator_pos != kingPosition)
 	{
-		toBlockPositions.push_back(Position(i, j));
+		toBlockPositions.push_back(iterator_pos);
+		iterator_pos.row += movingDirections.row;
+		iterator_pos.col += movingDirections.col;
 	}
 
 	return toBlockPositions;
