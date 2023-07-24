@@ -539,7 +539,18 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 	PositionList possibleMoves = GetPossibleMoves(initialPosition);
 	if (std::find(possibleMoves.begin(), possibleMoves.end(), finalPosition) == possibleMoves.end()) 
 	{
-		throw NotInPossibleMovesException("Your move is not possible"); 
+		if (!m_board[finalPosition.row][finalPosition.col])
+		{
+			throw NotInPossibleMovesException("Your move is not possible"); 
+		}
+		if (m_board[finalPosition.row][finalPosition.col]->GetColor() != m_turn)
+		{
+			throw OccupiedByEnemyPieceException("Your move is not possible");
+		}
+		else
+		{
+			throw OccupiedByOwnPieceException("The final square is occupied by own piece");
+		}
 	}
 
 	if (m_board[finalPosition.row][finalPosition.col])

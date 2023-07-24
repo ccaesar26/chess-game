@@ -26,6 +26,8 @@ inline ChessException::ChessException(const std::string& message)
  // 1.	Invalid move:
  //		a.	Out of bounds
  //		b.	Occupied square
+ //			i.	By enemy piece
+ //			ii.	By own piece
  //		c.	NotInPossibleMovesException	
 
 class InvalidMoveException : public ChessException
@@ -64,6 +66,28 @@ private:
 
 inline OccupiedSquareException::OccupiedSquareException(const std::string& message)
 	: InvalidMoveException(message)
+{
+}
+
+class OccupiedByEnemyPieceException : public OccupiedSquareException
+{
+public:
+	OccupiedByEnemyPieceException(const std::string&);
+};
+
+inline OccupiedByEnemyPieceException::OccupiedByEnemyPieceException(const std::string& message)
+	: OccupiedSquareException(message)
+{
+}
+
+class OccupiedByOwnPieceException : public OccupiedSquareException
+{
+public:
+	OccupiedByOwnPieceException(const std::string&);
+};
+
+inline OccupiedByOwnPieceException::OccupiedByOwnPieceException(const std::string& message)
+	: OccupiedSquareException(message)
 {
 }
 
