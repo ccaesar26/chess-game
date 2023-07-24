@@ -28,6 +28,10 @@ public:
 	ChessGame();
 	ChessGame(const CharBoard& inputConfig, EColor turn = EColor::White);
 
+	// Setter for Castle Matrix // 
+
+	void SetCastleValues(const std::array<std::array<bool, 2>, 2>& Castle);
+
 	// Virtual Implementations //
 
 	IPiecePtr GetIPiecePtr(int row, int col) const override;

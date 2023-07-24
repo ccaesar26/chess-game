@@ -72,6 +72,10 @@ ChessGame::ChessGame(const CharBoard& inputConfig, EColor turn)
 	: m_turn(turn)
 	, m_state(EGameState::MovingPiece)
 {
+	for (int i = 0; i < 2; i++)
+		for (int j = 0; j < 2; j++)
+			m_Castle[i][j] = true;
+
 	m_turn = turn;
 	m_kingPositions.resize(2);
 
@@ -98,6 +102,11 @@ ChessGame::ChessGame(const CharBoard& inputConfig, EColor turn)
 	{
 		m_state = EGameState::CheckState;
 	}
+}
+
+void ChessGame::SetCastleValues(const std::array<std::array<bool, 2>, 2>& Castle)
+{
+	m_Castle = Castle;
 }
 
 // Virtual Implementations //
