@@ -59,6 +59,9 @@ public:
 
 	bool IsCheckState() const override;
 
+	Position ConvertToMemoryPosition(char col, char row) const override;
+	BoardPosition ConvertToBoardPosition(Position pos) const override;
+
 	// Game's Logic //
 
 	PiecePtr GetPiece(Position pos, const ArrayBoard& board) const;
@@ -86,9 +89,6 @@ private:
 	// Static Methods //
 
 	static bool IsInMatrix(Position piecePosition);
-
-	static Position ConvertToPosition(char col, char row);
-	static BoardPosition ConvertToBoardPosition(Position pos);
 
 private:
 
