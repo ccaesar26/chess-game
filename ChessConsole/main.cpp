@@ -11,12 +11,12 @@ void printBoard(std::shared_ptr<class IChessGame> g)
 		std::cout << " " << j << " |";
 		for (int i = 'A'; i <= 'H'; i++)
 		{
-			if (g->GetIPiece(i, j))
+			if (g->GetIPiecePtr(j, i))
 			{ 
 				std::cout << ' ';
-				if (g->GetIPiece(i, j)->GetColor() == EColor::Black)
+				if (g->GetIPiecePtr(j, i)->GetColor() == EColor::Black)
 				{
-					switch (g->GetIPiece(i, j)->GetType())
+					switch (g->GetIPiecePtr(j, i)->GetType())
 					{
 					case EType::Rook:
 						std::cout << 'R';
@@ -42,7 +42,7 @@ void printBoard(std::shared_ptr<class IChessGame> g)
 				}
 				else
 				{
-					switch (g->GetIPiece(i, j)->GetType())
+					switch (g->GetIPiecePtr(j, i)->GetType())
 					{
 					case EType::Rook:
 						std::cout << 'r';
@@ -107,7 +107,7 @@ bool inputIsDraw(char ic, char ir, char fc, char fr)
 
 int main()
 {
-	std::shared_ptr<class IChessGame> g = IChessGame::CreateBoard();
+	/*std::shared_ptr<class IChessGame> g = IChessGame::CreateBoard();
 	
 	char ic, ir, fc, fr;
 	std::string upg;
@@ -178,6 +178,6 @@ int main()
 	else if (g->IsWonByWhitePlayer())
 	{
 		std::cout << "Game won by White Player" << std::endl;
-	}
+	}*/
 	return 0;
 }
