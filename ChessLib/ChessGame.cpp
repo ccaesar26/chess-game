@@ -34,6 +34,42 @@ static EColor GetColor(char c)
 	return islower(c) ? EColor::White : EColor::Black;
 }
 
+static char GetPieceLetter(PiecePtr p)
+{
+	// white pieces: p r h b q k
+	// black pieces: P R H B Q K
+	char l;
+	switch (p->GetType())
+	{
+	case EType::Rook:
+		l = 'r';
+		break;
+	case EType::Horse:
+		l = 'h';
+		break;
+	case EType::King:
+		l = 'k';
+		break;
+	case EType::Queen:
+		l = 'q';
+		break;
+	case EType::Bishop:
+		l = 'b';
+		break;
+	case EType::Pawn:
+		l = 'p';
+		break;
+	default:
+		break;
+	}
+	if (p->GetColor() == EColor::Black)
+	{
+		l = l - 'a' + 'A';
+	}
+
+	return l;
+}
+
 // Producer //
 
 IChessGamePtr IChessGame::CreateBoard()
@@ -202,6 +238,10 @@ void ChessGame::MakeMovement(int initialRow, int initialColumn, int finalRow, in
 	MakeMove(Position(initialRow, initialColumn), Position(finalRow, finalColumn));
 	if (IsGameOver())
 	{
+		if (m_state == EGameState::Draw)
+		{
+			return;
+		}
 		if (m_turn == EColor::White)
 		{
 			m_state = EGameState::WonByBlackPlayer;
@@ -700,15 +740,7 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 			m_board[finalPosition.row][7].reset();
 		}
 	}  
-	
 	// End of Make Castle Inaccessible if King moved //
-
-	// v  Save current configuration
-
-
-
-	// ^  End of save current config
-
 	else if (m_board[finalPosition.row][finalPosition.col]->GetType() == EType::Pawn)
 	{
 		if (m_board[finalPosition.row][finalPosition.col]->GetColor() == EColor::White && finalPosition.row == 0)
@@ -722,6 +754,12 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 			return;
 		}
 	}
+	
+	// v  Save current configuration
+
+	SaveCurrentConfig();
+
+	// ^  End of save current config
 
 	SwitchTurn();
 
@@ -733,7 +771,28 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 
 void ChessGame::SaveCurrentConfig()
 {
-	
+	// r h b q k p -> white pieces
+	// R H B Q K P -> black pieces
+	std::array<std::array<char, 8>, 8> currConfig;
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			if (m_board[i][j])
+			{
+				currConfig[i][j] = GetPieceLetter(m_board[i][j]);
+			}
+			else
+			{
+				currConfig[i][j] = ' ';
+			}
+		}
+	}
+	m_boardConfigurationsRepetitons[currConfig]++;
+	if (m_boardConfigurationsRepetitons[currConfig] >= 3)
+	{
+		m_state = EGameState::Draw;
+	}
 }
 
 // Static Methods //
