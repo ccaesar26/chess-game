@@ -34,6 +34,7 @@ public:
     void ShowPromoteOptions();
 
     void UpdateMessage(const QString& message);
+    void AppendToMessage(const QString& message);
 
 public slots:
     void OnButtonClicked(const std::pair<int, int>& position);

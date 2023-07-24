@@ -170,6 +170,7 @@ void ChessUIQt::OnButtonClicked(const std::pair<int, int>&position)
             }
             catch (const ChessException& e)
             {
+                AppendToMessage(e.what());
                 return;
             }
 
@@ -426,5 +427,13 @@ void ChessUIQt::ShowPromoteOptions()
 void ChessUIQt::UpdateMessage(const QString& message)
 {
     m_MessageLabel->setText(message);
+}
+
+void ChessUIQt::AppendToMessage(const QString& message)
+{
+    /*QString s = m_MessageLabel->text();
+    s.append('\n');
+    s.append(message);
+    m_MessageLabel->setText(s);*/
 }
 
