@@ -26,6 +26,7 @@ inline ChessException::ChessException(const std::string& message)
  // 1.	Invalid move:
  //		a.	Out of bounds
  //		b.	Occupied square
+ //		c.	NotInPossibleMovesException	
 
 class InvalidMoveException : public ChessException
 {
@@ -38,7 +39,7 @@ inline InvalidMoveException::InvalidMoveException(const std::string& message)
 {
 }
 
-class OutOfBoundsException : InvalidMoveException
+class OutOfBoundsException : public InvalidMoveException
 {
 public:
 	OutOfBoundsException(const std::string&);
@@ -52,7 +53,7 @@ inline OutOfBoundsException::OutOfBoundsException(const std::string& message)
 {
 }
 
-class OccupiedSquareException : InvalidMoveException
+class OccupiedSquareException : public InvalidMoveException
 {
 public:
 	OccupiedSquareException(const std::string&);
@@ -65,6 +66,21 @@ inline OccupiedSquareException::OccupiedSquareException(const std::string& messa
 	: InvalidMoveException(message)
 {
 }
+
+class NotInPossibleMovesException : public InvalidMoveException
+{
+public:
+	NotInPossibleMovesException(const std::string&);
+
+private:
+
+};
+
+inline NotInPossibleMovesException::NotInPossibleMovesException(const std::string& message)
+	: InvalidMoveException(message)
+{
+}
+
 
 // 2.	Invalid input:
 //		a.	Invalid answer
@@ -136,5 +152,21 @@ public:
 
 inline InvalidMemoryPositionException::InvalidMemoryPositionException(const std::string& message)
 	: InvalidPositionException(message)
+{
+}
+
+// 3.	Invalid state 
+
+class InvalidStateException : public ChessException
+{
+public:
+	InvalidStateException(const std::string&);
+
+private:
+
+};
+
+InvalidStateException::InvalidStateException(const std::string& message)
+	: ChessException(message)
 {
 }
