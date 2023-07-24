@@ -99,7 +99,7 @@ ChessGame::ChessGame(const CharBoard& inputConfig, EColor turn)
 
 IPiecePtr ChessGame::GetIPiece(char col, int ln) const
 {
-	if (ln <= 0 || ln >= 8)
+	if (ln <= 0 || ln > 8)
 	{
 		throw InvalidBoardPositionException("Line out of range");
 	}
