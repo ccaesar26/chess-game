@@ -137,6 +137,11 @@ void ChessUIQt::OnButtonClicked(const std::pair<int, int>&position)
             {
                 game->MakeMovement(m_selectedCell->first, m_selectedCell->second, position.first, position.second);
                 
+                if (game->IsWaitingForUpgrade())
+                {
+                    ShowPromoteOptions();
+                }
+
                 switch (game->GetCurrentPlayer())
                 {
                 case EColor::Black:
@@ -167,13 +172,37 @@ void ChessUIQt::OnButtonClicked(const std::pair<int, int>&position)
             {
                 return;
             }
-            
 
             //Unselect prev. pressed button
             m_grid[m_selectedCell.value().first][m_selectedCell.value().second]->setSelected(false);
             m_selectedCell.reset();
 
-            UpdateBoard();
+			UpdateBoard();
+            if (game->IsGameOver())
+            {
+				m_MessageLabel->setText("Game over! Black player won");
+				QMessageBox::StandardButton reply;
+				
+				if (game->IsWonByBlackPlayer())
+				{
+                    reply = QMessageBox::question(this, "Game Over", "Black player won.\nDo you want to play again?", QMessageBox::Yes | QMessageBox::Close);
+                }
+				if (game->IsWonByWhitePlayer())
+				{
+					reply = QMessageBox::question(this, "Game Over", "White player won.\nDo you want to play again?", QMessageBox::Yes | QMessageBox::Close);
+				}
+                
+                if (reply == QMessageBox::Yes)
+				{
+                    OnRestartButtonClicked();
+				}
+				else
+				{
+                    Exit();
+				}
+				return;
+            }
+			
         }
     }
     //At first click
@@ -200,19 +229,54 @@ void ChessUIQt::OnLoadButtonClicked()
 
 void ChessUIQt::OnRestartButtonClicked()
 {
-    //TODO ...
+    //game.reset();
+	game = IChessGame::CreateBoard();
+
+	//Widget containing everything
+	QWidget* mainWidget = new QWidget();
+	QGridLayout* mainGridLayout = new QGridLayout();
+
+	InitializeBoard(mainGridLayout);
+	InitializeMessage(mainGridLayout);
+	InitializeButtons(mainGridLayout);
+	InitializeTimers(mainGridLayout);
+	InitializeHistory(mainGridLayout);
+
+	mainWidget->setLayout(mainGridLayout);
+	this->setCentralWidget(mainWidget);
+
+    StartGame();
 }
 
 void ChessUIQt::OnDrawButtonClicked()
 {
     //TODO MODIFY ME
+    game->RequestDraw();
 
     QMessageBox::StandardButton reply;
     reply = QMessageBox::question(this, "Draw proposal", "Do you accept a draw?", QMessageBox::Yes | QMessageBox::No);
 
-    if (reply == QMessageBox::Yes) {
-        //TODO ...
-        //game.Draw(...);
+    if (reply == QMessageBox::Yes) 
+    {
+		game->AcceptDrawProposal();
+		m_MessageLabel->setText("Game over! Draw.");
+		QMessageBox::StandardButton reply;
+        reply = QMessageBox::question(this, "Game Over", "Draw.\nDo you want to play again?", QMessageBox::Yes | QMessageBox::Close);
+		
+		if (reply == QMessageBox::Yes)
+		{
+			OnRestartButtonClicked();
+		}
+		else
+		{
+			Exit();
+		}
+		return;
+        
+    }
+    else
+    {
+        game->DeclineDrawProposal();
     }
 }
 
@@ -333,12 +397,13 @@ void ChessUIQt::ShowPromoteOptions()
     if (ok && !item.isEmpty())
     {
         //TODO
+        game->UpgradePawn(item.toStdString());
         //game.promotePawn(parseQStringToPieceType(item))
 
-        //TODO DELETE ME...
-        QMessageBox notification;
-        notification.setText("You selected " + item);
-        notification.exec();
+        ////TODO DELETE ME...
+        //QMessageBox notification;
+        //notification.setText("You selected " + item);
+        //notification.exec();
     }
 }
 
