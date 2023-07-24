@@ -145,8 +145,29 @@ EColor ChessGame::GetCurrentPlayer() const
 	return m_turn;
 }
 
+bool ChessGame::IsStealMate() const
+{
+	if (m_state != EGameState::MovingPiece)
+		return false;
+	
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			if (m_board[i][j] && m_board[i][j]->GetColor() == m_turn)
+			{
+				PositionList possibleMoves = GetPossibleMoves(Position(i, j));
+				if (!possibleMoves.empty())
+					return false;
+			}
+		}
+	}
+	return true;
+}
+
 bool ChessGame::IsGameOver() const
 {
+
 	if (m_state == EGameState::Draw || m_state == EGameState::WonByWhitePlayer || m_state == EGameState::WonByBlackPlayer)
 	{
 		return true;
@@ -728,6 +749,11 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 	if (CanBeCaptured(m_board, m_kingPositions[(int)m_turn]) == true)
 	{
 		m_state = EGameState::CheckState;
+	}
+
+	if (IsStealMate())
+	{
+		m_state = EGameState::Draw;
 	}
 }
 

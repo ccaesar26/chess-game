@@ -56,6 +56,8 @@ public:
 	IPieceList GetCapturedPieces(EColor color) const override;
 	EColor GetCurrentPlayer() const override;
 
+	bool IsStealMate() const;
+
 	bool IsGameOver() const override;
 
 	void MakeMovement(int initialRow, int initialColumn, int finalRow, int finalColumn) override;
