@@ -66,6 +66,8 @@ public:
 
 	PiecePtr GetPiece(Position pos, const ArrayBoard& board) const;
 
+	void AddCastle(Position kingPosition, PositionList& kingPossibleMoves) const;
+
 	PositionList GetPossibleMoves(Position currentPos) const;
 	
 private:
@@ -103,4 +105,7 @@ private:
 	IPieceList m_blackPiecesCaptured;
 
 	EGameState m_state;
+
+	std::array<std::array<bool, 2>, 2> m_Castle;    
+	// Row 1 is for White and Row 2 is for Black ! Column 1 is for left castle and Column 2 is for right castle //
 };

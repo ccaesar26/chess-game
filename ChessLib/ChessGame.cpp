@@ -48,6 +48,11 @@ ChessGame::ChessGame()
 	, m_kingPositions({Position(7 ,4), Position(0, 4)})
 	, m_state(EGameState::MovingPiece)
 {
+
+	for (int i = 0; i < 2; i++)
+		for (int j = 0; j < 2; j++)
+			m_Castle[i][j] = true;
+
 	for (int j = 0; j < 8; j++)
 	{
 		m_board[6][j] = Piece::Produce(EType::Pawn, EColor::White);
@@ -314,6 +319,83 @@ PiecePtr ChessGame::GetPiece(Position pos, const ArrayBoard& board) const
 	return board[pos.row][pos.col];
 }
 
+void ChessGame::AddCastle(Position kingPosition, PositionList& kingPossibleMoves) const
+{
+	PiecePtr king = m_board[kingPosition.row][kingPosition.col];
+
+	ArrayBoard boardAfterMove = m_board;
+
+	// Add Left Castle //
+
+	PositionList toCheckPositions = { kingPosition,Position(kingPosition.row,kingPosition.col - 1)
+		, Position(kingPosition.row,kingPosition.col - 2) };
+
+	if (m_Castle[(int)king->GetColor()][0] == true)
+	{
+		if (m_board[kingPosition.row][0] && m_board[kingPosition.row][0]->GetType() == EType::Rook
+			&& m_board[kingPosition.row][0]->GetColor() == m_turn)
+		{
+			if (!m_board[kingPosition.row][kingPosition.col - 1] && !m_board[kingPosition.row][kingPosition.col - 2] && !m_board[kingPosition.row][kingPosition.col - 3])
+			{
+				bool leftCastle = true;
+				for (auto pos : toCheckPositions)
+				{
+					if (pos != kingPosition)
+					{
+						boardAfterMove[pos.row][pos.col] = boardAfterMove[pos.row][pos.col + 1];
+						boardAfterMove[pos.row][pos.col + 1].reset();
+					}
+
+					if (CanBeCaptured(boardAfterMove, pos))
+					{
+						leftCastle = false;
+						break;
+					}
+				}
+
+				if (leftCastle)
+					kingPossibleMoves.push_back(Position(kingPosition.row, kingPosition.col - 2));
+			}
+		}	
+	}
+
+	// Add Right Castle //
+
+	boardAfterMove = m_board;
+
+	toCheckPositions = { kingPosition,Position(kingPosition.row,kingPosition.col + 1)
+		, Position(kingPosition.row,kingPosition.col + 2) };
+
+	if (m_Castle[(int)king->GetColor()][1] == true)
+	{
+		if (m_board[kingPosition.row][7] && m_board[kingPosition.row][7]->GetType() == EType::Rook
+			&& m_board[kingPosition.row][7]->GetColor() == m_turn)
+		{
+			if (!m_board[kingPosition.row][kingPosition.col + 1] && !m_board[kingPosition.row][kingPosition.col + 2])
+			{
+				bool rightCastle = true;
+				for (auto pos : toCheckPositions)
+				{
+					if (pos != kingPosition)
+					{
+						boardAfterMove[pos.row][pos.col] = boardAfterMove[pos.row][pos.col - 1];
+						boardAfterMove[pos.row][pos.col - 1].reset();
+					}
+
+					if (CanBeCaptured(boardAfterMove, pos))
+					{
+						rightCastle = false;
+						break;
+					}
+				}
+
+				if (rightCastle)
+					kingPossibleMoves.push_back(Position(kingPosition.row, kingPosition.col + 2));
+			}
+		}
+	}
+}
+
 PositionList ChessGame::GetPossibleMoves(Position currentPos) const
 {
 	PositionList possibleMoves;
@@ -353,6 +435,11 @@ PositionList ChessGame::GetPossibleMoves(Position currentPos) const
 			possibleMoves.erase(std::find(possibleMoves.begin(), possibleMoves.end(), pos));
 			i--;
 		}
+	}
+
+	if (currentPiece && currentPiece->GetType() == EType::King)
+	{
+		AddCastle(currentPos, possibleMoves);
 	}
 
 	return possibleMoves;
@@ -567,11 +654,41 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 
 	m_board[finalPosition.row][finalPosition.col] = m_board[initialPosition.row][initialPosition.col];
 	m_board[initialPosition.row][initialPosition.col].reset();
+	
+	// Make Castle Inaccessible if Rook moved // 
+
+	if (initialPosition.row == 0 || initialPosition.row == 7)   
+	{
+		if (initialPosition.col == 0)
+		{
+			m_Castle[(int)m_turn][0] = false;
+		}
+		else if (initialPosition.col == 7)
+		{
+			m_Castle[(int)m_turn][1] = false;
+		}
+	}
+
+	// End of Make Castle Inaccessible if Rook moved //
+
+	// Make Castle Inaccessible if King moved // 
 
 	if (m_board[finalPosition.row][finalPosition.col]->GetType() == EType::King)
 	{
 		m_kingPositions[(int)m_turn] = finalPosition;
-	}
+		m_Castle[(int)m_turn][0] = false;
+		m_Castle[(int)m_turn][1] = false;
+		if (initialPosition.col - finalPosition.col == 2)
+		{
+			m_board[finalPosition.row][finalPosition.col + 1] = m_board[finalPosition.row][0];
+			m_board[finalPosition.row][0].reset();
+		}
+		else if (initialPosition.col - finalPosition.col == -2)
+		{
+			m_board[finalPosition.row][finalPosition.col - 1] = m_board[finalPosition.row][7];
+			m_board[finalPosition.row][7].reset();
+		}
+	}  // End of Make Castle Inaccessible if King moved //
 	else if (m_board[finalPosition.row][finalPosition.col]->GetType() == EType::Pawn)
 	{
 		if (m_board[finalPosition.row][finalPosition.col]->GetColor() == EColor::White && finalPosition.row == 0)
