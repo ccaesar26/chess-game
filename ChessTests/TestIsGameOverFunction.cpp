@@ -176,3 +176,32 @@ TEST(TestIsGameOver, King_In_Check_From_One_Piece_5)
 
 	EXPECT_EQ(game.IsGameOver(), true);
 }
+
+TEST(TestIsGameOver, King_In_Check_From_One_Piece_6)
+{
+	// Declare board //
+
+	std::array<std::array<char, 8>, 8> alternativeBoard =
+	{
+		//   0    1    2    3    4    5    6    7
+
+			'R', 'H', 'B', 'Q', ' ', 'B', 'H', 'R',   // 0
+			'P', 'P', 'h', 'P', ' ', ' ', 'P', 'P',   // 1		
+			' ', ' ', ' ', ' ', 'K', ' ', ' ', ' ',   // 2
+			' ', ' ', ' ', ' ', ' ', 'P', ' ', ' ',   // 3
+			' ', ' ', ' ', ' ', ' ', ' ', 'p', ' ',   // 4
+			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 5
+			'p', 'p', 'p', 'p', 'p', 'p', ' ', 'p',   // 6
+			'r', ' ', 'b', 'q', 'k', 'b', 'h', 'r'    // 7
+	};
+
+	// Tests //
+
+	ChessGame game(alternativeBoard, EColor::Black);
+
+	EXPECT_EQ(game.IsGameOver(), false);
+
+	game.MakeMovement(0, 3, 1, 2);
+
+	EXPECT_EQ(game.GetIPiecePtr(1, 2)->GetType(), EType::Queen);
+}
