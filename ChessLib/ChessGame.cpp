@@ -1,5 +1,6 @@
 #include "ChessGame.h"
 #include "Piece.h"
+#include "ChessException.h"
 
 #include <cctype>
 
@@ -95,11 +96,19 @@ ChessGame::ChessGame(const CharBoard& inputConfig, EColor turn)
 
 IPiecePtr ChessGame::GetIPiece(char col, int ln) const
 {
-	if (col >= 'a')
+	if (ln <= 0 || ln >= 8)
+	{
+		throw InvalidBoardPositionException("Line out of range");
+	}
+	if (col >= 'a' && col <= 'h')
 	{
 		return m_board[8 - ln][col - 'a'];
 	}
-	return m_board[8 - ln][col - 'A'];
+	if (col >= 'A' && col <= 'H')
+	{
+		return m_board[8 - ln][col - 'A'];
+	}
+	throw InvalidBoardPositionException("Column out of range");
 }
 
 std::vector<BoardPosition> ChessGame::GetMoves(char col, char row) const
@@ -240,7 +249,8 @@ void ChessGame::UpgradePawn(std::string upgradeType)
 	}
 	else
 	{
-		throw "Upgrade not possible";
+		std::string m = "The type " + upgradeType + " is not a valid upgrade";
+		throw InvalidUpgradeException(m);
 	}
 
 	m_state = EGameState::MovingPiece;

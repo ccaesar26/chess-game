@@ -18,5 +18,7 @@ PositionList King::GetPattern(Position currentPos, std::function<PiecePtr(Positi
 		Position(currentPos.row    , currentPos.col + 1)
 	};
 
-	return GetFinalPositionsFromMovementArray(possibleMovements, GetPieceFromBoard);
+	PositionList pattern = GetFinalPositionsFromMovementArray(possibleMovements, GetPieceFromBoard);
+
+
 }
