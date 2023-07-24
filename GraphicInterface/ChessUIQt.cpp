@@ -9,7 +9,8 @@
 ChessUIQt::ChessUIQt(QWidget *parent)
     : QMainWindow(parent)
 {
-   
+    game = IChessGame::CreateBoard();
+
     //Widget containing everything
     QWidget* mainWidget = new QWidget();
     QGridLayout* mainGridLayout = new QGridLayout();
@@ -134,7 +135,9 @@ void ChessUIQt::OnButtonClicked(const std::pair<int, int>&position)
         m_grid[position.first][position.second]->setSelected(true);
 
         //TODO Show possible moves here
-        //HighlightPossibleMoves(game.GetPossibleMoves(...))
+        std::vector<std::pair<int, int>> possibleMoves;
+        //std::vector<BoardPosition> 
+        //HighlightPossibleMoves(game.GetPossibleMoves(...));
     }
 }
 

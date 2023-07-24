@@ -20,5 +20,5 @@ PositionList King::GetPattern(Position currentPos, std::function<PiecePtr(Positi
 
 	PositionList pattern = GetFinalPositionsFromMovementArray(possibleMovements, GetPieceFromBoard);
 
-
+	return pattern;
 }
