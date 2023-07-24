@@ -533,13 +533,13 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 {
 	if (m_state == EGameState::UpgradePawn)
 	{
-		throw "You must upgrade pawn";
+		throw InvalidStateException("You must upgrade pawn");
 	}
 
 	PositionList possibleMoves = GetPossibleMoves(initialPosition);
 	if (std::find(possibleMoves.begin(), possibleMoves.end(), finalPosition) == possibleMoves.end()) 
 	{
-		throw "Your move is not possible !"; 
+		throw NotInPossibleMovesException("Your move is not possible"); 
 	}
 
 	if (m_board[finalPosition.row][finalPosition.col])

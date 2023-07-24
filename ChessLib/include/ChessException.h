@@ -166,7 +166,7 @@ private:
 
 };
 
-InvalidStateException::InvalidStateException(const std::string& message)
+inline InvalidStateException::InvalidStateException(const std::string& message)
 	: ChessException(message)
 {
 }
