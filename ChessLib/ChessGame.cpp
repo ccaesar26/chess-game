@@ -208,7 +208,7 @@ void ChessGame::UpgradePawn(std::string upgradeType)
 {
 	for (auto i = 0; i < upgradeType.size(); i++)
 	{
-		tolower(upgradeType[i]);
+		upgradeType[i] = tolower(upgradeType[i]);
 	}
 
 	Position upgradePos;
@@ -227,7 +227,7 @@ void ChessGame::UpgradePawn(std::string upgradeType)
 	{
 		for (int i = 0; i < 8; i++)
 		{
-			if (m_board[0][i] && m_board[7][i]->GetType() == EType::Pawn)
+			if (m_board[7][i] && m_board[7][i]->GetType() == EType::Pawn)
 			{
 				upgradePos.row = 7;
 				upgradePos.col = i;
@@ -247,7 +247,7 @@ void ChessGame::UpgradePawn(std::string upgradeType)
 	{
 		m_board[upgradePos.row][upgradePos.col] = Piece::Produce(EType::Rook, m_turn);
 	}
-	else if(upgradeType == "horse")
+	else if(upgradeType == "knight")
 	{
 		m_board[upgradePos.row][upgradePos.col] = Piece::Produce(EType::Horse, m_turn);
 	}
@@ -654,6 +654,8 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 
 	m_board[finalPosition.row][finalPosition.col] = m_board[initialPosition.row][initialPosition.col];
 	m_board[initialPosition.row][initialPosition.col].reset();
+
+	m_state = EGameState::MovingPiece;
 	
 	// Make Castle Inaccessible if Rook moved // 
 
@@ -688,10 +690,24 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 			m_board[finalPosition.row][finalPosition.col - 1] = m_board[finalPosition.row][7];
 			m_board[finalPosition.row][7].reset();
 		}
-	}  // End of Make Castle Inaccessible if King moved //
+	}  
+	
+	// End of Make Castle Inaccessible if King moved //
+
+	// v  Save current configuration
+
+
+
+	// ^  End of save current config
+
 	else if (m_board[finalPosition.row][finalPosition.col]->GetType() == EType::Pawn)
 	{
 		if (m_board[finalPosition.row][finalPosition.col]->GetColor() == EColor::White && finalPosition.row == 0)
+		{
+			m_state = EGameState::UpgradePawn;
+			return;
+		}
+		if (m_board[finalPosition.row][finalPosition.col]->GetColor() == EColor::Black && finalPosition.row == 7)
 		{
 			m_state = EGameState::UpgradePawn;
 			return;
@@ -704,6 +720,11 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 	{
 		m_state = EGameState::CheckState;
 	}
+}
+
+void ChessGame::SaveCurrentConfig()
+{
+	
 }
 
 // Static Methods //
