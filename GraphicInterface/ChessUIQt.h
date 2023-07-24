@@ -6,6 +6,7 @@
 #include <QPushButton>
 #include <QLabel>
 #include <QListWidget>
+#include "IChessGame.h"
 
 class ChessUIQt : public QMainWindow
 {
@@ -43,6 +44,9 @@ public slots:
 
 signals:
     void Exit();
+
+public:
+    std::shared_ptr<class IChessGame> game;
 
 private:
     std::array<std::array<GridButton*, 8>, 8> m_grid;

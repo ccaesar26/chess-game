@@ -39,6 +39,9 @@ public:
 	virtual bool IsWaitingForUpgrade() const = 0;
 	virtual bool IsCheckState() const = 0;
 
+	virtual Position ConvertToMemoryPosition(char col, char row) const = 0;
+	virtual BoardPosition ConvertToBoardPosition(Position pos) const = 0;
+
 	virtual ~IChessGame() = default;
 };
 

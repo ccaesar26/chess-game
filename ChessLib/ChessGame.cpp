@@ -117,7 +117,7 @@ IPiecePtr ChessGame::GetIPiece(char col, int ln) const
 std::vector<BoardPosition> ChessGame::GetMoves(char col, char row) const
 {
 	std::vector<BoardPosition> possibleBoardPositions;
-	PositionList possiblePositions = GetPossibleMoves(ConvertToPosition(col, row));
+	PositionList possiblePositions = GetPossibleMoves(ConvertToMemoryPosition(col, row));
 	for (int i = 0; i < possiblePositions.size(); i++)
 	{
 		possibleBoardPositions.push_back(ConvertToBoardPosition(possiblePositions.at(i)));
@@ -189,7 +189,7 @@ bool ChessGame::IsGameOver() const
 
 void ChessGame::MakeMovement(char initialColumn, char initialRow, char finalColumn, char finalRow)
 {
-	MakeMove(ConvertToPosition(initialColumn, initialRow), ConvertToPosition(finalColumn, finalRow));
+	MakeMove(ConvertToMemoryPosition(initialColumn, initialRow), ConvertToMemoryPosition(finalColumn, finalRow));
 	if (IsGameOver())
 	{
 		if (m_turn == EColor::White)
@@ -593,16 +593,16 @@ bool ChessGame::IsInMatrix(Position piecePosition)
 	}
 	return true;
 }
-Position ChessGame::ConvertToPosition(char col, char row)
+Position ChessGame::ConvertToMemoryPosition(char col, char row) const
 {
-	if (col >= 'a')
+	if (col >= 'a') 
 	{
 		return Position(8 - (row - '0'), col - 'a');
 	}
 	return Position(8 - (row - '0'), col - 'A');
 }
 
-BoardPosition ChessGame::ConvertToBoardPosition(Position pos)
+BoardPosition ChessGame::ConvertToBoardPosition(Position pos) const
 {
 	return BoardPosition(pos.col + 'A', 8 - pos.row + '0');
 }
