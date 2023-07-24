@@ -97,6 +97,16 @@ void GridButton::setSelected(bool selected)
 	updateBackgroundColor();
 }
 
+PieceType GridButton::GetType() const
+{
+	return m_PieceType;
+}
+
+PieceColor GridButton::GetColor() const
+{
+	return m_PieceColor;
+}
+
 GridButton::GridButton(const std::pair<int, int>& boardPosition, PieceType pieceType, PieceColor pieceColor, QWidget* parent):
 	m_Position(boardPosition), m_PieceType(pieceType), m_PieceColor(pieceColor), m_Highlighted(false), m_Selected(false)
 {

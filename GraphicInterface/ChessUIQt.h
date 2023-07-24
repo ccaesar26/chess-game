@@ -42,6 +42,7 @@ public slots:
     void OnLoadButtonClicked();
     void OnRestartButtonClicked();
     void OnDrawButtonClicked();
+    void SaveInClipboard();
     void OnHistoryClicked(QListWidgetItem* item);
     
 

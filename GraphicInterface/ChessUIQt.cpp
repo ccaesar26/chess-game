@@ -7,6 +7,9 @@
 #include "IChessGame.h"
 #include "ChessException.h"
 
+#include <QClipboard>
+#include <QGuiApplication>
+
 ChessUIQt::ChessUIQt(QWidget *parent)
     : QMainWindow(parent)
 {
@@ -48,6 +51,7 @@ void ChessUIQt::InitializeButtons(QGridLayout* mainGridLayout)
     QPushButton* loadButton = new QPushButton("Load");
     QPushButton* restartButton = new QPushButton("Restart");
     QPushButton* drawButton = new QPushButton("Draw");
+    QPushButton* saveClipboardButton = new QPushButton("Save in Clipboard");
 
     QWidget* buttonContainer = new QWidget();
     QGridLayout* btnGrid = new QGridLayout();
@@ -57,10 +61,14 @@ void ChessUIQt::InitializeButtons(QGridLayout* mainGridLayout)
     btnGrid->addWidget(restartButton, 0, 2);
     btnGrid->addWidget(drawButton, 0, 3);
 
+    btnGrid->addWidget(saveClipboardButton, 0, 4);
+
     connect(saveButton, &QPushButton::pressed, this, &ChessUIQt::OnSaveButtonClicked);
     connect(loadButton, &QPushButton::pressed, this, &ChessUIQt::OnLoadButtonClicked);
     connect(restartButton, &QPushButton::pressed, this, &ChessUIQt::OnRestartButtonClicked);
     connect(drawButton, &QPushButton::pressed, this, &ChessUIQt::OnDrawButtonClicked);
+
+    connect(saveClipboardButton, &QPushButton::pressed, this, &ChessUIQt::SaveInClipboard);
 
     buttonContainer->setLayout(btnGrid);
     mainGridLayout->addWidget(buttonContainer, 0, 0, 1, 1);
@@ -294,6 +302,61 @@ void ChessUIQt::OnDrawButtonClicked()
     {
         game->DeclineDrawProposal();
     }
+}
+
+void ChessUIQt::SaveInClipboard()
+{
+    QString textToCopy;
+
+    for (int i = 0; i < 8; i++)
+    {
+        for (int j = 0; j < 8; j++)
+        {
+            PieceType type = m_grid[i][j]->GetType();
+            PieceColor color = m_grid[i][j]->GetColor();
+
+            char piece;
+
+			switch (type) {
+			case PieceType::none:
+                piece = ' ';
+				break;
+			case PieceType::king:
+                piece = 'k';
+				break;
+			case PieceType::rook:
+                piece = 'r';
+				break;
+			case PieceType::bishop:
+                piece = 'b';
+				break;
+			case PieceType::queen:
+                piece = 'q';
+				break;
+			case PieceType::knight:
+                piece = 'h';
+				break;
+			case PieceType::pawn:
+                piece = 'p';
+				break;
+			default:
+                piece = '*';
+				break;
+			}
+
+            if (color == PieceColor::black)
+                piece = std::toupper(piece);   // include to upper if it doesn t work //
+
+            textToCopy.append("\'");
+            textToCopy.append(piece);
+            textToCopy.append("\', ");
+        }
+        textToCopy.append("\n");
+    }
+    textToCopy.chop(3);
+    
+    QClipboard* clipboard = QGuiApplication::clipboard();
+    clipboard->setText(textToCopy);
 }
 
 void ChessUIQt::OnHistoryClicked(QListWidgetItem* item)
