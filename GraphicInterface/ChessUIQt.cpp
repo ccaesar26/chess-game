@@ -180,6 +180,22 @@ void ChessUIQt::OnButtonClicked(const std::pair<int, int>&position)
 			UpdateBoard();
             if (game->IsGameOver())
             {
+                if (game->IsDraw())
+                {
+					m_MessageLabel->setText("Game over! Draw.");
+					QMessageBox::StandardButton reply;
+					reply = QMessageBox::question(this, "Game Over", "Threefold repetition.\nDo you want to play again?", QMessageBox::Yes | QMessageBox::Close);
+
+					if (reply == QMessageBox::Yes)
+					{
+						OnRestartButtonClicked();
+					}
+					else
+					{
+						Exit();
+					}
+                    return;
+                }
 				m_MessageLabel->setText("Game over! Black player won");
 				QMessageBox::StandardButton reply;
 				
