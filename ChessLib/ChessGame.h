@@ -4,6 +4,7 @@
 #include "Piece.h"
 
 #include <array>
+#include <unordered_map>
 
 using ArrayBoard = std::array<std::array<PiecePtr, 8>, 8>;
 using CharBoard = std::array<std::array<char, 8>, 8>;
@@ -17,6 +18,22 @@ enum class EGameState
 	UpgradePawn,
 	CheckState,
 	WaitingForDrawResponse
+};
+
+struct HashFunctor {
+	std::size_t operator()(const std::array<std::array<char, 8>, 8>& data) const
+	{
+		std::size_t seed = 0;
+		for (const auto& row : data) 
+		{
+			for (char element : row) 
+			{
+				// Combine the hash of each element in the data structure
+				seed ^= std::hash<char>{}(element)+0x9e3779b9 + (seed << 6) + (seed >> 2);
+			}
+		}
+		return seed;
+	}
 };
 
 class ChessGame : public IChessGame
@@ -92,6 +109,8 @@ private:
 
 	void MakeMove(Position initialPosition, Position finalPosition);
 
+	void SaveCurrentConfig();
+
 	// Static Methods //
 
 	static bool IsInMatrix(Position piecePosition);
@@ -112,4 +131,6 @@ private:
 
 	std::array<std::array<bool, 2>, 2> m_Castle;    
 	// Row 1 is for White and Row 2 is for Black ! Column 1 is for left castle and Column 2 is for right castle //
+
+	std::unordered_map<std::array<std::array<char, 8>, 8>, int, HashFunctor> m_boardConfigurationsRepetitons;
 };
