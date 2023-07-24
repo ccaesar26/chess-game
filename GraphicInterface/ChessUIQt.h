@@ -33,6 +33,8 @@ public:
     void StartGame();
     void ShowPromoteOptions();
 
+    void UpdateMessage(const QString& message);
+
 public slots:
     void OnButtonClicked(const std::pair<int, int>& position);
 

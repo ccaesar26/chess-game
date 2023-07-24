@@ -136,6 +136,32 @@ void ChessUIQt::OnButtonClicked(const std::pair<int, int>&position)
             try
             {
                 game->MakeMovement(m_selectedCell->first, m_selectedCell->second, position.first, position.second);
+                
+                switch (game->GetCurrentPlayer())
+                {
+                case EColor::Black:
+                    UpdateMessage("Waiting for black player");
+                    break;
+				case EColor::White:
+					UpdateMessage("Waiting for white player");
+					break;
+                default:
+                    break;
+                }
+            }
+            catch (const OccupiedByOwnPieceException& e)
+            {
+                UnhighlightPossibleMoves(game->GetMoves(m_selectedCell->first, m_selectedCell->second));
+
+				m_grid[m_selectedCell.value().first][m_selectedCell.value().second]->setSelected(false);
+				m_selectedCell.reset();                
+
+				m_selectedCell = position;
+				m_grid[position.first][position.second]->setSelected(true);
+
+				HighlightPossibleMoves(game->GetMoves(m_selectedCell->first, m_selectedCell->second));
+
+                return;
             }
             catch (const ChessException& e)
             {
@@ -157,7 +183,7 @@ void ChessUIQt::OnButtonClicked(const std::pair<int, int>&position)
         m_grid[position.first][position.second]->setSelected(true);
 
         //TODO Show possible moves here
-       HighlightPossibleMoves(game->GetMoves(position.first, position.second));
+        HighlightPossibleMoves(game->GetMoves(position.first, position.second));
     }
 }
 
@@ -314,5 +340,10 @@ void ChessUIQt::ShowPromoteOptions()
         notification.setText("You selected " + item);
         notification.exec();
     }
+}
+
+void ChessUIQt::UpdateMessage(const QString& message)
+{
+    m_MessageLabel->setText(message);
 }
 
