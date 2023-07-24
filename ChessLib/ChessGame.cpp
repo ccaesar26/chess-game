@@ -669,13 +669,13 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 		m_Castle[(int)m_turn][1] = false;
 		if (initialPosition.col - finalPosition.col == 2)
 		{
-			m_board[finalPosition.row][finalPosition.col - 1] = m_board[finalPosition.row][7];
-			m_board[finalPosition.row][7].reset();
+			m_board[finalPosition.row][finalPosition.col + 1] = m_board[finalPosition.row][0];
+			m_board[finalPosition.row][0].reset();
 		}
 		else if (initialPosition.col - finalPosition.col == -2)
 		{
-			m_board[finalPosition.row][finalPosition.col + 1] = m_board[finalPosition.row][0];
-			m_board[finalPosition.row][0].reset();
+			m_board[finalPosition.row][finalPosition.col - 1] = m_board[finalPosition.row][7];
+			m_board[finalPosition.row][7].reset();
 		}
 	}  // End of Make Castle Inaccessible if King moved //
 	else if (m_board[finalPosition.row][finalPosition.col]->GetType() == EType::Pawn)
