@@ -5,6 +5,7 @@
 #include <QMessageBox>
 
 #include "IChessGame.h"
+#include "ChessException.h"
 
 ChessUIQt::ChessUIQt(QWidget *parent)
     : QMainWindow(parent)
@@ -121,23 +122,42 @@ void ChessUIQt::InitializeBoard(QGridLayout* mainGridLayout)
 void ChessUIQt::OnButtonClicked(const std::pair<int, int>&position)
 {
     //At second click
-    if (m_selectedCell.has_value()) {
-        //TODO COMPLETE ME...
-        // game.MakeMove(...);
+    if (m_selectedCell.has_value()) 
+    {
+        if (m_selectedCell.value() == position)
+        {
+            m_grid[m_selectedCell.value().first][m_selectedCell.value().second]->setSelected(false);
+            m_selectedCell.reset();
+            UnhighlightPossibleMoves(game->GetMoves(position.first, position.second));
+        }
+        else
+        {
+            //TODO COMPLETE ME...
+            try
+            {
+                game->MakeMovement(m_selectedCell->first, m_selectedCell->second, position.first, position.second);
+            }
+            catch (const ChessException& e)
+            {
+                return;
+            }
+            
 
-        //Unselect prev. pressed button
-        m_grid[m_selectedCell.value().first][m_selectedCell.value().second]->setSelected(false);
-        m_selectedCell.reset();
+            //Unselect prev. pressed button
+            m_grid[m_selectedCell.value().first][m_selectedCell.value().second]->setSelected(false);
+            m_selectedCell.reset();
+
+            UpdateBoard();
+        }
     }
     //At first click
-    else {
+    else 
+    {
         m_selectedCell = position;
         m_grid[position.first][position.second]->setSelected(true);
 
         //TODO Show possible moves here
-        std::vector<std::pair<int, int>> possibleMoves;
-        //std::vector<BoardPosition> 
-        //HighlightPossibleMoves(game.GetPossibleMoves(...));
+       HighlightPossibleMoves(game->GetMoves(position.first, position.second));
     }
 }
 
@@ -188,13 +208,61 @@ void ChessUIQt::UpdateHistory()
     }
 }
 
-void ChessUIQt::UpdateBoard(const std::array<std::array<std::pair<PieceType, PieceColor>, 8>, 8>& newBoard)
+void ChessUIQt::UpdateBoard()
 {
-    for (int i = 0; i < 8; i++) {
-        for (int j = 0; j < 8; j++) {
-            m_grid[i][j]->setPiece(newBoard[i][j]);
-            m_grid[i][j]->setSelected(false);
-            m_grid[i][j]->setHighlighted(false);
+    for (int i = 0; i < 8; i++) 
+    {
+        for (int j = 0; j < 8; j++) 
+        {
+            std::pair<PieceType, PieceColor> newPiece;
+
+            if (game->GetIPiecePtr(i, j))
+            {
+				switch (game->GetIPiecePtr(i, j)->GetType())
+				{
+				case EType::Rook:
+					newPiece.first = PieceType::rook;
+					break;
+				case EType::Horse:
+					newPiece.first = PieceType::knight;
+					break;
+				case EType::Bishop:
+					newPiece.first = PieceType::bishop;
+					break;
+				case EType::Queen:
+					newPiece.first = PieceType::queen;
+					break;
+				case EType::King:
+					newPiece.first = PieceType::king;
+					break;
+				case EType::Pawn:
+					newPiece.first = PieceType::pawn;
+					break;
+				default:
+					break;
+				}
+
+                switch (game->GetIPiecePtr(i, j)->GetColor())
+				{
+				case EColor::Black:
+					newPiece.second = PieceColor::black;
+					break;
+				case EColor::White:
+					newPiece.second = PieceColor::white;
+					break;
+				default:
+					break;
+				}
+            }
+            else
+            {
+                newPiece.first = PieceType::none;
+				newPiece.second = PieceColor::none;
+            }
+            
+            m_grid[i][j]->setPiece(newPiece);
+			m_grid[i][j]->setSelected(false);
+			m_grid[i][j]->setHighlighted(false);
         }
     }
 
@@ -207,10 +275,17 @@ void ChessUIQt::HighlightPossibleMoves(const std::vector<std::pair<int, int>>& p
     }
 }
 
+void ChessUIQt::UnhighlightPossibleMoves(const std::vector<std::pair<int, int>>& possibleMoves)
+{
+	for (const auto& position : possibleMoves) {
+		m_grid[position.first][position.second]->setHighlighted(false);
+	}
+}
+
 void ChessUIQt::StartGame()
 {
     //TODO MODIFY ME OR DELETE ME
-    UpdateBoard(Helper::getDefaultBoard());
+    UpdateBoard();
 }
 
 void ChessUIQt::ShowPromoteOptions()

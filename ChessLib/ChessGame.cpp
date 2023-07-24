@@ -102,30 +102,26 @@ ChessGame::ChessGame(const CharBoard& inputConfig, EColor turn)
 
 // Virtual Implementations //
 
-IPiecePtr ChessGame::GetIPiece(char col, int ln) const
+IPiecePtr ChessGame::GetIPiecePtr(int row, int col) const
 {
-	if (ln <= 0 || ln > 8)
+	if (row < 0 || row >= 8)
 	{
 		throw InvalidBoardPositionException("Line out of range");
 	}
-	if (col >= 'a' && col <= 'h')
+	if (col >= 0 && col < 8)
 	{
-		return m_board[8 - ln][col - 'a'];
-	}
-	if (col >= 'A' && col <= 'H')
-	{
-		return m_board[8 - ln][col - 'A'];
+		return m_board[row][col];
 	}
 	throw InvalidBoardPositionException("Column out of range");
 }
 
-std::vector<BoardPosition> ChessGame::GetMoves(char col, char row) const
+std::vector<std::pair<int, int>> ChessGame::GetMoves(int row, int col) const
 {
-	std::vector<BoardPosition> possibleBoardPositions;
-	PositionList possiblePositions = GetPossibleMoves(ConvertToMemoryPosition(col, row));
+	std::vector<std::pair<int, int>> possibleBoardPositions;
+	PositionList possiblePositions = GetPossibleMoves(Position(row, col));
 	for (int i = 0; i < possiblePositions.size(); i++)
 	{
-		possibleBoardPositions.push_back(ConvertToBoardPosition(possiblePositions.at(i)));
+		possibleBoardPositions.push_back(std::make_pair(possiblePositions.at(i).row, possiblePositions.at(i).col));
 	}
 	return possibleBoardPositions;
 }
@@ -192,9 +188,9 @@ bool ChessGame::IsGameOver() const
 	return true;
 }
 
-void ChessGame::MakeMovement(char initialColumn, char initialRow, char finalColumn, char finalRow)
+void ChessGame::MakeMovement(int initialRow, int initialColumn, int finalRow, int finalColumn)
 {
-	MakeMove(ConvertToMemoryPosition(initialColumn, initialRow), ConvertToMemoryPosition(finalColumn, finalRow));
+	MakeMove(Position(initialRow, initialColumn), Position(finalRow, finalColumn));
 	if (IsGameOver())
 	{
 		if (m_turn == EColor::White)
@@ -624,13 +620,13 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 {
 	if (m_state == EGameState::UpgradePawn)
 	{
-		throw "You must upgrade pawn";
+		throw InvalidStateException("You must upgrade pawn");
 	}
 
 	PositionList possibleMoves = GetPossibleMoves(initialPosition);
 	if (std::find(possibleMoves.begin(), possibleMoves.end(), finalPosition) == possibleMoves.end()) 
 	{
-		throw "Your move is not possible !"; 
+		throw NotInPossibleMovesException("Your move is not possible"); 
 	}
 
 	if (m_board[finalPosition.row][finalPosition.col])

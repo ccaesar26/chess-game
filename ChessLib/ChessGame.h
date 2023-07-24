@@ -30,14 +30,14 @@ public:
 
 	// Virtual Implementations //
 
-	IPiecePtr GetIPiece(char col, int ln) const override;
-	std::vector<BoardPosition> GetMoves(char col, char row) const override;
+	IPiecePtr GetIPiecePtr(int row, int col) const override;
+	std::vector<std::pair<int, int>> GetMoves(int row, int col) const override;
 	IPieceList GetCapturedPieces(EColor color) const override;
 	EColor GetCurrentPlayer() const override;
 
 	bool IsGameOver() const override;
 
-	void MakeMovement(char initialColumn, char initialRow, char finalColumn, char finalRow) override;
+	void MakeMovement(int initialRow, int initialColumn, int finalRow, int finalColumn) override;
 
 	void UpgradePawn(std::string upgradeType) override;
 
