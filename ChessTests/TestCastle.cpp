@@ -194,7 +194,7 @@ TEST(TestCastle, Test_Black_Castle_1)
 			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 4
 			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 5
 			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 6
-			'k', ' ', ' ', ' ', ' ', ' ', ' ', ' ',    // 7
+			'k', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 7
 	};
 
 	ChessGame game(alternativeBoard, EColor::Black);
@@ -222,7 +222,7 @@ TEST(TestCastle, Test_Black_Can_Not_Castle_1)
 			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 4
 			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 5
 			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 6
-			'k', ' ', ' ', ' ', ' ', ' ', ' ', ' ',    // 7
+			'k', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 7
 	};
 
 	ChessGame game(alternativeBoard, EColor::Black);
@@ -238,3 +238,32 @@ TEST(TestCastle, Test_Black_Can_Not_Castle_1)
 
 	EXPECT_EQ(ComparePositionLists(kingPossbileMoves, kingExpectedMoves), true);
 }
+
+TEST(TestCastle, Test_Black_Can_Not_Castle_2)
+{
+	// Declare board //
+
+	std::array<std::array<char, 8>, 8> alternativeBoard =
+	{
+		//   0    1    2    3    4    5    6    7
+
+			'R', 'H', ' ', ' ', 'K', ' ', 'H', 'R',   // 0
+			'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P',   // 1		
+			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 2
+			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 3
+			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 4
+			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 5
+			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 6
+			'k', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 7
+	};
+
+	ChessGame game(alternativeBoard, EColor::Black);
+
+	// Tests //
+
+	PositionList kingPossbileMoves = game.GetPossibleMoves(Position(0, 4));
+	PositionList kingExpectedMoves = { Position(0,5),Position(0,3) };
+
+	EXPECT_EQ(ComparePositionLists(kingPossbileMoves, kingExpectedMoves), true);
+}
+
