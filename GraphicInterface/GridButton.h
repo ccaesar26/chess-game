@@ -16,7 +16,7 @@ public:
 	void updateBackgroundColor();
 
 	void setPiece(std::pair<PieceType, PieceColor> newPiece);
-	void setHighlighted(bool highlighted);
+	void setHighlighted(int highlighted);
 	void setSelected(bool selected);
 
 	// Getters // 
@@ -31,6 +31,6 @@ private:
 	std::pair<int, int> m_Position;
 	PieceType m_PieceType;
 	PieceColor m_PieceColor;
-	bool m_Highlighted;
+	int m_Highlighted;
 	bool m_Selected;
 };

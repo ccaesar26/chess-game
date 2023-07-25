@@ -439,8 +439,13 @@ void ChessUIQt::UpdateBoard()
 
 void ChessUIQt::HighlightPossibleMoves(const std::vector<std::pair<int, int>>& possibleMoves)
 {
-    for (const auto& position : possibleMoves) {
-        m_grid[position.first][position.second]->setHighlighted(true);
+    for (const auto& position : possibleMoves) 
+    {
+        if (game->GetIPiecePtr(position.first, position.second))
+        {
+            m_grid[position.first][position.second]->setHighlighted(2);
+        } 
+        else  m_grid[position.first][position.second]->setHighlighted(1);
     }
 }
 

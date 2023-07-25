@@ -62,17 +62,17 @@ void GridButton::updateBackgroundColor()
 	bool defaultColorBlack = (m_Position.first + m_Position.second) % 2;
 	QString backColor = "";
 
-	if (defaultColorBlack && !m_Highlighted)
-		backColor = "#464e53";
-	if (defaultColorBlack && m_Highlighted)
-		backColor = "#82CD47";
-	if (!defaultColorBlack && !m_Highlighted)
-		backColor = "#d6d6d6";
-	if (!defaultColorBlack && m_Highlighted)
-		backColor = "#82CD47";
-
-	if (m_Selected)
+	if(m_Highlighted==1)
 		backColor = "#2192FF";
+	else if(m_Highlighted==2)
+		backColor = "#FF4C4C";
+	else
+	{
+		if (defaultColorBlack)
+			backColor = "#464e53";
+		else
+			backColor = "#d6d6d6";
+	}
 
 	setStyleSheet("background-color: " + backColor + "; border: none;");
 }
@@ -85,7 +85,7 @@ void GridButton::setPiece(std::pair<PieceType, PieceColor> newPiece)
 	updatePiece();
 }
 
-void GridButton::setHighlighted(bool highlighted)
+void GridButton::setHighlighted(int highlighted)
 {
 	m_Highlighted = highlighted;
 	updateBackgroundColor();
