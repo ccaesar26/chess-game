@@ -1,14 +1,15 @@
 #pragma once
 
 #include <QtWidgets/QMainWindow>
-#include "GridButton.h"
 #include <QtWidgets/qgridlayout.h>
 #include <QPushButton>
 #include <QLabel>
 #include <QListWidget>
+#include "GridButton.h"
 #include "IChessGame.h"
+#include "IChessGameListener.h"
 
-class ChessUIQt : public QMainWindow
+class ChessUIQt : public QMainWindow, public IChessGameListener
 {
     Q_OBJECT
 
@@ -36,6 +37,15 @@ public:
     void UpdateMessage(const QString& message);
     void AppendThrowMessage(const QString& message);
 
+    // For listeners methods //
+    void OnMoveMade() const override;
+    void OnGameOver() const override;
+    void OnPawnUpgrade() const override;
+    void OnDrawProposal() const override;
+
+
+    void Update() override;
+
 public slots:
     void OnButtonClicked(const std::pair<int, int>& position);
 
@@ -43,7 +53,7 @@ public slots:
     void OnLoadButtonClicked();
     void OnRestartButtonClicked();
     void OnDrawButtonClicked();
-    void SaveInClipboard();
+    void OnSaveInClipboardButtonClicked();
     void OnHistoryClicked(QListWidgetItem* item);
     
 

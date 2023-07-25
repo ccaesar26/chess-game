@@ -60,15 +60,13 @@ void ChessUIQt::InitializeButtons(QGridLayout* mainGridLayout)
     btnGrid->addWidget(loadButton, 0, 1);
     btnGrid->addWidget(restartButton, 0, 2);
     btnGrid->addWidget(drawButton, 0, 3);
-
     btnGrid->addWidget(saveClipboardButton, 0, 4);
 
     connect(saveButton, &QPushButton::pressed, this, &ChessUIQt::OnSaveButtonClicked);
     connect(loadButton, &QPushButton::pressed, this, &ChessUIQt::OnLoadButtonClicked);
     connect(restartButton, &QPushButton::pressed, this, &ChessUIQt::OnRestartButtonClicked);
     connect(drawButton, &QPushButton::pressed, this, &ChessUIQt::OnDrawButtonClicked);
-
-    connect(saveClipboardButton, &QPushButton::pressed, this, &ChessUIQt::SaveInClipboard);
+    connect(saveClipboardButton, &QPushButton::pressed, this, &ChessUIQt::OnSaveInClipboardButtonClicked);
 
     buttonContainer->setLayout(btnGrid);
     mainGridLayout->addWidget(buttonContainer, 0, 0, 1, 1);
@@ -103,8 +101,8 @@ void ChessUIQt::InitializeTimers(QGridLayout* mainGridLayout)
 void ChessUIQt::InitializeHistory(QGridLayout* mainGridLayout)
 {
     m_MovesList = new QListWidget();
-    m_MovesList->setMinimumWidth(250);
-    m_MovesList->setMaximumWidth(350);
+    m_MovesList->setMinimumWidth(350);
+    m_MovesList->setMaximumWidth(450);
     connect(m_MovesList, &QListWidget::itemActivated, this, &ChessUIQt::OnHistoryClicked);
     mainGridLayout->addWidget(m_MovesList, 1, 0, 1, 1);
 }
@@ -305,7 +303,7 @@ void ChessUIQt::OnDrawButtonClicked()
     }
 }
 
-void ChessUIQt::SaveInClipboard()
+void ChessUIQt::OnSaveInClipboardButtonClicked()
 {
     QString textToCopy;
 
@@ -511,5 +509,30 @@ void ChessUIQt::AppendThrowMessage(const QString& message)
 	s.append('\n');
 	s.append(message);
 	m_MessageLabel->setText(s);
+}
+
+void ChessUIQt::OnMoveMade() const
+{
+	throw std::logic_error("The method or operation is not implemented.");
+}
+
+void ChessUIQt::OnGameOver() const
+{
+	throw std::logic_error("The method or operation is not implemented.");
+}
+
+void ChessUIQt::OnPawnUpgrade() const
+{
+	throw std::logic_error("The method or operation is not implemented.");
+}
+
+void ChessUIQt::OnDrawProposal() const
+{
+	throw std::logic_error("The method or operation is not implemented.");
+}
+
+void ChessUIQt::Update()
+{
+	throw std::logic_error("The method or operation is not implemented.");
 }
 

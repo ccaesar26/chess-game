@@ -382,6 +382,21 @@ bool ChessGame::IsCheckState() const
 	return m_state == EGameState::CheckState ? true : false;
 }
 
+// Observers //
+
+void ChessGame::AddListener(IChessGameListenerPtr listener)
+{
+}
+
+void ChessGame::RemoveListener(IChessGameListenerPtr listener)
+{
+}
+
+void ChessGame::NotifyAll()
+{
+
+}
+
 // Game's Logic //
 
 PiecePtr ChessGame::GetPiece(Position pos, const ArrayBoard& board) const

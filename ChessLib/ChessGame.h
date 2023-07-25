@@ -2,12 +2,16 @@
 
 #include "IChessGame.h"
 #include "Piece.h"
+#include "IChessGameListener.h"
 
 #include <array>
 #include <unordered_map>
 
 using ArrayBoard = std::array<std::array<PiecePtr, 8>, 8>;
 using CharBoard = std::array<std::array<char, 8>, 8>;
+
+using IChessGameListenerWeakPtr = std::weak_ptr<IChessGameListener>;
+using IChessGameListenerPtr = std::shared_ptr<IChessGameListener>;
 
 enum class EGameState
 {
@@ -85,6 +89,12 @@ public:
 	Position ConvertToMemoryPosition(char col, char row) const override;
 	BoardPosition ConvertToBoardPosition(Position pos) const override;
 
+	// Observable //
+
+	void AddListener(IChessGameListenerPtr listener);
+	void RemoveListener(IChessGameListenerPtr listener);
+	void NotifyAll();
+
 	// Game's Logic //
 
 	PiecePtr GetPiece(Position pos, const ArrayBoard& board) const;
@@ -131,8 +141,12 @@ private:
 
 	EGameState m_state;
 
+	// Row 1 is for White and Row 2 is for Black ! Column 1 is for left castle and Column 2 is for right castle
 	std::array<std::array<bool, 2>, 2> m_Castle;    
-	// Row 1 is for White and Row 2 is for Black ! Column 1 is for left castle and Column 2 is for right castle //
 
 	std::unordered_map<std::array<std::array<char, 8>, 8>, int, HashFunctor> m_boardConfigurationsRepetitons;
+
+	// Observable //
+
+	std::vector<std::weak_ptr<IChessGameListener>> m_listeners;
 };
