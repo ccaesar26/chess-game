@@ -170,7 +170,7 @@ void ChessUIQt::OnButtonClicked(const std::pair<int, int>&position)
             }
             catch (const ChessException& e)
             {
-                AppendToMessage(e.what());
+                AppendThrowMessage(e.what());
                 return;
             }
 
@@ -429,11 +429,19 @@ void ChessUIQt::UpdateMessage(const QString& message)
     m_MessageLabel->setText(message);
 }
 
-void ChessUIQt::AppendToMessage(const QString& message)
+void ChessUIQt::AppendThrowMessage(const QString& message)
 {
-    /*QString s = m_MessageLabel->text();
-    s.append('\n');
-    s.append(message);
-    m_MessageLabel->setText(s);*/
+	QString s = m_MessageLabel->text();
+	for (auto it = s.begin(); it != s.end(); it++)
+	{
+		if (*it == '\n')
+		{
+			s.erase(it, s.end());
+			break;
+		}
+	}
+	s.append('\n');
+	s.append(message);
+	m_MessageLabel->setText(s);
 }
 
