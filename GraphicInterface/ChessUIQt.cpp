@@ -531,8 +531,3 @@ void ChessUIQt::OnDrawProposal() const
 	throw std::logic_error("The method or operation is not implemented.");
 }
 
-void ChessUIQt::Update()
-{
-	throw std::logic_error("The method or operation is not implemented.");
-}
-

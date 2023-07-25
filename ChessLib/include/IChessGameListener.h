@@ -8,7 +8,5 @@ public:
 	virtual void OnPawnUpgrade(int r, int c, char t) const = 0;
 	virtual void OnDrawProposal() const = 0;
 
-	virtual void Update() = 0;
-
 	virtual ~IChessGameListener() = default;
 };

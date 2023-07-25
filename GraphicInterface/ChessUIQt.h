@@ -44,8 +44,6 @@ public:
     void OnDrawProposal() const override;
 
 
-    void Update() override;
-
 public slots:
     void OnButtonClicked(const std::pair<int, int>& position);
 
