@@ -181,7 +181,7 @@ EColor ChessGame::GetCurrentPlayer() const
 	return m_turn;
 }
 
-bool ChessGame::IsStealMate() const
+bool ChessGame::IsStaleMate() const
 {
 	if (m_state != EGameState::MovingPiece)
 		return false;
@@ -206,6 +206,7 @@ bool ChessGame::IsGameOver() const
 
 	if (m_state == EGameState::Draw || m_state == EGameState::WonByWhitePlayer || m_state == EGameState::WonByBlackPlayer)
 	{
+		//Notify(ENotification::GameOver);
 		return true;
 	}
 
@@ -225,6 +226,7 @@ bool ChessGame::IsGameOver() const
 	}
 	if (checkPieces.size() > 1)
 	{
+		//Notify(ENotification::GameOver);
 		return true;
 	}
 
@@ -237,6 +239,7 @@ bool ChessGame::IsGameOver() const
 		checkPieces.at(0)->GetType() == EType::Pawn ||
 		checkPieces.at(0)->GetType() == EType::Horse)
 	{
+		//Notify(ENotification::GameOver);
 		return true;
 	}
 
@@ -244,6 +247,7 @@ bool ChessGame::IsGameOver() const
 
 	if (toBlockPositions.empty())
 	{
+		//Notify(ENotification::GameOver);
 		return true;
 	}
 	if (KingsWayCanBeBlocked(toBlockPositions))
@@ -251,16 +255,19 @@ bool ChessGame::IsGameOver() const
 		return false;
 	}
 
+	//Notify(ENotification::GameOver);
 	return true;
 }
 
 void ChessGame::MakeMovement(int initialRow, int initialColumn, int finalRow, int finalColumn)
 {
 	MakeMove(Position(initialRow, initialColumn), Position(finalRow, finalColumn));
+
 	if (IsGameOver())
 	{
 		if (m_state == EGameState::Draw)
 		{
+			Notify(ENotification::GameOver);
 			return;
 		}
 		if (m_turn == EColor::White)
@@ -271,6 +278,33 @@ void ChessGame::MakeMovement(int initialRow, int initialColumn, int finalRow, in
 		{
 			m_state = EGameState::WonByWhitePlayer;
 		}
+		Notify(ENotification::GameOver);
+	}
+
+	switch (m_state)
+	{
+	case EGameState::MovingPiece:
+		Notify(ENotification::MoveMade, initialRow, initialColumn, finalRow, finalColumn);
+		break;
+	case EGameState::Draw:
+		Notify(ENotification::GameOver);
+		break;
+	case EGameState::WonByWhitePlayer:
+		Notify(ENotification::GameOver);
+		break;
+	case EGameState::WonByBlackPlayer:
+		Notify(ENotification::GameOver);
+		break;
+	case EGameState::UpgradePawn:
+		Notify(ENotification::PawnUpgrade);
+		break;
+	case EGameState::CheckState:
+		Notify(ENotification::CheckState);
+		break;
+	case EGameState::WaitingForDrawResponse:
+		break;
+	default:
+		break;
 	}
 }
 
@@ -334,17 +368,20 @@ void ChessGame::UpgradePawn(std::string upgradeType)
 	if (CanBeCaptured(m_board, m_kingPositions[(int)m_turn]) == true)
 	{
 		m_state = EGameState::CheckState;
+		//Notify(ENotification::CheckState);
 	}
 }
 
 void ChessGame::RequestDraw()
 {
 	m_state = EGameState::WaitingForDrawResponse;
+	//Notify(ENotification::DrawProposal);
 }
 
 void ChessGame::AcceptDrawProposal()
 {
 	m_state = EGameState::Draw;
+	//Notify(ENotification::GameOver);
 }
 
 void ChessGame::DeclineDrawProposal()
@@ -386,85 +423,58 @@ bool ChessGame::IsCheckState() const
 
 void ChessGame::AddListener(IChessGameListenerPtr listener)
 {
+	m_listeners.push_back(listener);
 }
 
 void ChessGame::RemoveListener(IChessGameListenerPtr listener)
 {
-}
-
-void ChessGame::Notify(int ir, int ic, int fr, int fc)
-{
-	for (auto it = m_listeners.begin(); it != m_listeners.end(); it++)
+	for (auto it = m_listeners.begin(); it != m_listeners.end();)
 	{
 		if (auto sp = it->lock())
 		{
-			sp->OnMoveMade(ir, ic, fr, fc);
-		}
-	}
-}
-
-void ChessGame::Notify(int r, int c, EType t)
-{
-	char l;
-	switch (t)
-	{
-	case EType::Rook:
-		l = 'r';
-		break;
-	case EType::Horse:
-		l = 'h';
-		break;
-	case EType::King:
-		l = 'k';
-		break;
-	case EType::Queen:
-		l = 'q';
-		break;
-	case EType::Bishop:
-		l = 'b';
-		break;
-	case EType::Pawn:
-		l = 'p';
-		break;
-	default:
-		break;
-	}
-	if (m_turn == EColor::Black)
-	{
-		l = l - 'a' + 'A';
-	}
-
-	for (auto it = m_listeners.begin(); it != m_listeners.end(); it++)
-	{
-		if (auto sp = it->lock())
-		{
-			sp->OnPawnUpgrade(r, c, l);
-		}
-	}
-}
-
-void ChessGame::Notify()
-{
-	if (m_state == EGameState::WaitingForDrawResponse)
-	{
-		for (auto it = m_listeners.begin(); it != m_listeners.end(); it++)
-		{
-			if (auto sp = it->lock())
+			if (sp.get())
 			{
-				sp->OnDrawProposal();
+				it = m_listeners.erase(it);
+			}
+			else
+			{
+				it++;
 			}
 		}
-	}
-	else
-	{
-		for (auto it = m_listeners.begin(); it != m_listeners.end(); it++)
+		else
 		{
-			if (auto sp = it->lock())
+			m_listeners.erase(it);
+		}
+	}
+}
+
+void ChessGame::Notify(ENotification notif, int ir /*= 0*/, int ic /*= 0*/, int fr /*= 0*/, int fc /*= 0*/)
+{
+	
+	for (auto it = m_listeners.begin(); it != m_listeners.end(); it++)
+	{
+		if (auto sp = it->lock())
+		{
+			switch (notif)
 			{
+			case ENotification::MoveMade:
+				sp->OnMoveMade(ir, ic, fr, fc);
+				break;
+			case ENotification::PawnUpgrade:
+				sp->OnPawnUpgrade();
+				break;
+			case ENotification::GameOver:
 				sp->OnGameOver();
+				break;
+			case ENotification::CheckState:
+				sp->OnCheckState();
+				break;
+			default:
+				break;
 			}
 		}
 	}
+	
 }
 
 // Game's Logic //
@@ -852,11 +862,13 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 		if (m_board[finalPosition.row][finalPosition.col]->GetColor() == EColor::White && finalPosition.row == 0)
 		{
 			m_state = EGameState::UpgradePawn;
+			//Notify(ENotification::PawnUpgrade);
 			return;
 		}
 		if (m_board[finalPosition.row][finalPosition.col]->GetColor() == EColor::Black && finalPosition.row == 7)
 		{
 			m_state = EGameState::UpgradePawn;
+			//Notify(ENotification::PawnUpgrade);
 			return;
 		}
 	}
@@ -872,11 +884,13 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 	if (CanBeCaptured(m_board, m_kingPositions[(int)m_turn]) == true)
 	{
 		m_state = EGameState::CheckState;
+		//Notify(ENotification::CheckState);
 	}
 
-	if (IsStealMate())
+	if (IsStaleMate())
 	{
 		m_state = EGameState::Draw;
+		//Notify(ENotification::GameOver);
 	}
 }
 

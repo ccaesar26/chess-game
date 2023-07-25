@@ -2,16 +2,12 @@
 
 #include "IChessGame.h"
 #include "Piece.h"
-#include "IChessGameListener.h"
 
 #include <array>
 #include <unordered_map>
 
 using ArrayBoard = std::array<std::array<PiecePtr, 8>, 8>;
 using CharBoard = std::array<std::array<char, 8>, 8>;
-
-using IChessGameListenerWeakPtr = std::weak_ptr<IChessGameListener>;
-using IChessGameListenerPtr = std::shared_ptr<IChessGameListener>;
 
 enum class EGameState
 {
@@ -22,6 +18,15 @@ enum class EGameState
 	UpgradePawn,
 	CheckState,
 	WaitingForDrawResponse
+};
+
+enum class ENotification
+{
+	MoveMade,
+	PawnUpgrade,
+	GameOver,
+	DrawProposal,
+	CheckState
 };
 
 struct HashFunctor {
@@ -60,7 +65,7 @@ public:
 	IPieceList GetCapturedPieces(EColor color) const override;
 	EColor GetCurrentPlayer() const override;
 
-	bool IsStealMate() const;
+	bool IsStaleMate() const;
 
 	bool IsGameOver() const override;
 
@@ -93,9 +98,7 @@ public:
 
 	void AddListener(IChessGameListenerPtr listener);
 	void RemoveListener(IChessGameListenerPtr listener);
-	void Notify(int, int, int, int);
-	void Notify(int, int, EType);
-	void Notify();
+	void Notify(ENotification notif, int ir = 0, int ic = 0, int fr = 0, int fc = 0);
 
 	// Game's Logic //
 

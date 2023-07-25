@@ -1,10 +1,14 @@
 #pragma once
 
 #include "IPiece.h"
+#include "IChessGameListener.h"
 
 #include <string>
 
 using IChessGamePtr = std::shared_ptr<class IChessGame>;
+
+using IChessGameListenerWeakPtr = std::weak_ptr<IChessGameListener>;
+using IChessGameListenerPtr = std::shared_ptr<IChessGameListener>;
 
 struct BoardPosition
 {
@@ -41,6 +45,9 @@ public:
 
 	virtual Position ConvertToMemoryPosition(char col, char row) const = 0;
 	virtual BoardPosition ConvertToBoardPosition(Position pos) const = 0;
+
+	virtual void AddListener(IChessGameListenerPtr listener) = 0;
+	virtual void RemoveListener(IChessGameListenerPtr listener) = 0;
 
 	virtual ~IChessGame() = default;
 };

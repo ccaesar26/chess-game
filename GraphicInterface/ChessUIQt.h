@@ -38,11 +38,10 @@ public:
     void AppendThrowMessage(const QString& message);
 
     // For listeners methods //
-    void OnMoveMade(int ir, int ic, int fr, int fc) const override;
-    void OnGameOver() const override;
-    void OnPawnUpgrade(int r, int c, char t) const override;
-    void OnDrawProposal() const override;
-
+    void OnMoveMade(int ir, int ic, int fr, int fc) override;
+    void OnGameOver() override;
+    void OnPawnUpgrade() override;
+    void OnCheckState() override;
 
 public slots:
     void OnButtonClicked(const std::pair<int, int>& position);

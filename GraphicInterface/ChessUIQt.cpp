@@ -141,24 +141,7 @@ void ChessUIQt::OnButtonClicked(const std::pair<int, int>&position)
             //TODO COMPLETE ME...
             try
             {
-                game->MakeMovement(m_selectedCell->first, m_selectedCell->second, position.first, position.second);
-                
-                if (game->IsWaitingForUpgrade())
-                {
-                    ShowPromoteOptions();
-                }
-
-                switch (game->GetCurrentPlayer())
-                {
-                case EColor::Black:
-                    UpdateMessage("Waiting for black player");
-                    break;
-				case EColor::White:
-					UpdateMessage("Waiting for white player");
-					break;
-                default:
-                    break;
-                }
+                game->MakeMovement(m_selectedCell->first, m_selectedCell->second, position.first, position.second);                                
             }
             catch (const OccupiedByOwnPieceException& e)
             {
@@ -182,50 +165,7 @@ void ChessUIQt::OnButtonClicked(const std::pair<int, int>&position)
 
             //Unselect prev. pressed button
             m_grid[m_selectedCell.value().first][m_selectedCell.value().second]->setSelected(false);
-            m_selectedCell.reset();
-
-			UpdateBoard();
-            if (game->IsGameOver())
-            {
-                if (game->IsDraw())
-                {
-					m_MessageLabel->setText("Game over! Draw.");
-					QMessageBox::StandardButton reply;
-					reply = QMessageBox::question(this, "Game Over", "Draw.\nDo you want to play again?", QMessageBox::Yes | QMessageBox::Close);
-
-					if (reply == QMessageBox::Yes)
-					{
-						OnRestartButtonClicked();
-					}
-					else
-					{
-						Exit();
-					}
-                    return;
-                }
-				m_MessageLabel->setText("Game over! Black player won");
-				QMessageBox::StandardButton reply;
-				
-				if (game->IsWonByBlackPlayer())
-				{
-                    reply = QMessageBox::question(this, "Game Over", "Black player won.\nDo you want to play again?", QMessageBox::Yes | QMessageBox::Close);
-                }
-				if (game->IsWonByWhitePlayer())
-				{
-					reply = QMessageBox::question(this, "Game Over", "White player won.\nDo you want to play again?", QMessageBox::Yes | QMessageBox::Close);
-				}
-                
-                if (reply == QMessageBox::Yes)
-				{
-                    OnRestartButtonClicked();
-				}
-				else
-				{
-                    Exit();
-				}
-				return;
-            }
-			
+            m_selectedCell.reset();			
         }
     }
     //At first click
@@ -511,23 +451,72 @@ void ChessUIQt::AppendThrowMessage(const QString& message)
 	m_MessageLabel->setText(s);
 }
 
-void ChessUIQt::OnMoveMade(int ir, int ic, int fr, int fc) const
+void ChessUIQt::OnMoveMade(int ir, int ic, int fr, int fc)
 {
-	throw std::logic_error("The method or operation is not implemented.");
+	UpdateBoard();
+
+	switch (game->GetCurrentPlayer())
+	{
+	case EColor::Black:
+		UpdateMessage("Waiting for black player");
+		break;
+	case EColor::White:
+		UpdateMessage("Waiting for white player");
+		break;
+	default:
+		break;
+	}
 }
 
-void ChessUIQt::OnGameOver() const
+void ChessUIQt::OnGameOver()
 {
-	throw std::logic_error("The method or operation is not implemented.");
+    UpdateBoard();
+	if (game->IsDraw())
+	{
+		m_MessageLabel->setText("Game over! Draw.");
+		QMessageBox::StandardButton reply;
+		reply = QMessageBox::question(this, "Game Over", "Draw.\nDo you want to play again?", QMessageBox::Yes | QMessageBox::Close);
+
+		if (reply == QMessageBox::Yes)
+		{
+			OnRestartButtonClicked();
+		}
+		else
+		{
+			Exit();
+		}
+		return;
+	}
+	m_MessageLabel->setText("Game over! Black player won");
+	QMessageBox::StandardButton reply;
+
+	if (game->IsWonByBlackPlayer())
+	{
+		reply = QMessageBox::question(this, "Game Over", "Black player won.\nDo you want to play again?", QMessageBox::Yes | QMessageBox::Close);
+	}
+	if (game->IsWonByWhitePlayer())
+	{
+		reply = QMessageBox::question(this, "Game Over", "White player won.\nDo you want to play again?", QMessageBox::Yes | QMessageBox::Close);
+	}
+
+	if (reply == QMessageBox::Yes)
+	{
+		OnRestartButtonClicked();
+	}
+	else
+	{
+		Exit();
+	}
 }
 
-void ChessUIQt::OnPawnUpgrade(int r, int c, char t) const
+void ChessUIQt::OnPawnUpgrade()
 {
-	throw std::logic_error("The method or operation is not implemented.");
+    ShowPromoteOptions();
 }
 
-void ChessUIQt::OnDrawProposal() const
+void ChessUIQt::OnCheckState()
 {
-	throw std::logic_error("The method or operation is not implemented.");
+    AppendThrowMessage("Solve check state");
+    UpdateBoard();
 }
 
