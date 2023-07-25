@@ -24,6 +24,13 @@ enum class EGameState
 	WaitingForDrawResponse
 };
 
+enum class ENotification
+{
+	MoveMade,
+	PawnUpgrade,
+	GameOver
+};
+
 struct HashFunctor {
 	std::size_t operator()(const std::array<std::array<char, 8>, 8>& data) const
 	{
