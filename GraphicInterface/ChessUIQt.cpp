@@ -511,7 +511,7 @@ void ChessUIQt::AppendThrowMessage(const QString& message)
 	m_MessageLabel->setText(s);
 }
 
-void ChessUIQt::OnMoveMade() const
+void ChessUIQt::OnMoveMade(int ir, int ic, int fr, int fc) const
 {
 	throw std::logic_error("The method or operation is not implemented.");
 }
@@ -521,7 +521,7 @@ void ChessUIQt::OnGameOver() const
 	throw std::logic_error("The method or operation is not implemented.");
 }
 
-void ChessUIQt::OnPawnUpgrade() const
+void ChessUIQt::OnPawnUpgrade(int r, int c, char t) const
 {
 	throw std::logic_error("The method or operation is not implemented.");
 }

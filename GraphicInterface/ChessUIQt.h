@@ -38,9 +38,9 @@ public:
     void AppendThrowMessage(const QString& message);
 
     // For listeners methods //
-    void OnMoveMade() const override;
+    void OnMoveMade(int ir, int ic, int fr, int fc) const override;
     void OnGameOver() const override;
-    void OnPawnUpgrade() const override;
+    void OnPawnUpgrade(int r, int c, char t) const override;
     void OnDrawProposal() const override;
 
 

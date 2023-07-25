@@ -392,9 +392,79 @@ void ChessGame::RemoveListener(IChessGameListenerPtr listener)
 {
 }
 
-void ChessGame::NotifyAll()
+void ChessGame::Notify(int ir, int ic, int fr, int fc)
 {
+	for (auto it = m_listeners.begin(); it != m_listeners.end(); it++)
+	{
+		if (auto sp = it->lock())
+		{
+			sp->OnMoveMade(ir, ic, fr, fc);
+		}
+	}
+}
 
+void ChessGame::Notify(int r, int c, EType t)
+{
+	char l;
+	switch (t)
+	{
+	case EType::Rook:
+		l = 'r';
+		break;
+	case EType::Horse:
+		l = 'h';
+		break;
+	case EType::King:
+		l = 'k';
+		break;
+	case EType::Queen:
+		l = 'q';
+		break;
+	case EType::Bishop:
+		l = 'b';
+		break;
+	case EType::Pawn:
+		l = 'p';
+		break;
+	default:
+		break;
+	}
+	if (m_turn == EColor::Black)
+	{
+		l = l - 'a' + 'A';
+	}
+
+	for (auto it = m_listeners.begin(); it != m_listeners.end(); it++)
+	{
+		if (auto sp = it->lock())
+		{
+			sp->OnPawnUpgrade(r, c, l);
+		}
+	}
+}
+
+void ChessGame::Notify()
+{
+	if (m_state == EGameState::WaitingForDrawResponse)
+	{
+		for (auto it = m_listeners.begin(); it != m_listeners.end(); it++)
+		{
+			if (auto sp = it->lock())
+			{
+				sp->OnDrawProposal();
+			}
+		}
+	}
+	else
+	{
+		for (auto it = m_listeners.begin(); it != m_listeners.end(); it++)
+		{
+			if (auto sp = it->lock())
+			{
+				sp->OnGameOver();
+			}
+		}
+	}
 }
 
 // Game's Logic //

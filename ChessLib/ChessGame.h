@@ -24,13 +24,6 @@ enum class EGameState
 	WaitingForDrawResponse
 };
 
-enum class ENotification
-{
-	MoveMade,
-	PawnUpgrade,
-	GameOver
-};
-
 struct HashFunctor {
 	std::size_t operator()(const std::array<std::array<char, 8>, 8>& data) const
 	{
@@ -100,7 +93,9 @@ public:
 
 	void AddListener(IChessGameListenerPtr listener);
 	void RemoveListener(IChessGameListenerPtr listener);
-	void NotifyAll();
+	void Notify(int, int, int, int);
+	void Notify(int, int, EType);
+	void Notify();
 
 	// Game's Logic //
 
