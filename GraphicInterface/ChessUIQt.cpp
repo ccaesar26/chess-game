@@ -487,15 +487,18 @@ void ChessUIQt::OnGameOver()
 		}
 		return;
 	}
-	m_MessageLabel->setText("Game over! Black player won");
+	
+    m_MessageLabel->setText("Game over! Black player won");
 	QMessageBox::StandardButton reply;
 
 	if (game->IsWonByBlackPlayer())
 	{
+        m_MessageLabel->setText("Game over! Black player won");
 		reply = QMessageBox::question(this, "Game Over", "Black player won.\nDo you want to play again?", QMessageBox::Yes | QMessageBox::Close);
 	}
 	if (game->IsWonByWhitePlayer())
 	{
+        m_MessageLabel->setText("Game over! White player won");
 		reply = QMessageBox::question(this, "Game Over", "White player won.\nDo you want to play again?", QMessageBox::Yes | QMessageBox::Close);
 	}
 
