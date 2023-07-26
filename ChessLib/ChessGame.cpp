@@ -12,10 +12,8 @@ static EType GetType(char c)
 	// black pieces: P R H B Q K
 	// empty tile: ' '
 
-	static const EType types[] = {EType::Pawn,EType::Rook, EType::Horse, EType::Bishop, EType::Queen, EType::King};
+	static const EType types[] = { EType::Pawn,EType::Rook, EType::Horse, EType::Bishop, EType::Queen, EType::King };
 
-	//const char str[] = "prhbqk";
-	//int pos = strchr(str, tolower(c)) - str;
 	std::string str = "prhbqk";
 	int pos = str.find_first_of(c);
 
@@ -220,15 +218,8 @@ void ChessGame::MakeMovement(Position initialPos, Position finalPos)
 
 	Notify(ENotification::MoveMade, initialPos, finalPos);
 
-	if (IsGameOver())
-	{
-		Notify(ENotification::GameOver);
-	}
-
 	switch (m_state)
 	{
-	/*case EGameState::MovingPiece:
-		break;*/
 	case EGameState::Draw:
 	case EGameState::WonByWhitePlayer:
 	case EGameState::WonByBlackPlayer:
@@ -240,7 +231,7 @@ void ChessGame::MakeMovement(Position initialPos, Position finalPos)
 	case EGameState::CheckState:
 		Notify(ENotification::Check);
 		break;
-	case EGameState::WaitingForDrawResponse:
+	default:
 		break;
 	}
 }
@@ -285,6 +276,16 @@ void ChessGame::UpgradePawn(EType upgradeType)
 	if (CanBeCaptured(m_board, m_kingPositions[(int)m_turn]) == true)
 	{
 		m_state = EGameState::CheckState;
+	}
+
+	if (IsStaleMate())
+	{
+		m_state = EGameState::Draw;
+	}
+
+	if (IsGameOver())
+	{
+		m_state = m_turn == EColor::White ? EGameState::WonByBlackPlayer : EGameState::WonByWhitePlayer;
 	}
 }
 
@@ -842,6 +843,11 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 	{
 		m_state = EGameState::Draw;
 		//Notify(ENotification::GameOver);
+	}
+
+	if (IsGameOver())
+	{
+		m_state = m_turn == EColor::White ? EGameState::WonByBlackPlayer : EGameState::WonByWhitePlayer;
 	}
 }
 
