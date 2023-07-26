@@ -198,6 +198,7 @@ void ChessUIQt::OnButtonClicked(const Position& position)
 				m_selectedCell = position;
 				m_grid[position.row][position.col]->setSelected(true);
 
+                AppendThrowMessage("");
 				HighlightPossibleMoves(m_game->GetPossibleMoves(m_selectedCell.value()));
 
                 return;
@@ -535,15 +536,18 @@ void ChessUIQt::OnGameOver(EGameResult result)
 		}
 		return;
 	}
-	m_MessageLabel->setText("Game over! Black player won");
+	
+    m_MessageLabel->setText("Game over! Black player won");
 	QMessageBox::StandardButton reply;
 
 	if (m_game->IsWonByBlackPlayer())
 	{
+        m_MessageLabel->setText("Game over! Black player won");
 		reply = QMessageBox::question(this, "Game Over", "Black player won.\nDo you want to play again?", QMessageBox::Yes | QMessageBox::Close);
 	}
 	if (m_game->IsWonByWhitePlayer())
 	{
+        m_MessageLabel->setText("Game over! White player won");
 		reply = QMessageBox::question(this, "Game Over", "White player won.\nDo you want to play again?", QMessageBox::Yes | QMessageBox::Close);
 	}
 
@@ -603,7 +607,11 @@ void ChessUIQt::OnPawnUpgrade(Position init, Position upPos)
 
 void ChessUIQt::OnCheck()
 {
-    AppendThrowMessage("Solve check state");
+	QString s = m_MessageLabel->text();
+	s.append(" - ");
+	s.append("Solve check");
+	m_MessageLabel->setText(s);
+    //AppendThrowMessage("Solve check state");
     //UpdateBoard();
 }
 

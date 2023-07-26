@@ -38,7 +38,7 @@ IChessGamePtr IChessGame::CreateGame()
 
 ChessGame::ChessGame()
 {
-	InitializeChessGame();
+	RestartChessGame();
 }
 
 ChessGame::ChessGame(const CharBoard& inputConfig, EColor turn) 
@@ -76,11 +76,15 @@ ChessGame::ChessGame(const CharBoard& inputConfig, EColor turn)
 	}
 }
 
-void ChessGame::InitializeChessGame()
+void ChessGame::RestartChessGame()
 {
 	m_turn = EColor::White;
 	m_kingPositions = { Position(7 ,4), Position(0, 4) };
 	m_state = EGameState::MovingPiece;
+
+	m_whitePiecesCaptured.clear();
+	m_blackPiecesCaptured.clear();
+	m_boardConfigurationsRepetitons.clear();
 
 	for (int i = 0; i < 2; i++)
 		for (int j = 0; j < 2; j++)
@@ -99,6 +103,10 @@ void ChessGame::InitializeChessGame()
 		m_board[0][i] = Piece::Produce(TYPES[i], EColor::Black);
 		m_board[7][i] = Piece::Produce(TYPES[i], EColor::White);
 	}
+
+	for (int i = 2; i <= 5; i++)
+		for (int j = 0; j < 8; j++)
+			m_board[i][j].reset();
 }
 
 void ChessGame::ResetGame()
@@ -795,11 +803,13 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 		{
 			m_board[finalPosition.row][finalPosition.col + 1] = m_board[finalPosition.row][0];
 			m_board[finalPosition.row][0].reset();
+			Notify(ENotification::MoveMade, Position(finalPosition.row, 0), Position(finalPosition.row, finalPosition.col + 1));
 		}
 		else if (initialPosition.col - finalPosition.col == -2)
 		{
 			m_board[finalPosition.row][finalPosition.col - 1] = m_board[finalPosition.row][7];
 			m_board[finalPosition.row][7].reset();
+			Notify(ENotification::MoveMade, Position(finalPosition.row, 7), Position(finalPosition.row, finalPosition.col - 1));
 		}
 	}  
 	// End of Make Castle Inaccessible if King moved //
