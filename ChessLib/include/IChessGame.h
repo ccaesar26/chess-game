@@ -21,6 +21,7 @@ class IChessGame
 {
 public:
 	static  IChessGamePtr CreateBoard();
+	virtual void RestartChessGame() = 0;
 
 	virtual IPiecePtr GetIPiecePtr(int row, int col) const = 0;
 	virtual std::vector<std::pair<int, int>> GetMoves(int row, int col) const = 0;

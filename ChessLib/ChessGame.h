@@ -53,7 +53,7 @@ public:
 
 	ChessGame();
 	ChessGame(const CharBoard& inputConfig, EColor turn = EColor::White);
-	void InitializeChessGame();
+	void RestartChessGame() override;
 
 	// Setter for Castle Matrix // 
 

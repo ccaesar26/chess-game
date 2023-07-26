@@ -193,7 +193,7 @@ void ChessUIQt::OnLoadButtonClicked()
 void ChessUIQt::OnRestartButtonClicked()
 {
     //game.reset();
-	game = IChessGame::CreateBoard();
+    game->RestartChessGame();
 
 	//Widget containing everything
 	QWidget* mainWidget = new QWidget();

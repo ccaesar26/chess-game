@@ -81,7 +81,7 @@ IChessGamePtr IChessGame::CreateBoard()
 
 ChessGame::ChessGame()
 {
-	InitializeChessGame();
+	RestartChessGame();
 }
 
 ChessGame::ChessGame(const CharBoard& inputConfig, EColor turn) 
@@ -120,11 +120,15 @@ ChessGame::ChessGame(const CharBoard& inputConfig, EColor turn)
 	}
 }
 
-void ChessGame::InitializeChessGame()
+void ChessGame::RestartChessGame()
 {
 	m_turn = EColor::White;
 	m_kingPositions = { Position(7 ,4), Position(0, 4) };
 	m_state = EGameState::MovingPiece;
+
+	m_whitePiecesCaptured.clear();
+	m_blackPiecesCaptured.clear();
+	m_boardConfigurationsRepetitons.clear();
 
 	for (int i = 0; i < 2; i++)
 		for (int j = 0; j < 2; j++)
@@ -143,6 +147,10 @@ void ChessGame::InitializeChessGame()
 		m_board[0][i] = Piece::Produce(TYPES[i], EColor::Black);
 		m_board[7][i] = Piece::Produce(TYPES[i], EColor::White);
 	}
+
+	for (int i = 2; i <= 5; i++)
+		for (int j = 0; j < 8; j++)
+			m_board[i][j].reset();
 }
 
 void ChessGame::SetCastleValues(const std::array<std::array<bool, 2>, 2>& Castle)
