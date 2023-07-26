@@ -169,59 +169,59 @@ void ChessUIQt::InitializeBoard(QGridLayout* mainGridLayout)
     mainGridLayout->addWidget(board, 1, 1, 1, 1);
 }
 
-void ChessUIQt::OnButtonClicked(const std::pair<int, int>&position)
+void ChessUIQt::OnButtonClicked(const Position& position)
 {
-    //At second click
+    //At col click
     if (m_selectedCell.has_value()) 
     {
         if (m_selectedCell.value() == position)
         {
-            m_grid[m_selectedCell.value().first][m_selectedCell.value().second]->setSelected(false);
+            m_grid[m_selectedCell.value().row][m_selectedCell.value().col]->setSelected(false);
             m_selectedCell.reset();
-            UnhighlightPossibleMoves(m_game->GetMoves(position.first, position.second));
+            UnhighlightPossibleMoves(m_game->GetPossibleMoves(position));
         }
         else
         {
             //TODO COMPLETE ME...
             try
             {
-                UnhighlightPossibleMoves(m_game->GetMoves(m_selectedCell->first, m_selectedCell->second));
-                m_game->MakeMovement(m_selectedCell->first, m_selectedCell->second, position.first, position.second);                                
+                UnhighlightPossibleMoves(m_game->GetPossibleMoves(m_selectedCell.value()));
+                m_game->MakeMovement(m_selectedCell.value(), position);                                
             }
             catch (const OccupiedByOwnPieceException& e)
             {
-                UnhighlightPossibleMoves(m_game->GetMoves(m_selectedCell->first, m_selectedCell->second));
+                UnhighlightPossibleMoves(m_game->GetPossibleMoves(m_selectedCell.value()));
 
-				m_grid[m_selectedCell.value().first][m_selectedCell.value().second]->setSelected(false);
+				m_grid[m_selectedCell.value().row][m_selectedCell.value().col]->setSelected(false);
 				m_selectedCell.reset();                
 
 				m_selectedCell = position;
-				m_grid[position.first][position.second]->setSelected(true);
+				m_grid[position.row][position.col]->setSelected(true);
 
-				HighlightPossibleMoves(m_game->GetMoves(m_selectedCell->first, m_selectedCell->second));
+				HighlightPossibleMoves(m_game->GetPossibleMoves(m_selectedCell.value()));
 
                 return;
             }
             catch (const ChessException& e)
 			{
-				HighlightPossibleMoves(m_game->GetMoves(m_selectedCell->first, m_selectedCell->second));
+				HighlightPossibleMoves(m_game->GetPossibleMoves(m_selectedCell.value()));
                 AppendThrowMessage(e.what());
                 return;
             }
 
             //Unselect prev. pressed button
-            m_grid[m_selectedCell.value().first][m_selectedCell.value().second]->setSelected(false);
+            m_grid[m_selectedCell.value().row][m_selectedCell.value().col]->setSelected(false);
             m_selectedCell.reset();			
         }
     }
-    //At first click
+    //At row click
     else 
     {
         m_selectedCell = position;
-        m_grid[position.first][position.second]->setSelected(true);
+        m_grid[position.row][position.col]->setSelected(true);
 
         //TODO Show possible moves here
-        HighlightPossibleMoves(m_game->GetMoves(position.first, position.second));
+        HighlightPossibleMoves(m_game->GetPossibleMoves(position));
     }
 }
 
@@ -358,9 +358,9 @@ void ChessUIQt::UpdateBoard()
         {
             std::pair<PieceType, PieceColor> newPiece;
 
-            if (m_game->GetIPiecePtr(i, j))
+            if (m_game->GetIPiecePtr(Position(i,j)))
             {
-				switch (m_game->GetIPiecePtr(i, j)->GetType())
+				switch (m_game->GetIPiecePtr(Position(i, j))->GetType())
 				{
 				case EType::Rook:
 					newPiece.first = PieceType::rook;
@@ -384,7 +384,7 @@ void ChessUIQt::UpdateBoard()
 					break;
 				}
 
-                switch (m_game->GetIPiecePtr(i, j)->GetColor())
+                switch (m_game->GetIPiecePtr(Position(i, j))->GetColor())
 				{
 				case EColor::Black:
 					newPiece.second = PieceColor::black;
@@ -410,22 +410,22 @@ void ChessUIQt::UpdateBoard()
 
 }
 
-void ChessUIQt::HighlightPossibleMoves(const std::vector<std::pair<int, int>>& possibleMoves)
+void ChessUIQt::HighlightPossibleMoves(const PositionList& possibleMoves)
 {
     for (const auto& position : possibleMoves) 
     {
-        if (m_game->GetIPiecePtr(position.first, position.second))
+        if (m_game->GetIPiecePtr(position))
         {
-            m_grid[position.first][position.second]->setHighlighted(2);
+            m_grid[position.row][position.col]->setHighlighted(2);
         } 
-        else  m_grid[position.first][position.second]->setHighlighted(1);
+        else  m_grid[position.row][position.col]->setHighlighted(1);
     }
 }
 
-void ChessUIQt::UnhighlightPossibleMoves(const std::vector<std::pair<int, int>>& possibleMoves)
+void ChessUIQt::UnhighlightPossibleMoves(const PositionList& possibleMoves)
 {
 	for (const auto& position : possibleMoves) {
-		m_grid[position.first][position.second]->setHighlighted(false);
+		m_grid[position.row][position.col]->setHighlighted(false);
 	}
 }
 
@@ -517,7 +517,7 @@ void ChessUIQt::OnMoveMade(Position init, Position fin)
 	}
 }
 
-void ChessUIQt::OnGameOver()
+void ChessUIQt::OnGameOver(EGameResult result)
 {
 	if (m_game->IsDraw())
 	{

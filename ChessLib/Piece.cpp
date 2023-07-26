@@ -7,6 +7,8 @@
 #include "Queen.h"
 #include "Rook.h"
 
+#include <cctype>
+
 PiecePtr Piece::Produce(EType type, EColor color)
 {
 	switch (type)
@@ -40,6 +42,38 @@ EColor Piece::GetColor() const
 EType Piece::GetType() const
 {
 	return m_type;
+}
+
+bool Piece::Is(EType type) const
+{
+	return m_type == type;
+}
+
+bool Piece::Is(std::vector<EType> types) const
+{
+	return std::find(types.begin(), types.end(), m_type) != types.end();
+}
+
+char Piece::ToLetter() const
+{
+	// white pieces: p r h b q k
+	// black pieces: P R H B Q K
+	switch (GetType())
+	{
+	case EType::Rook:
+		return GetColor() == EColor::White ? 'r' : 'R';
+	case EType::Horse:
+		return GetColor() == EColor::White ? 'h' : 'H';
+	case EType::King:
+		return GetColor() == EColor::White ? 'k' : 'K';
+	case EType::Queen:
+		return GetColor() == EColor::White ? 'q' : 'Q';
+	case EType::Bishop:
+		return GetColor() == EColor::White ? 'b' : 'B';
+	case EType::Pawn:
+		return GetColor() == EColor::White ? 'p' : 'P';
+	}
+	return 'p';
 }
 
 PositionList Piece::GetFinalPositionsFromMovementArray(const std::array<Position, 8>& possibleMovements, 

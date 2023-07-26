@@ -53,7 +53,7 @@ TEST(TestCastle, Test_White_Can_Not_Castle_1)
 
 	ChessGame game(alternativeBoard, EColor::White);
 
-	std::array<std::array<bool, 2>, 2> Castle = { false,false,true,true };
+	CastleValues Castle = { false,false,true,true };
 
 	game.SetCastleValues(Castle);
 
@@ -227,7 +227,7 @@ TEST(TestCastle, Test_Black_Can_Not_Castle_1)
 
 	ChessGame game(alternativeBoard, EColor::Black);
 
-	std::array<std::array<bool, 2>, 2> Castle = { true,true,false,false };
+	CastleValues Castle = { true,true,false,false };
 
 	game.SetCastleValues(Castle);
 

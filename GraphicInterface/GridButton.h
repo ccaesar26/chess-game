@@ -1,6 +1,7 @@
 #pragma once
 #include <QPushButton>
 #include "Enums.h"
+#include "IPiece.h"
 
 class GridButton : public QPushButton
 {
@@ -28,7 +29,7 @@ signals:
 	void Clicked(const std::pair<int, int>& position);
 
 private:
-	std::pair<int, int> m_Position;
+	Position m_Position;
 	PieceType m_PieceType;
 	PieceColor m_PieceColor;
 	int m_Highlighted;

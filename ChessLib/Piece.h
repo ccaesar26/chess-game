@@ -15,6 +15,11 @@ public:
 	EColor GetColor() const override;
 	EType GetType() const override;
 
+	bool Is(EType type) const;
+	bool Is(std::vector<EType> types) const;
+
+	char ToLetter() const;
+
 	virtual PositionList GetPattern(Position currentPos, std::function<PiecePtr(Position)> GetPieceFromBoard) const = 0;
 
 protected:

@@ -3,7 +3,7 @@
 void GridButton::mouseReleaseEvent(QMouseEvent* event)
 {
 	QPushButton::mouseReleaseEvent(event);
-	emit(Clicked(m_Position));
+	emit(Clicked(m_Position.ToPair()));
 }
 
 void GridButton::updatePiece()
@@ -59,7 +59,7 @@ void GridButton::updatePiece()
 
 void GridButton::updateBackgroundColor()
 {
-	bool defaultColorBlack = (m_Position.first + m_Position.second) % 2;
+	bool defaultColorBlack = (m_Position.row + m_Position.col) % 2;
 	QString backColor = "";
 
 	if(m_Highlighted==1)

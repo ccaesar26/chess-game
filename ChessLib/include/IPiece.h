@@ -10,6 +10,9 @@ struct Position
 	int row, col;
 
 	Position(int r = 0, int c = 0);
+	Position(std::pair<int, int> p);
+
+	std::pair<int, int> ToPair();
 
 	bool operator==(const Position& P) const;
 
@@ -36,13 +39,26 @@ class IPiece
 {
 public:
 	virtual EColor GetColor() const = 0;
-	virtual EType GetType() const = 0; 
+	virtual EType GetType() const = 0;
+
+	virtual ~IPiece() = default;
 };
 
 inline Position::Position(int r, int c)
 	: row(r)
 	, col(c)
 {}
+
+inline Position::Position(std::pair<int, int> p)
+	: row(p.first)
+	, col(p.second)
+{
+}
+
+inline std::pair<int, int> Position::ToPair()
+{
+	return std::make_pair(row, col);
+}
 
 inline bool Position::operator==(const Position& P) const
 {

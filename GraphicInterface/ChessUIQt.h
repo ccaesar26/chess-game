@@ -30,8 +30,8 @@ public:
     //Modify if necessary with your board representation
     void UpdateBoard();
     //Modify if necessary with your possible moves representation
-    void HighlightPossibleMoves(const std::vector<std::pair<int, int>>& possibleMoves);
-    void UnhighlightPossibleMoves(const std::vector<std::pair<int, int>>& possibleMoves);
+    void HighlightPossibleMoves(const PositionList& possibleMoves);
+    void UnhighlightPossibleMoves(const PositionList& possibleMoves);
     //Modify or delete
     void StartGame();
     QString ShowPromoteOptions();
@@ -41,7 +41,7 @@ public:
 
     // For listeners methods //
     void OnMoveMade(Position init, Position fin) override;
-    void OnGameOver() override;
+    void OnGameOver(EGameResult result) override;
     void OnPawnUpgrade(Position init, Position upPos) override;
     void OnCheck() override;
 
@@ -49,7 +49,7 @@ public:
     void OnGameRestarted() override;
 
 public slots:
-    void OnButtonClicked(const std::pair<int, int>& position);
+    void OnButtonClicked(const Position& position);
 
     void OnSaveButtonClicked();
     void OnLoadButtonClicked();
@@ -64,7 +64,7 @@ signals:
 
 private:
     std::array<std::array<GridButton*, 8>, 8> m_grid;
-    std::optional<std::pair<int, int>> m_selectedCell;
+    std::optional<Position> m_selectedCell;
     QLabel* m_MessageLabel;
     QListWidget* m_MovesList;
     QLabel* m_BlackTimer, *m_WhiteTimer;

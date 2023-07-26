@@ -8,6 +8,7 @@
 
 using ArrayBoard = std::array<std::array<PiecePtr, 8>, 8>;
 using CharBoard = std::array<std::array<char, 8>, 8>;
+using CastleValues = std::array<std::array<bool, 2>, 2>;
 
 enum class EGameState
 {
@@ -54,18 +55,18 @@ public:
 
 	ChessGame();
 	ChessGame(const CharBoard& inputConfig, EColor turn = EColor::White);
-	void InitializeChessGame();
 
 	void ResetGame() override;
 
 	// Setter for Castle Matrix // 
 
-	void SetCastleValues(const std::array<std::array<bool, 2>, 2>& Castle);
+	void SetCastleValues(const CastleValues& Castle);
 
 	// Virtual Implementations //
 
-	IPiecePtr GetIPiecePtr(int row, int col) const override;
-	std::vector<std::pair<int, int>> GetMoves(int row, int col) const override;
+	IPiecePtr GetIPiecePtr(Position pos) const override;
+	PositionList GetPossibleMoves(Position currentPos) const override;
+
 	IPieceList GetCapturedPieces(EColor color) const override;
 	EColor GetCurrentPlayer() const override;
 
@@ -73,20 +74,18 @@ public:
 
 	bool IsGameOver() const override;
 
-	void MakeMovement(int initialRow, int initialColumn, int finalRow, int finalColumn) override;
+	void MakeMovement(Position initialpOS, Position finalPos) override;
 
 	void UpgradePawn(EType upgradeType) override;
 
 	void RequestDraw() override;
 
 	void AcceptDrawProposal() override;
-
 	void DeclineDrawProposal() override;
 
 	bool IsDraw() const override;
 
 	bool IsWonByWhitePlayer() const override;
-
 	bool IsWonByBlackPlayer() const override;
 
 	bool IsWaitingForUpgrade() const override;
@@ -95,24 +94,23 @@ public:
 
 	bool IsCheckState() const override;
 
-	Position ConvertToMemoryPosition(char col, char row) const override;
-	BoardPosition ConvertToBoardPosition(Position pos) const override;
-
 	// Observable //
 
 	void AddListener(IChessGameListenerPtr listener);
-	void RemoveListener(IChessGameListenerPtr listener);
+	void RemoveListener(IChessGameListener* listener);
 	void Notify(ENotification notif, Position init, Position fin); // different implementations
 	//void Notify(ENotification notif, Position pos/*, EType type*/); // different implementations
 	void Notify(ENotification notif); // different implementations
 
 	// Game's Logic //
 
+	void InitializeChessGame();
+
 	PiecePtr GetPiece(Position pos, const ArrayBoard& board) const;
 
 	void AddCastle(Position kingPosition, PositionList& kingPossibleMoves) const;
 
-	PositionList GetPossibleMoves(Position currentPos) const;
+	void ResetBoard();
 	
 private:
 
@@ -132,7 +130,7 @@ private:
 
 	void MakeMove(Position initialPosition, Position finalPosition);
 
-	void SaveCurrentConfig();
+	int SaveCurrentConfig();
 
 	// Static Methods //
 
@@ -153,11 +151,11 @@ private:
 	EGameState m_state;
 
 	// Row 1 is for White and Row 2 is for Black ! Column 1 is for left castle and Column 2 is for right castle
-	std::array<std::array<bool, 2>, 2> m_Castle;    
+	CastleValues m_Castle;    
 
 	std::unordered_map<std::array<std::array<char, 8>, 8>, int, HashFunctor> m_boardConfigurationsRepetitons;
 
 	// Observable //
 
-	std::vector<std::weak_ptr<IChessGameListener>> m_listeners;
+	std::vector<IChessGameListenerWeakPtr> m_listeners;
 };
