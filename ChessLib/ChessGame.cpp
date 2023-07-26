@@ -153,6 +153,25 @@ void ChessGame::RestartChessGame()
 			m_board[i][j].reset();
 }
 
+void ChessGame::ResetGame()
+{
+	InitializeChessGame();
+
+	for (int i = 2; i < 6; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			m_board[i][j].reset();
+		}
+	}
+
+	m_whitePiecesCaptured.clear();
+	m_blackPiecesCaptured.clear();
+	m_boardConfigurationsRepetitons.clear();
+
+	Notify(ENotification::Reset);
+}
+
 void ChessGame::SetCastleValues(const std::array<std::array<bool, 2>, 2>& Castle)
 {
 	m_Castle = Castle;
@@ -274,9 +293,10 @@ bool ChessGame::IsGameOver() const
 
 void ChessGame::MakeMovement(int initialRow, int initialColumn, int finalRow, int finalColumn)
 {
-	MakeMove(Position(initialRow, initialColumn), Position(finalRow, finalColumn));
+	Position init(initialRow, initialColumn), fin(finalRow, finalColumn);
+	MakeMove(init, fin);
 
-	Notify(ENotification::MoveMade, initialRow, initialColumn, finalRow, finalColumn);
+	Notify(ENotification::MoveMade, init, fin);
 
 	if (IsGameOver())
 	{
@@ -310,10 +330,10 @@ void ChessGame::MakeMovement(int initialRow, int initialColumn, int finalRow, in
 		Notify(ENotification::GameOver);
 		break;
 	case EGameState::UpgradePawn:
-		Notify(ENotification::PawnUpgrade);
+		Notify(ENotification::PawnUpgrade, init, fin);
 		break;
 	case EGameState::CheckState:
-		Notify(ENotification::CheckState);
+		Notify(ENotification::Check);
 		break;
 	case EGameState::WaitingForDrawResponse:
 		break;
@@ -322,12 +342,12 @@ void ChessGame::MakeMovement(int initialRow, int initialColumn, int finalRow, in
 	}
 }
 
-void ChessGame::UpgradePawn(std::string upgradeType)
+void ChessGame::UpgradePawn(EType upgradeType)
 {
-	for (auto i = 0; i < upgradeType.size(); i++)
+	/*for (auto i = 0; i < upgradeType.size(); i++)
 	{
 		upgradeType[i] = tolower(upgradeType[i]);
-	}
+	}*/
 
 	Position upgradePos;
 	if (m_turn == EColor::White)
@@ -353,7 +373,7 @@ void ChessGame::UpgradePawn(std::string upgradeType)
 		}
 	}
 
-	if (upgradeType == "queen")
+	/*if (upgradeType == "queen")
 	{
 		m_board[upgradePos.row][upgradePos.col] = Piece::Produce(EType::Queen, m_turn);
 	}
@@ -373,8 +393,10 @@ void ChessGame::UpgradePawn(std::string upgradeType)
 	{
 		std::string m = "The type " + upgradeType + " is not a valid upgrade";
 		throw InvalidUpgradeException(m);
-	}
+	}*/
 
+	m_board[upgradePos.row][upgradePos.col] = Piece::Produce(upgradeType, m_turn);
+	
 	m_state = EGameState::MovingPiece;
 
 	SwitchTurn();
@@ -462,33 +484,45 @@ void ChessGame::RemoveListener(IChessGameListenerPtr listener)
 	}
 }
 
-void ChessGame::Notify(ENotification notif, int ir /*= 0*/, int ic /*= 0*/, int fr /*= 0*/, int fc /*= 0*/)
+void ChessGame::Notify(ENotification notif, Position init, Position fin)
 {
-	
+	for (auto it = m_listeners.begin(); it != m_listeners.end(); it++)
+	{
+		if (auto sp = it->lock())
+		{
+			if (notif == ENotification::MoveMade)
+			{
+				sp->OnMoveMade(init, fin);
+			}
+			else if (notif == ENotification::PawnUpgrade)
+			{
+				sp->OnPawnUpgrade(init, fin);
+			}
+		}
+	}
+}
+
+void ChessGame::Notify(ENotification notif)
+{
 	for (auto it = m_listeners.begin(); it != m_listeners.end(); it++)
 	{
 		if (auto sp = it->lock())
 		{
 			switch (notif)
 			{
-			case ENotification::MoveMade:
-				sp->OnMoveMade(ir, ic, fr, fc);
-				break;
-			case ENotification::PawnUpgrade:
-				sp->OnPawnUpgrade();
-				break;
 			case ENotification::GameOver:
 				sp->OnGameOver();
 				break;
-			case ENotification::CheckState:
+			case ENotification::Check:
 				sp->OnCheck();
 				break;
+			case ENotification::Reset:
+				sp->OnGameRestarted();
 			default:
 				break;
 			}
 		}
 	}
-	
 }
 
 // Game's Logic //

@@ -23,6 +23,8 @@ public:
 	static  IChessGamePtr CreateBoard();
 	virtual void RestartChessGame() = 0;
 
+	virtual void ResetGame() = 0;
+
 	virtual IPiecePtr GetIPiecePtr(int row, int col) const = 0;
 	virtual std::vector<std::pair<int, int>> GetMoves(int row, int col) const = 0;
 	virtual IPieceList GetCapturedPieces(EColor color) const = 0;
@@ -32,7 +34,7 @@ public:
 
 	virtual void MakeMovement(int initialRow, int initialColumn, int finalRow, int finalColumn) = 0;
 
-	virtual void UpgradePawn(std::string upgradeType) = 0;
+	virtual void UpgradePawn(EType upgradeType) = 0;
 	virtual void RequestDraw() = 0;
 	virtual void AcceptDrawProposal() = 0;
 	virtual void DeclineDrawProposal() = 0;

@@ -26,7 +26,8 @@ enum class ENotification
 	PawnUpgrade,
 	GameOver,
 	DrawProposal,
-	CheckState
+	Check,
+	Reset
 };
 
 struct HashFunctor {
@@ -55,6 +56,8 @@ public:
 	ChessGame(const CharBoard& inputConfig, EColor turn = EColor::White);
 	void RestartChessGame() override;
 
+	void ResetGame() override;
+
 	// Setter for Castle Matrix // 
 
 	void SetCastleValues(const std::array<std::array<bool, 2>, 2>& Castle);
@@ -72,7 +75,7 @@ public:
 
 	void MakeMovement(int initialRow, int initialColumn, int finalRow, int finalColumn) override;
 
-	void UpgradePawn(std::string upgradeType) override;
+	void UpgradePawn(EType upgradeType) override;
 
 	void RequestDraw() override;
 
@@ -99,7 +102,9 @@ public:
 
 	void AddListener(IChessGameListenerPtr listener);
 	void RemoveListener(IChessGameListenerPtr listener);
-	void Notify(ENotification notif, int ir = 0, int ic = 0, int fr = 0, int fc = 0); // different implementations
+	void Notify(ENotification notif, Position init, Position fin); // different implementations
+	//void Notify(ENotification notif, Position pos/*, EType type*/); // different implementations
+	void Notify(ENotification notif); // different implementations
 
 	// Game's Logic //
 

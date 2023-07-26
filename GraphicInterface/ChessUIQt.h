@@ -17,6 +17,8 @@ public:
     ChessUIQt(QWidget *parent = nullptr);
     ~ChessUIQt() override;
 
+    void SetGame(IChessGame* game);
+
     void InitializeMessage(QGridLayout* mainGridLayout);
     void InitializeButtons(QGridLayout* mainGridLayout);
     void InitializeTimers(QGridLayout* mainGridLayout);
@@ -32,15 +34,15 @@ public:
     void UnhighlightPossibleMoves(const std::vector<std::pair<int, int>>& possibleMoves);
     //Modify or delete
     void StartGame();
-    void ShowPromoteOptions();
+    QString ShowPromoteOptions();
 
     void UpdateMessage(const QString& message);
     void AppendThrowMessage(const QString& message);
 
     // For listeners methods //
-    void OnMoveMade(int ir, int ic, int fr, int fc) override;
+    void OnMoveMade(Position init, Position fin) override;
     void OnGameOver() override;
-    void OnPawnUpgrade() override;
+    void OnPawnUpgrade(Position init, Position upPos) override;
     void OnCheck() override;
 
 
@@ -60,15 +62,14 @@ public slots:
 signals:
     void Exit();
 
-public:
-    std::shared_ptr<class IChessGame> game;
-
 private:
     std::array<std::array<GridButton*, 8>, 8> m_grid;
     std::optional<std::pair<int, int>> m_selectedCell;
     QLabel* m_MessageLabel;
     QListWidget* m_MovesList;
     QLabel* m_BlackTimer, *m_WhiteTimer;
+
+    IChessGame* m_game;
 };
 
 //TODO REMOVE THIS AFTER IMPLEMENTATION
