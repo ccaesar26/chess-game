@@ -5,8 +5,9 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     std::shared_ptr<ChessUIQt> w = std::make_shared<ChessUIQt>();
-
-	w->game->AddListener(w);
+    std::shared_ptr<IChessGame> game = IChessGame::CreateBoard();
+    game->AddListener(w);
+    w->SetGame(game.get());
     w->show();
     w->StartGame();
 
