@@ -470,7 +470,7 @@ void ChessUIQt::OnMoveMade(int ir, int ic, int fr, int fc)
 
 void ChessUIQt::OnGameOver()
 {
-    UpdateBoard();
+    //UpdateBoard();
 	if (game->IsDraw())
 	{
 		m_MessageLabel->setText("Game over! Draw.");
@@ -517,6 +517,6 @@ void ChessUIQt::OnPawnUpgrade()
 void ChessUIQt::OnCheckState()
 {
     AppendThrowMessage("Solve check state");
-    UpdateBoard();
+    //UpdateBoard();
 }
 

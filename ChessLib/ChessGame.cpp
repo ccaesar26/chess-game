@@ -263,6 +263,8 @@ void ChessGame::MakeMovement(int initialRow, int initialColumn, int finalRow, in
 {
 	MakeMove(Position(initialRow, initialColumn), Position(finalRow, finalColumn));
 
+	Notify(ENotification::MoveMade, initialRow, initialColumn, finalRow, finalColumn);
+
 	if (IsGameOver())
 	{
 		if (m_state == EGameState::Draw)
@@ -283,9 +285,8 @@ void ChessGame::MakeMovement(int initialRow, int initialColumn, int finalRow, in
 
 	switch (m_state)
 	{
-	case EGameState::MovingPiece:
-		Notify(ENotification::MoveMade, initialRow, initialColumn, finalRow, finalColumn);
-		break;
+	/*case EGameState::MovingPiece:
+		break;*/
 	case EGameState::Draw:
 		Notify(ENotification::GameOver);
 		break;
