@@ -198,6 +198,7 @@ void ChessUIQt::OnButtonClicked(const std::pair<int, int>&position)
 				m_selectedCell = position;
 				m_grid[position.first][position.second]->setSelected(true);
 
+                AppendThrowMessage("");
 				HighlightPossibleMoves(m_game->GetMoves(m_selectedCell->first, m_selectedCell->second));
 
                 return;
