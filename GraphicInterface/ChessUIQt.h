@@ -41,7 +41,10 @@ public:
     void OnMoveMade(int ir, int ic, int fr, int fc) override;
     void OnGameOver() override;
     void OnPawnUpgrade() override;
-    void OnCheckState() override;
+    void OnCheck() override;
+
+
+    void OnGameRestarted() override;
 
 public slots:
     void OnButtonClicked(const std::pair<int, int>& position);

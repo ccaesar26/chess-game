@@ -512,11 +512,28 @@ void ChessUIQt::OnGameOver()
 void ChessUIQt::OnPawnUpgrade()
 {
     ShowPromoteOptions();
+    UpdateBoard();
+	switch (game->GetCurrentPlayer())
+	{
+	case EColor::Black:
+		UpdateMessage("Waiting for black player");
+		break;
+	case EColor::White:
+		UpdateMessage("Waiting for white player");
+		break;
+	default:
+		break;
+	}
 }
 
-void ChessUIQt::OnCheckState()
+void ChessUIQt::OnCheck()
 {
     AppendThrowMessage("Solve check state");
     //UpdateBoard();
+}
+
+void ChessUIQt::OnGameRestarted()
+{
+	throw std::logic_error("The method or operation is not implemented.");
 }
 
