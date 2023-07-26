@@ -606,7 +606,11 @@ void ChessUIQt::OnPawnUpgrade(Position init, Position upPos)
 
 void ChessUIQt::OnCheck()
 {
-    AppendThrowMessage("Solve check state");
+	QString s = m_MessageLabel->text();
+	s.append(" - ");
+	s.append("Solve check");
+	m_MessageLabel->setText(s);
+    //AppendThrowMessage("Solve check state");
     //UpdateBoard();
 }
 
