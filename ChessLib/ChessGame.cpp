@@ -80,28 +80,8 @@ IChessGamePtr IChessGame::CreateBoard()
 // Constructor //
 
 ChessGame::ChessGame()
-	: m_turn(EColor::White)
-	, m_kingPositions({Position(7 ,4), Position(0, 4)})
-	, m_state(EGameState::MovingPiece)
 {
-
-	for (int i = 0; i < 2; i++)
-		for (int j = 0; j < 2; j++)
-			m_Castle[i][j] = true;
-
-	for (int j = 0; j < 8; j++)
-	{
-		m_board[6][j] = Piece::Produce(EType::Pawn, EColor::White);
-		m_board[1][j] = Piece::Produce(EType::Pawn, EColor::Black);
-	}
-
-	const std::vector<EType> TYPES = {EType::Rook, EType::Horse, EType::Bishop, EType::Queen, EType::King, EType::Bishop, EType::Horse, EType::Rook};
-
-	for (int i = 0; i < TYPES.size(); i++)
-	{
-		m_board[0][i] = Piece::Produce(TYPES[i], EColor::Black);
-		m_board[7][i] = Piece::Produce(TYPES[i], EColor::White);
-	}
+	InitializeChessGame();
 }
 
 ChessGame::ChessGame(const CharBoard& inputConfig, EColor turn) 
@@ -137,6 +117,31 @@ ChessGame::ChessGame(const CharBoard& inputConfig, EColor turn)
 	if (CanBeCaptured(m_board, m_kingPositions[(int)turn]))
 	{
 		m_state = EGameState::CheckState;
+	}
+}
+
+void ChessGame::InitializeChessGame()
+{
+	m_turn = EColor::White;
+	m_kingPositions = { Position(7 ,4), Position(0, 4) };
+	m_state = EGameState::MovingPiece;
+
+	for (int i = 0; i < 2; i++)
+		for (int j = 0; j < 2; j++)
+			m_Castle[i][j] = true;
+
+	for (int j = 0; j < 8; j++)
+	{
+		m_board[6][j] = Piece::Produce(EType::Pawn, EColor::White);
+		m_board[1][j] = Piece::Produce(EType::Pawn, EColor::Black);
+	}
+
+	const std::vector<EType> TYPES = { EType::Rook, EType::Horse, EType::Bishop, EType::Queen, EType::King, EType::Bishop, EType::Horse, EType::Rook };
+
+	for (int i = 0; i < TYPES.size(); i++)
+	{
+		m_board[0][i] = Piece::Produce(TYPES[i], EColor::Black);
+		m_board[7][i] = Piece::Produce(TYPES[i], EColor::White);
 	}
 }
 
@@ -468,7 +473,7 @@ void ChessGame::Notify(ENotification notif, int ir /*= 0*/, int ic /*= 0*/, int 
 				sp->OnGameOver();
 				break;
 			case ENotification::CheckState:
-				sp->OnCheckState();
+				sp->OnCheck();
 				break;
 			default:
 				break;

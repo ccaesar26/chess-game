@@ -53,6 +53,7 @@ public:
 
 	ChessGame();
 	ChessGame(const CharBoard& inputConfig, EColor turn = EColor::White);
+	void InitializeChessGame();
 
 	// Setter for Castle Matrix // 
 
@@ -98,7 +99,7 @@ public:
 
 	void AddListener(IChessGameListenerPtr listener);
 	void RemoveListener(IChessGameListenerPtr listener);
-	void Notify(ENotification notif, int ir = 0, int ic = 0, int fr = 0, int fc = 0);
+	void Notify(ENotification notif, int ir = 0, int ic = 0, int fr = 0, int fc = 0); // different implementations
 
 	// Game's Logic //
 
