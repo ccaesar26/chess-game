@@ -155,7 +155,7 @@ void ChessGame::RestartChessGame()
 
 void ChessGame::ResetGame()
 {
-	InitializeChessGame();
+	RestartChessGame();
 
 	for (int i = 2; i < 6; i++)
 	{
@@ -897,11 +897,13 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 		{
 			m_board[finalPosition.row][finalPosition.col + 1] = m_board[finalPosition.row][0];
 			m_board[finalPosition.row][0].reset();
+			Notify(ENotification::MoveMade, Position(finalPosition.row, 0), Position(finalPosition.row, finalPosition.col + 1));
 		}
 		else if (initialPosition.col - finalPosition.col == -2)
 		{
 			m_board[finalPosition.row][finalPosition.col - 1] = m_board[finalPosition.row][7];
 			m_board[finalPosition.row][7].reset();
+			Notify(ENotification::MoveMade, Position(finalPosition.row, 7), Position(finalPosition.row, finalPosition.col - 1));
 		}
 	}  
 	// End of Make Castle Inaccessible if King moved //
