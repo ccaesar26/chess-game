@@ -1,4 +1,5 @@
 #pragma once
+#include "IPiece.h"
 
 enum class EGameResult
 {

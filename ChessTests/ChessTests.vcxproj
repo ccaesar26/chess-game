@@ -122,7 +122,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../ChessLib; ../ChessLib/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../ChessLib; ../ChessLib/include; ../GraphicInterface</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -139,7 +139,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../ChessLib; ../ChessLib/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../ChessLib; ../ChessLib/include; ../GraphicInterface</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -160,6 +160,7 @@
     <ClCompile Include="InitialConfigTests.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MakeMoveTests.cpp" />
+    <ClCompile Include="TestIListener.cpp" />
     <ClCompile Include="TestIsGameOverFunction.cpp" />
     <ClCompile Include="TestIsStalemate.cpp" />
     <ClCompile Include="TestKingPossibleMoves.cpp" />

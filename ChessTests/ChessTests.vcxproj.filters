@@ -63,6 +63,9 @@
     <ClCompile Include="TestIsStalemate.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TestIListener.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utility.h">
