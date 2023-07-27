@@ -76,7 +76,27 @@ TEST(OnMoveMadeIsCalled, IllegalMove2)
 		EXPECT_THROW(game.MakeMovement(Position(8, 3), Position(3, 9)), OutOfBoundsException);
 	}
 	catch (const std::exception&)
+	{}
+
+}
+
+TEST(OnMoveMadeIsCalled, IllegalMove3)
+{
+	ChessGame game;
+
+	auto listener = std::make_shared<MockListener>();
+
+	game.AddListener(listener);
+
+
+	EXPECT_CALL(*listener, OnMoveMade(::testing::_, ::testing::_))
+		.Times(0);
+
+	try
 	{
+		EXPECT_THROW(game.MakeMovement(Position(6, 0), Position(5, 1)), NotInPossibleMovesException);
 	}
+	catch (const std::exception&)
+	{}
 
 }
