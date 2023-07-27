@@ -1,6 +1,6 @@
 #include "IChessGameListener.h"
 #include "ChessGame.h"
-
+#include "ChessException.h"
 
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
@@ -23,7 +23,7 @@ public:
 
 };
 
-TEST(OnMoveMade, IsCalled) 
+TEST(OnMoveMadeIsCalled, LegalMove1) 
 {
 	ChessGame game;
 
@@ -35,5 +35,26 @@ TEST(OnMoveMade, IsCalled)
 		.Times(1);
 
 	game.MakeMovement(Position(6, 4), Position(4, 4));
+
+}
+
+TEST(OnMoveMadeIsCalled, IllegalMove1)
+{
+	ChessGame game;
+
+	auto listener = std::make_shared<MockListener>();
+
+	game.AddListener(listener);
+
+
+	EXPECT_CALL(*listener, OnMoveMade(Position(7, 6), Position(6, 4)))
+		.Times(0);
+
+	try
+	{
+		EXPECT_THROW(game.MakeMovement(Position(7, 6), Position(6, 4)), OccupiedByOwnPieceException);
+	}
+	catch (const std::exception&)
+	{}
 
 }
