@@ -158,7 +158,6 @@
     <ClCompile Include="TestCastle.cpp" />
     <ClCompile Include="TestHorsePossibleMoves.cpp" />
     <ClCompile Include="InitialConfigTests.cpp" />
-    <ClCompile Include="KingInCheckState.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MakeMoveTests.cpp" />
     <ClCompile Include="TestIsGameOverFunction.cpp" />

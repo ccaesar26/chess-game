@@ -15,7 +15,7 @@ static EType GetType(char c)
 	static const EType types[] = { EType::Pawn,EType::Rook, EType::Horse, EType::Bishop, EType::Queen, EType::King };
 
 	std::string str = "prhbqk";
-	int pos = str.find_first_of(c);
+	int pos = str.find_first_of(tolower(c));
 
 	return types[pos];
 }
@@ -730,6 +730,15 @@ bool ChessGame::CanBeCaptured(const ArrayBoard& board, Position toCapturePos) co
 
 void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 {
+	if (!IsInMatrix(initialPosition))
+	{
+		throw OutOfBoundsException("Initial position is not a valid position");
+	}
+	if (!IsInMatrix(finalPosition))
+	{
+		throw OutOfBoundsException("Final position is not a valid position");
+	}
+
 	if (m_state == EGameState::UpgradePawn)
 	{
 		throw InvalidStateException("You must upgrade pawn");
@@ -842,7 +851,7 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 	if (IsStaleMate())
 	{
 		m_state = EGameState::Draw;
-		//Notify(ENotification::GameOver);
+		return;
 	}
 
 	if (IsGameOver())
