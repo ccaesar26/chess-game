@@ -29,6 +29,7 @@ inline ChessException::ChessException(const std::string& message)
  //			i.	By enemy piece
  //			ii.	By own piece
  //		c.	NotInPossibleMovesException	
+ //		d.	InitialSquareIsEmptyException
 
 class InvalidMoveException : public ChessException
 {
@@ -105,6 +106,16 @@ inline NotInPossibleMovesException::NotInPossibleMovesException(const std::strin
 {
 }
 
+class InitialSquareIsEmptyException : InvalidMoveException
+{
+public:
+	InitialSquareIsEmptyException(const std::string&);
+};
+
+inline InitialSquareIsEmptyException::InitialSquareIsEmptyException(const std::string& message)
+	: InvalidMoveException(message)
+{
+}
 
 // 2.	Invalid input:
 //		a.	Invalid answer
