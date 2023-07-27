@@ -189,8 +189,18 @@ TEST(ListenersFunction, GameSimulation_1)
 		EXPECT_CALL(*listener, OnCheck())
 			.Times(1);
 
-		
+		EXPECT_CALL(*listener, OnMoveMade(Position(0, 2), Position(1, 3)))
+			.Times(1);
 
+		EXPECT_CALL(*listener, OnMoveMade(Position(6, 1), Position(4, 1)))
+			.Times(1);
+
+		EXPECT_CALL(*listener, OnMoveMade(Position(1, 7), Position(2, 7)))
+			.Times(1);
+
+		EXPECT_CALL(*listener, OnMoveMade(Position(4, 1), Position(3, 2)))
+			.Times(1);
+		
 	}
 
 	// Actual moves // 
@@ -210,4 +220,8 @@ TEST(ListenersFunction, GameSimulation_1)
 	catch (const std::exception&)
 	{}
 
+	game.MakeMovement(Position(0, 2), Position(1, 3));	// Black
+	game.MakeMovement(Position(6, 1), Position(4, 1));	// White
+	game.MakeMovement(Position(1, 7), Position(2, 7));	// Black
+	game.MakeMovement(Position(4, 1), Position(3, 2));	// White
 }
