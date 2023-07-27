@@ -47,7 +47,7 @@ TEST(OnMoveMadeIsCalled, IllegalMove1)
 	game.AddListener(listener);
 
 
-	EXPECT_CALL(*listener, OnMoveMade(Position(7, 6), Position(6, 4)))
+	EXPECT_CALL(*listener, OnMoveMade(::testing::_, ::testing::_))
 		.Times(0);
 
 	try
