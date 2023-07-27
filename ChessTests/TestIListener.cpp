@@ -5,6 +5,8 @@
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 
+using ::testing::InSequence; 
+using ::testing::_;
 
 class MockListener : public IChessGameListener
 {
@@ -151,3 +153,61 @@ public:
 ////	catch (const std::exception&)
 ////	{}
 ////}
+
+TEST(ListenersFunction, GameSimulation_1)
+{
+	ChessGame game;
+	auto listener = std::make_shared<MockListener>();
+	game.AddListener(listener);
+
+	// Expect // 
+
+	{
+		InSequence sequence;
+
+		EXPECT_CALL(*listener, OnMoveMade(Position(6, 3), Position(4, 3)))
+			.Times(1);
+
+		EXPECT_CALL(*listener, OnMoveMade(Position(1, 2), Position(3, 2)))
+			.Times(1);
+
+		EXPECT_CALL(*listener, OnMoveMade(Position(4, 3), Position(3, 2)))
+			.Times(1);
+
+		EXPECT_CALL(*listener, OnMoveMade(Position(0, 3), Position(1, 2)))
+			.Times(1);
+
+		EXPECT_CALL(*listener, OnMoveMade(Position(7, 3), Position(6, 3)))
+			.Times(1);
+
+		EXPECT_CALL(*listener, OnMoveMade(Position(1, 2), Position(3, 2)))
+			.Times(1);
+
+		EXPECT_CALL(*listener, OnMoveMade(Position(6, 3), Position(1, 3)))
+			.Times(1);
+
+		EXPECT_CALL(*listener, OnCheck())
+			.Times(1);
+
+		
+
+	}
+
+	// Actual moves // 
+
+	game.MakeMovement(Position(6, 3), Position(4, 3));  // White
+	game.MakeMovement(Position(1, 2), Position(3, 2));  // Black
+	game.MakeMovement(Position(4, 3), Position(3, 2));  // White
+	game.MakeMovement(Position(0, 3), Position(1, 2));	// Black
+	game.MakeMovement(Position(7, 3), Position(6, 3));	// White
+	game.MakeMovement(Position(1, 2), Position(3, 2));	// Black
+	game.MakeMovement(Position(6, 3), Position(1, 3));	// White
+	
+	try
+	{
+		EXPECT_THROW(game.MakeMovement(Position(0, 0), Position(1, 3)),NotInPossibleMovesException);	// Black
+	}
+	catch (const std::exception&)
+	{}
+
+}
