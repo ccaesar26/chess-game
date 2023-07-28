@@ -225,13 +225,12 @@ void ChessGame::MakeMovement(Position initialPos, Position finalPos)
 
 	switch (m_state)
 	{
+	case EGameState::UpgradePawn:
+		Notify(ENotification::PawnUpgrade, initialPos, finalPos);
 	case EGameState::Draw:
 	case EGameState::WonByWhitePlayer:
 	case EGameState::WonByBlackPlayer:
 		Notify(ENotification::GameOver);
-		break;
-	case EGameState::UpgradePawn:
-		Notify(ENotification::PawnUpgrade, initialPos, finalPos);
 		break;
 	case EGameState::CheckState:
 		Notify(ENotification::Check);
