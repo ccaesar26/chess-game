@@ -63,15 +63,15 @@ void GridButton::updateBackgroundColor()
 	QString backColor = "";
 
 	if(m_Highlighted==1)
-		backColor = "#2192FF";
+		backColor = "#AAC8A7"/*#D4E2D4*/;
 	else if(m_Highlighted==2)
-		backColor = "#FF4C4C";
+		backColor = "#FFABAB";
 	else
 	{
 		if (defaultColorBlack)
-			backColor = "#464e53";
+			backColor = "#BB8760";
 		else
-			backColor = "#d6d6d6";
+			backColor = "#F6F4EB";
 	}
 
 	setStyleSheet("background-color: " + backColor + "; border: none;");
@@ -110,9 +110,10 @@ PieceColor GridButton::GetColor() const
 GridButton::GridButton(const std::pair<int, int>& boardPosition, PieceType pieceType, PieceColor pieceColor, QWidget* parent):
 	m_Position(boardPosition), m_PieceType(pieceType), m_PieceColor(pieceColor), m_Highlighted(false), m_Selected(false)
 {
+	
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-
 	updateBackgroundColor();
 
 	updatePiece();
 }
+
