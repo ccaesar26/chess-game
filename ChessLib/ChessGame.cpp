@@ -160,8 +160,13 @@ bool ChessGame::IsStaleMate() const
 bool ChessGame::IsGameOver() const
 {
 	if (m_state == EGameState::Draw || m_state == EGameState::WonByWhitePlayer || m_state == EGameState::WonByBlackPlayer)
+		return true;
+}
+
+bool ChessGame::VerifyCheckMate() const
+{
+	if (m_state == EGameState::Draw || m_state == EGameState::WonByWhitePlayer || m_state == EGameState::WonByBlackPlayer)
 	{
-		//Notify(ENotification::GameOver);
 		return true;
 	}
 
@@ -283,7 +288,7 @@ void ChessGame::UpgradePawn(EType upgradeType)
 		m_state = EGameState::Draw;
 	}
 
-	if (IsGameOver())
+	if (VerifyCheckMate())
 	{
 		m_state = m_turn == EColor::White ? EGameState::WonByBlackPlayer : EGameState::WonByWhitePlayer;
 	}
@@ -805,13 +810,13 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 		{
 			m_board[finalPosition.row][finalPosition.col + 1] = m_board[finalPosition.row][0];
 			m_board[finalPosition.row][0].reset();
-			Notify(ENotification::MoveMade, Position(finalPosition.row, 0), Position(finalPosition.row, finalPosition.col + 1));
+			//Notify(ENotification::MoveMade, Position(finalPosition.row, 0), Position(finalPosition.row, finalPosition.col + 1));
 		}
 		else if (initialPosition.col - finalPosition.col == -2)
 		{
 			m_board[finalPosition.row][finalPosition.col - 1] = m_board[finalPosition.row][7];
 			m_board[finalPosition.row][7].reset();
-			Notify(ENotification::MoveMade, Position(finalPosition.row, 7), Position(finalPosition.row, finalPosition.col - 1));
+			//Notify(ENotification::MoveMade, Position(finalPosition.row, 7), Position(finalPosition.row, finalPosition.col - 1));
 		}
 	}  
 	// End of Make Castle Inaccessible if King moved //
@@ -854,7 +859,7 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 		return;
 	}
 
-	if (IsGameOver())
+	if (VerifyCheckMate())
 	{
 		m_state = m_turn == EColor::White ? EGameState::WonByBlackPlayer : EGameState::WonByWhitePlayer;
 	}
