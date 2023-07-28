@@ -745,15 +745,15 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 	}
 
 	PositionList possibleMoves = GetPossibleMoves(initialPosition);
-	if (std::find(possibleMoves.begin(), possibleMoves.end(), finalPosition) == possibleMoves.end()) 
+	if (std::find(possibleMoves.begin(), possibleMoves.end(), finalPosition) == possibleMoves.end())
 	{
 		if (!m_board[finalPosition.row][finalPosition.col])
 		{
-			throw NotInPossibleMovesException("Your move is not possible"); 
+			throw NotInPossibleMovesException("Your move is not possible");
 		}
 		if (m_board[finalPosition.row][finalPosition.col]->GetColor() != m_turn)
 		{
-			throw OccupiedByEnemyPieceException("Your move is not possible !!!");
+			throw OccupiedByEnemyPieceException("Your move is not possible");
 		}
 		else
 		{
