@@ -74,6 +74,8 @@ public:
 
 	bool IsGameOver() const override;
 
+	bool VerifyCheckMate() const ;
+
 	void MakeMovement(Position initialpOS, Position finalPos) override;
 
 	void UpgradePawn(EType upgradeType) override;

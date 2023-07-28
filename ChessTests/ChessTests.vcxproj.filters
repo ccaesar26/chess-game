@@ -54,7 +54,7 @@
     <ClCompile Include="TestQueenPossibleMoves.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TestIsGameOverFunction.cpp">
+    <ClCompile Include="TestVerifyCheckMate.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TestCastle.cpp">

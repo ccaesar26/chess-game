@@ -2,7 +2,7 @@
 
 #include "gtest/gtest.h"
 
-TEST(TestIsGameOver, King_In_Check_From_Two_Pieces_1)
+TEST(VerifyCheckMate, King_In_Check_From_Two_Pieces_1)
 {
 	// Declare board //
 
@@ -24,10 +24,10 @@ TEST(TestIsGameOver, King_In_Check_From_Two_Pieces_1)
 
 	ChessGame game(alternativeBoard, EColor::White);
 
-	EXPECT_EQ(game.IsGameOver(), false);
+	EXPECT_EQ(game.VerifyCheckMate(), false);
 }
 
-TEST(TestIsGameOver, King_In_Check_From_Two_Pieces_2)
+TEST(VerifyCheckMate, King_In_Check_From_Two_Pieces_2)
 {
 	// Declare board //
 
@@ -49,10 +49,10 @@ TEST(TestIsGameOver, King_In_Check_From_Two_Pieces_2)
 
 	ChessGame game(alternativeBoard, EColor::White);
 
-	EXPECT_EQ(game.IsGameOver(), true);
+	EXPECT_EQ(game.VerifyCheckMate(), true);
 }
 
-TEST(TestIsGameOver, King_In_Check_From_One_Piece_1)
+TEST(VerifyCheckMate, King_In_Check_From_One_Piece_1)
 {
 	// Declare board //
 
@@ -74,10 +74,10 @@ TEST(TestIsGameOver, King_In_Check_From_One_Piece_1)
 
 	ChessGame game(alternativeBoard, EColor::White);
 
-	EXPECT_EQ(game.IsGameOver(), false);
+	EXPECT_EQ(game.VerifyCheckMate(), false);
 }
 
-TEST(TestIsGameOver, King_In_Check_From_One_Piece_2)
+TEST(VerifyCheckMate, King_In_Check_From_One_Piece_2)
 {
 	// Declare board //
 
@@ -99,10 +99,10 @@ TEST(TestIsGameOver, King_In_Check_From_One_Piece_2)
 
 	ChessGame game(alternativeBoard, EColor::White);
 
-	EXPECT_EQ(game.IsGameOver(), true);
+	EXPECT_EQ(game.VerifyCheckMate(), true);
 }
 
-TEST(TestIsGameOver, King_In_Check_From_One_Piece_3)
+TEST(VerifyCheckMate, King_In_Check_From_One_Piece_3)
 {
 	// Declare board //
 
@@ -124,10 +124,10 @@ TEST(TestIsGameOver, King_In_Check_From_One_Piece_3)
 
 	ChessGame game(alternativeBoard, EColor::White);
 
-	EXPECT_EQ(game.IsGameOver(), false);
+	EXPECT_EQ(game.VerifyCheckMate(), false);
 }
 
-TEST(TestIsGameOver, King_In_Check_From_One_Piece_4)
+TEST(VerifyCheckMate, King_In_Check_From_One_Piece_4)
 {
 	// Declare board //
 
@@ -149,10 +149,10 @@ TEST(TestIsGameOver, King_In_Check_From_One_Piece_4)
 
 	ChessGame game(alternativeBoard, EColor::White);
 
-	EXPECT_EQ(game.IsGameOver(), false);
+	EXPECT_EQ(game.VerifyCheckMate(), false);
 }
 
-TEST(TestIsGameOver, King_In_Check_From_One_Piece_5)
+TEST(VerifyCheckMate, King_In_Check_From_One_Piece_5)
 {
 	// Declare board //
 
@@ -174,5 +174,5 @@ TEST(TestIsGameOver, King_In_Check_From_One_Piece_5)
 
 	ChessGame game(alternativeBoard, EColor::White);
 
-	EXPECT_EQ(game.IsGameOver(), true);
+	EXPECT_EQ(game.VerifyCheckMate(), true);
 }
