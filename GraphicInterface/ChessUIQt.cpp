@@ -266,7 +266,7 @@ void ChessUIQt::OnButtonClicked(const Position& position)
 			try
 			{
 				UnhighlightPossibleMoves(m_game->GetPossibleMoves(m_selectedCell.value()));
-				m_game->MakeMovement(m_selectedCell.value(), position);
+				m_game->MakeMove(m_selectedCell.value(), position);
 			}
 			catch (const OccupiedByOwnPieceException& e)
 			{
@@ -756,7 +756,7 @@ void ChessUIQt::OnGameOver(EGameResult result)
 	}
 }
 
-void ChessUIQt::OnPawnUpgrade(Position init, Position upPos)
+void ChessUIQt::OnPawnUpgrade(Position pos)
 {
     QString item = ShowPromoteOptions();
 
@@ -765,7 +765,7 @@ void ChessUIQt::OnPawnUpgrade(Position init, Position upPos)
     m_game->UpgradePawn(upgradeType);
 
 	std::pair<PieceType, PieceColor> upgradePiece;
-    if (upPos.row == 0)
+    if (pos.row == 0)
     {
         upgradePiece.second = PieceColor::white;
     }
@@ -775,19 +775,9 @@ void ChessUIQt::OnPawnUpgrade(Position init, Position upPos)
     }
     upgradePiece.first = ToPieceTypeFromEType(upgradeType);
 
-	m_grid[upPos.row][upPos.col]->setPiece(upgradePiece);
-	//m_grid[fin.row][fin.col]->setSelected(false);
-	//m_grid[fin.row][fin.col]->setHighlighted(false);
+	m_grid[pos.row][pos.col]->setPiece(upgradePiece);
 
-	std::pair<PieceType, PieceColor> voidPiece;
-	voidPiece.first = PieceType::none;
-	voidPiece.second = PieceColor::none;
-
-	m_grid[init.row][init.col]->setPiece(voidPiece);
-
-    //UpdateBoard();
-
-	switch (m_game->GetCurrentPlayer())
+	/*switch (m_game->GetCurrentPlayer())
 	{
 	case EColor::Black:
 		UpdateMessage("Waiting for black player");
@@ -797,7 +787,7 @@ void ChessUIQt::OnPawnUpgrade(Position init, Position upPos)
 		break;
 	default:
 		break;
-	}
+	}*/
 }
 
 void ChessUIQt::OnCheck()

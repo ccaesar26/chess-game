@@ -70,51 +70,45 @@ public:
 	IPieceList GetCapturedPieces(EColor color) const override;
 	EColor GetCurrentPlayer() const override;
 
-	bool IsStaleMate() const;
+	bool CheckStaleMate() const;
+	bool CheckCheckMate() const ;
+	bool CheckThreeFoldRepetition();
 
-	bool IsGameOver() const override;
-
-	bool VerifyCheckMate() const ;
-
-	void MakeMovement(Position initialpOS, Position finalPos) override;
+	void MakeMove(Position initialpOS, Position finalPos) override;
 
 	void UpgradePawn(EType upgradeType) override;
 
 	void RequestDraw() override;
-
 	void AcceptDrawProposal() override;
 	void DeclineDrawProposal() override;
 
 	bool IsDraw() const override;
+	bool IsGameOver() const override;
+	bool IsCheckState() const override;
 
 	bool IsWonByWhitePlayer() const override;
 	bool IsWonByBlackPlayer() const override;
 
 	bool IsWaitingForUpgrade() const override;
-
 	bool IsWaitingForDrawResponse() const override;
-
-	bool IsCheckState() const override;
 
 	// Observable //
 
 	void AddListener(IChessGameListenerPtr listener);
 	void RemoveListener(IChessGameListener* listener);
 	void Notify(ENotification notif, Position init, Position fin); // different implementations
-	//void Notify(ENotification notif, Position pos/*, EType type*/); // different implementations
+	void Notify(ENotification notif, Position pos);
 	void Notify(ENotification notif); // different implementations
 
 	// Game's Logic //
-
-	void InitializeChessGame();
 
 	PiecePtr GetPiece(Position pos, const ArrayBoard& board) const;
 
 	void AddCastle(Position kingPosition, PositionList& kingPossibleMoves) const;
 
-	void ResetBoard();
-	
 private:
+	void InitializeChessGame();
+	void ResetBoard();
 
 	PieceList GetCheckPieces(Position& checkPos) const;
 
@@ -130,9 +124,6 @@ private:
 
 	bool CanBeCaptured(const ArrayBoard& board, Position toCapturePos) const;
 
-	void MakeMove(Position initialPosition, Position finalPosition);
-
-	int SaveCurrentConfig();
 
 	// Static Methods //
 
