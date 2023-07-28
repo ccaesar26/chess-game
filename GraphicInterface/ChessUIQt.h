@@ -24,6 +24,7 @@ public:
     void InitializeTimers(QGridLayout* mainGridLayout);
     void InitializeHistory(QGridLayout* mainGridLayout);
     void InitializeBoard(QGridLayout* mainGridLayout);
+    void InitializeCapturedBoxes(QGridLayout* mainGridLayout);
 
     //Modify if necessary with your history representation
     void UpdateHistory();
@@ -64,6 +65,8 @@ signals:
 
 private:
     std::array<std::array<GridButton*, 8>, 8> m_grid;
+    std::array<std::array<GridButton*, 8>, 4> m_capturedGrid;
+
     std::optional<Position> m_selectedCell;
     QLabel* m_MessageLabel;
     QListWidget* m_MovesList;

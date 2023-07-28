@@ -66,6 +66,7 @@ ChessUIQt::ChessUIQt(QWidget *parent)
     InitializeButtons(mainGridLayout);
     InitializeTimers(mainGridLayout);
     InitializeHistory(mainGridLayout);
+	InitializeCapturedBoxes(mainGridLayout);
 
     mainWidget->setLayout(mainGridLayout);
     this->setCentralWidget(mainWidget);
@@ -93,7 +94,7 @@ void ChessUIQt::InitializeMessage(QGridLayout * mainGridLayout)
     m_MessageLabel->setAlignment(Qt::AlignCenter);
     m_MessageLabel->setStyleSheet("font-size: 20px; font-weight: bold;");
 
-    mainGridLayout->addWidget(m_MessageLabel, 0, 1, 1, 1);
+    mainGridLayout->addWidget(m_MessageLabel, 0, 1, 1, 3);
 }
 
 void ChessUIQt::InitializeButtons(QGridLayout* mainGridLayout)
@@ -146,7 +147,7 @@ void ChessUIQt::InitializeTimers(QGridLayout* mainGridLayout)
     timerGrid->addWidget(m_WhiteTimer, 0, 4);
 
     timerContainer->setLayout(timerGrid);
-    mainGridLayout->addWidget(timerContainer, 2, 0, 1, 2, Qt::AlignCenter);
+    mainGridLayout->addWidget(timerContainer, 2, 0, 1, 4, Qt::AlignCenter);
 }
 
 void ChessUIQt::InitializeHistory(QGridLayout* mainGridLayout)
@@ -205,7 +206,46 @@ void ChessUIQt::InitializeBoard(QGridLayout* mainGridLayout)
 	}
 
 	board->setLayout(chessGridLayout);
-	mainGridLayout->addWidget(board, 1, 1, 1, 1);
+	mainGridLayout->addWidget(board, 1, 2, 1, 1);
+}
+
+void ChessUIQt::InitializeCapturedBoxes(QGridLayout* mainGridLayout)
+{
+	QGridLayout* capturedGrid1;
+	capturedGrid1 = new QGridLayout();
+	QWidget* captured1 = new QWidget();
+
+	for (int i = 0; i < 2; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			m_capturedGrid[i][j] = new GridButton({ j,i }, PieceType::none, PieceColor::none);
+			m_capturedGrid[i][j]->setStyleSheet("background-color: #d6c4b8; border: none;");
+			capturedGrid1->addWidget(m_capturedGrid[i][j], j, i);
+			capturedGrid1->setSpacing(0);
+		}
+	}
+
+	captured1->setLayout(capturedGrid1);
+	mainGridLayout->addWidget(captured1, 1, 1, 1, 1);
+
+	QGridLayout* capturedGrid2;
+	capturedGrid2 = new QGridLayout();
+	QWidget* captured2 = new QWidget();
+
+	for (int i = 2; i < 4; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			m_capturedGrid[i][j] = new GridButton({ j,i }, PieceType::none, PieceColor::none);
+			m_capturedGrid[i][j]->setStyleSheet("background-color: #d6c4b8; border: none;");
+			capturedGrid2->addWidget(m_capturedGrid[i][j], j, i);
+			capturedGrid2->setSpacing(0);
+		}
+	}
+
+	captured2->setLayout(capturedGrid2);
+	mainGridLayout->addWidget(captured2, 1, 3, 1, 1);
 }
 
 
