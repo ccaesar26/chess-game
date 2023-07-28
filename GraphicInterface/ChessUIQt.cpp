@@ -10,6 +10,9 @@
 #include <QClipboard>
 #include <QGuiApplication>
 
+#include <QLabel>
+#include <QPalette>
+
 static EType ToETypeFromQString(const QString& s)
 {
     if (s == "Rook")
@@ -66,6 +69,10 @@ ChessUIQt::ChessUIQt(QWidget *parent)
 
     mainWidget->setLayout(mainGridLayout);
     this->setCentralWidget(mainWidget);
+
+	QPalette palette = this->palette();
+    palette.setColor(QPalette::Window, QColor("#F2D8D8"));
+	this->setPalette(palette);
 }
 
 ChessUIQt::~ChessUIQt()
@@ -82,7 +89,7 @@ void ChessUIQt::SetGame(IChessGame* game)
 void ChessUIQt::InitializeMessage(QGridLayout * mainGridLayout)
 {
     m_MessageLabel = new QLabel();
-    m_MessageLabel->setText("Waiting for white player");
+    m_MessageLabel->setText("Waiting for white player\n");
     m_MessageLabel->setAlignment(Qt::AlignCenter);
     m_MessageLabel->setStyleSheet("font-size: 20px; font-weight: bold;");
 
@@ -151,23 +158,56 @@ void ChessUIQt::InitializeHistory(QGridLayout* mainGridLayout)
     mainGridLayout->addWidget(m_MovesList, 1, 0, 1, 1);
 }
 
+#include <QLabel> // Include the QLabel header
+
 void ChessUIQt::InitializeBoard(QGridLayout* mainGridLayout)
 {
-    QGridLayout* chessGridLayout;
-    chessGridLayout = new QGridLayout();
-    QWidget* board = new QWidget();
+	QGridLayout* chessGridLayout;
+	chessGridLayout = new QGridLayout();
+	QWidget* board = new QWidget();
 
-    for (int i = 0; i < 8; i++) {
-        for (int j = 0; j < 8; j++) {
-            m_grid[i][j] = new GridButton({ i,j }, PieceType::none, PieceColor::none);
-            chessGridLayout->addWidget(m_grid[i][j], i, j, 1, 1);
-            connect(m_grid[i][j], &GridButton::Clicked, this, &ChessUIQt::OnButtonClicked);
-        }
-    }
+	for (int i = 0; i < 8; i++)
+	{
+		QLabel* rowLabel = new QLabel(QString::number(8 - i) + "  ");
+		rowLabel->setAlignment(Qt::AlignCenter);
+		chessGridLayout->addWidget(rowLabel, i, 0);
 
-    board->setLayout(chessGridLayout);
-    mainGridLayout->addWidget(board, 1, 1, 1, 1);
+		QFont rowFont = rowLabel->font();
+		rowFont.setPointSize(10);
+		rowLabel->setFont(rowFont);
+
+		QPalette rowPalette = rowLabel->palette();
+		rowPalette.setColor(QPalette::WindowText, QColor("#84A7A1"));
+		rowLabel->setPalette(rowPalette);
+
+		for (int j = 0; j < 8; j++)
+		{
+			m_grid[i][j] = new GridButton({ i,j }, PieceType::none, PieceColor::none);
+			chessGridLayout->addWidget(m_grid[i][j], i, j + 1);
+			chessGridLayout->setSpacing(2.5);
+			connect(m_grid[i][j], &GridButton::Clicked, this, &ChessUIQt::OnButtonClicked);
+		}
+	}
+
+	for (int j = 0; j < 8; j++)
+	{
+		QLabel* colLabel = new QLabel(QString(QChar('A' + j)));
+		colLabel->setAlignment(Qt::AlignCenter);
+		chessGridLayout->addWidget(colLabel, 8, j + 1);
+
+        QFont colFont = colLabel->font();
+        colFont.setPointSize(10);
+        colLabel->setFont(colFont);
+
+		QPalette colPalette = colLabel->palette();
+		colPalette.setColor(QPalette::WindowText, QColor("#84A7A1"));
+		colLabel->setPalette(colPalette);
+	}
+
+	board->setLayout(chessGridLayout);
+	mainGridLayout->addWidget(board, 1, 1, 1, 1);
 }
+
 
 void ChessUIQt::OnButtonClicked(const Position& position)
 {
@@ -259,7 +299,7 @@ void ChessUIQt::OnDrawButtonClicked()
     if (reply == QMessageBox::Yes) 
     {
 		m_game->AcceptDrawProposal();
-		m_MessageLabel->setText("Game over! Draw.");
+		m_MessageLabel->setText("Game over!\nDraw.");
 		QMessageBox::StandardButton reply;
         reply = QMessageBox::question(this, "Game Over", "Draw.\nDo you want to play again?", QMessageBox::Yes | QMessageBox::Close);
 		
@@ -468,7 +508,7 @@ QString ChessUIQt::ShowPromoteOptions()
 
 void ChessUIQt::UpdateMessage(const QString& message)
 {
-    m_MessageLabel->setText(message);
+    m_MessageLabel->setText(message + '\n');
 }
 
 void ChessUIQt::AppendThrowMessage(const QString& message)
@@ -522,7 +562,7 @@ void ChessUIQt::OnGameOver(EGameResult result)
 {
 	if (m_game->IsDraw())
 	{
-		m_MessageLabel->setText("Game over! Draw.");
+		m_MessageLabel->setText("Game over!\nDraw.");
 		QMessageBox::StandardButton reply;
 		reply = QMessageBox::question(this, "Game Over", "Draw.\nDo you want to play again?", QMessageBox::Yes | QMessageBox::Close);
 
@@ -537,17 +577,17 @@ void ChessUIQt::OnGameOver(EGameResult result)
 		return;
 	}
 	
-    m_MessageLabel->setText("Game over! Black player won");
+    //m_MessageLabel->setText("Game over!\nBlack player won");
 	QMessageBox::StandardButton reply;
 
 	if (m_game->IsWonByBlackPlayer())
 	{
-        m_MessageLabel->setText("Game over! Black player won");
+        m_MessageLabel->setText("Game over!\nBlack player won");
 		reply = QMessageBox::question(this, "Game Over", "Black player won.\nDo you want to play again?", QMessageBox::Yes | QMessageBox::Close);
 	}
 	if (m_game->IsWonByWhitePlayer())
 	{
-        m_MessageLabel->setText("Game over! White player won");
+        m_MessageLabel->setText("Game over!\nWhite player won");
 		reply = QMessageBox::question(this, "Game Over", "White player won.\nDo you want to play again?", QMessageBox::Yes | QMessageBox::Close);
 	}
 
@@ -608,8 +648,9 @@ void ChessUIQt::OnPawnUpgrade(Position init, Position upPos)
 void ChessUIQt::OnCheck()
 {
 	QString s = m_MessageLabel->text();
-	s.append(" - ");
-	s.append("Solve check");
+    s.remove(s.size() - 1, 1);
+    s.append(" - ");
+	s.append("Solve check\n");
 	m_MessageLabel->setText(s);
     //AppendThrowMessage("Solve check state");
     //UpdateBoard();
