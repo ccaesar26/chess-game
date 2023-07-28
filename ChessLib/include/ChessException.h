@@ -106,7 +106,7 @@ inline NotInPossibleMovesException::NotInPossibleMovesException(const std::strin
 {
 }
 
-class InitialSquareIsEmptyException : InvalidMoveException
+class InitialSquareIsEmptyException : public InvalidMoveException
 {
 public:
 	InitialSquareIsEmptyException(const std::string&);
