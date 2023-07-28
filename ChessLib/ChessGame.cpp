@@ -165,10 +165,8 @@ bool ChessGame::IsGameOver() const
 
 bool ChessGame::VerifyCheckMate() const
 {
-	if (m_state == EGameState::Draw || m_state == EGameState::WonByWhitePlayer || m_state == EGameState::WonByBlackPlayer)
-	{
-		return true;
-	}
+	if (m_state == EGameState::Draw)
+		return false;
 
 	if (m_state != EGameState::CheckState)
 	{
@@ -225,13 +223,12 @@ void ChessGame::MakeMovement(Position initialPos, Position finalPos)
 
 	switch (m_state)
 	{
+	case EGameState::UpgradePawn:
+		Notify(ENotification::PawnUpgrade, initialPos, finalPos);
 	case EGameState::Draw:
 	case EGameState::WonByWhitePlayer:
 	case EGameState::WonByBlackPlayer:
 		Notify(ENotification::GameOver);
-		break;
-	case EGameState::UpgradePawn:
-		Notify(ENotification::PawnUpgrade, initialPos, finalPos);
 		break;
 	case EGameState::CheckState:
 		Notify(ENotification::Check);
