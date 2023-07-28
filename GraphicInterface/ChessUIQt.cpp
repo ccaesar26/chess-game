@@ -491,6 +491,119 @@ void ChessUIQt::UpdateBoard()
 
 }
 
+void ChessUIQt::UpdateCaptures()
+{
+	IPieceList capturedByWhite = m_game->GetCapturedPieces(EColor::Black);
+
+	auto it = capturedByWhite.begin();
+
+	for (int i = 0; i < 2 && it != capturedByWhite.end(); i++)
+	{
+		for (int j = 0; j < 8 && it != capturedByWhite.end(); j++)
+		{
+			std::pair<PieceType, PieceColor> newPiece;
+
+			switch ((*it)->GetType())
+			{
+			case EType::Rook:
+				newPiece.first = PieceType::rook;
+				break;
+			case EType::Horse:
+				newPiece.first = PieceType::knight;
+				break;
+			case EType::Bishop:
+				newPiece.first = PieceType::bishop;
+				break;
+			case EType::Queen:
+				newPiece.first = PieceType::queen;
+				break;
+			case EType::King:
+				newPiece.first = PieceType::king;
+				break;
+			case EType::Pawn:
+				newPiece.first = PieceType::pawn;
+				break;
+			default:
+				break;
+			}
+
+			switch ((*it)->GetColor())
+			{
+			case EColor::Black:
+				newPiece.second = PieceColor::black;
+				break;
+			case EColor::White:
+				newPiece.second = PieceColor::white;
+				break;
+			default:
+				break;
+			}
+
+			m_capturedGrid[i][j]->setPiece(newPiece);
+			m_capturedGrid[i][j]->setSelected(false);
+			m_capturedGrid[i][j]->setHighlighted(false);
+			m_capturedGrid[i][j]->setStyleSheet("background-color: #d6c4b8; border: none;");
+
+			it++;
+		}
+	}
+
+	IPieceList capturedByBlack = m_game->GetCapturedPieces(EColor::White);
+
+	it = capturedByBlack.begin();
+
+	for (int i = 2; i < 4 && it != capturedByBlack.end(); i++)
+	{
+		for (int j = 0; j < 8 && it != capturedByBlack.end(); j++)
+		{
+			std::pair<PieceType, PieceColor> newPiece;
+
+			switch ((*it)->GetType())
+			{
+			case EType::Rook:
+				newPiece.first = PieceType::rook;
+				break;
+			case EType::Horse:
+				newPiece.first = PieceType::knight;
+				break;
+			case EType::Bishop:
+				newPiece.first = PieceType::bishop;
+				break;
+			case EType::Queen:
+				newPiece.first = PieceType::queen;
+				break;
+			case EType::King:
+				newPiece.first = PieceType::king;
+				break;
+			case EType::Pawn:
+				newPiece.first = PieceType::pawn;
+				break;
+			default:
+				break;
+			}
+
+			switch ((*it)->GetColor())
+			{
+			case EColor::Black:
+				newPiece.second = PieceColor::black;
+				break;
+			case EColor::White:
+				newPiece.second = PieceColor::white;
+				break;
+			default:
+				break;
+			}
+
+			m_capturedGrid[i][j]->setPiece(newPiece);
+			m_capturedGrid[i][j]->setSelected(false);
+			m_capturedGrid[i][j]->setHighlighted(false);
+			m_capturedGrid[i][j]->setStyleSheet("background-color: #d6c4b8; border: none;");
+
+			it++;
+		}
+	}
+}
+
 void ChessUIQt::HighlightPossibleMoves(const PositionList& possibleMoves)
 {
     for (const auto& position : possibleMoves) 
@@ -596,6 +709,8 @@ void ChessUIQt::OnMoveMade(Position init, Position fin)
 	default:
 		break;
 	}
+
+	UpdateCaptures();
 }
 
 void ChessUIQt::OnGameOver(EGameResult result)

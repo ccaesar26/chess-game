@@ -26,21 +26,20 @@ public:
     void InitializeBoard(QGridLayout* mainGridLayout);
     void InitializeCapturedBoxes(QGridLayout* mainGridLayout);
 
-    //Modify if necessary with your history representation
     void UpdateHistory();
-    //Modify if necessary with your board representation
     void UpdateBoard();
-    //Modify if necessary with your possible moves representation
-    void HighlightPossibleMoves(const PositionList& possibleMoves);
-    void UnhighlightPossibleMoves(const PositionList& possibleMoves);
-    //Modify or delete
-    void StartGame();
-    QString ShowPromoteOptions();
+    void UpdateCaptures();
 
     void UpdateMessage(const QString& message);
     void AppendThrowMessage(const QString& message);
 
-    // For listeners methods //
+    void HighlightPossibleMoves(const PositionList& possibleMoves);
+    void UnhighlightPossibleMoves(const PositionList& possibleMoves);
+
+    void StartGame();
+
+    QString ShowPromoteOptions();
+
     void OnMoveMade(Position init, Position fin) override;
     void OnGameOver(EGameResult result) override;
     void OnPawnUpgrade(Position init, Position upPos) override;
