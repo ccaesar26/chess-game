@@ -63,15 +63,15 @@ void GridButton::updateBackgroundColor()
 	QString backColor = "";
 
 	if(m_Highlighted==1)
-		backColor = "#2192FF";
+		backColor = "#D4E2D4";
 	else if(m_Highlighted==2)
-		backColor = "#FF4C4C";
+		backColor = "#FFCACC";
 	else
 	{
 		if (defaultColorBlack)
-			backColor = "#464e53";
+			backColor = "#91C8E4";
 		else
-			backColor = "#d6d6d6";
+			backColor = "#F6F4EB";
 	}
 
 	setStyleSheet("background-color: " + backColor + "; border: none;");
