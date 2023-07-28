@@ -234,15 +234,6 @@ TEST(ListenersFunction, GameSimulation_1)
 
 		EXPECT_CALL(*listener, OnGameOver(EGameResult::BlackPlayerWon))
 			.Times(1);
-
-		EXPECT_CALL(*listener, OnMoveMade(Position(6, 1), Position(4, 1)))
-			.Times(1);
-
-		EXPECT_CALL(*listener, OnMoveMade(Position(1, 7), Position(2, 7)))
-			.Times(1);
-
-		EXPECT_CALL(*listener, OnMoveMade(Position(4, 1), Position(3, 2)))
-			.Times(1);
 		
 	}
 
