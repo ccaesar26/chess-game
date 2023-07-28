@@ -288,7 +288,129 @@ TEST(ListenersFunction, GameSimulation_1)
 	game.MakeMovement(Position(2, 3), Position(7, 3)); // black
 }
 
-TEST(OnGameOver, AfterPawnUpgrade_IsStealMate)
+TEST(OnPawnUpgrade, OnPawnUpgrade_1)
+{
+	std::array<std::array<char, 8>, 8> alternativeBoard =
+	{
+		//  0    1    2    3    4    5    6    7
+
+		   'K', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 0
+		   ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'p',   // 1		
+		   ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 2
+		   ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 3
+		   ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 4
+		   ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 5
+		   ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 6
+		   'k', ' ', ' ', ' ', ' ', ' ', ' ', ' '    // 7
+	};
+
+	ChessGame game(alternativeBoard, EColor::White);
+	auto listener = std::make_shared<MockListener>();
+	game.AddListener(listener);
+
+	EXPECT_CALL(*listener, OnMoveMade(Position(1, 7), Position(0, 7)))
+		.Times(1);
+
+	EXPECT_CALL(*listener, OnPawnUpgrade(Position(1, 7), Position(0, 7)))
+		.Times(1);
+
+	game.MakeMovement(Position(1, 7), Position(0, 7));
+	game.UpgradePawn(EType::Horse);
+
+}
+
+TEST(OnCheck, OnCheck_1)
+{
+	std::array<std::array<char, 8>, 8> alternativeBoard =
+	{
+		//  0    1    2    3    4    5    6    7
+
+		   'K', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 0
+		   ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 1		
+		   ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 2
+		   ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 3
+		   ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 4
+		   ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 5
+		   ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 6
+		   'k', ' ', ' ', ' ', ' ', ' ', ' ', 'r'    // 7
+	};
+
+	ChessGame game(alternativeBoard, EColor::White);
+	auto listener = std::make_shared<MockListener>();
+	game.AddListener(listener);
+
+	EXPECT_CALL(*listener, OnMoveMade(Position(7, 7), Position(0, 7)))
+		.Times(1);
+
+	EXPECT_CALL(*listener, OnCheck())
+		.Times(1);
+
+	game.MakeMovement(Position(7, 7), Position(0, 7));
+
+}
+
+TEST(OnGameOver, WhiteWins)
+{
+	std::array<std::array<char, 8>, 8> alternativeBoard =
+	{
+		//  0    1    2    3    4    5    6    7
+
+		   'K', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 0
+		   ' ', ' ', ' ', ' ', ' ', ' ', 'r', ' ',   // 1		
+		   ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 2
+		   ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 3
+		   ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 4
+		   ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 5
+		   ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 6
+		   'k', ' ', ' ', ' ', ' ', ' ', ' ', 'r'    // 7
+	};
+
+	ChessGame game(alternativeBoard, EColor::White);
+	auto listener = std::make_shared<MockListener>();
+	game.AddListener(listener);
+
+	EXPECT_CALL(*listener, OnMoveMade(Position(7, 7), Position(0, 7)))
+		.Times(1);
+
+	EXPECT_CALL(*listener, OnGameOver(EGameResult::WhitePlayerWon))
+		.Times(1);
+
+	game.MakeMovement(Position(7, 7), Position(0, 7));
+
+}
+
+TEST(OnGameOver, IsStaleMate)
+{
+	std::array<std::array<char, 8>, 8> alternativeBoard =
+	{
+		//  0    1    2    3    4    5    6    7
+
+		   'K', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 0
+		   ' ', ' ', ' ', ' ', ' ', ' ', 'r', ' ',   // 1		
+		   ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 2
+		   ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 3
+		   ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 4
+		   ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 5
+		   ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 6
+		   'k', ' ', ' ', ' ', ' ', ' ', ' ', 'r'    // 7
+	};
+
+	ChessGame game(alternativeBoard, EColor::White);
+	auto listener = std::make_shared<MockListener>();
+	game.AddListener(listener);
+
+	EXPECT_CALL(*listener, OnMoveMade(Position(7, 7), Position(7, 1)))
+		.Times(1);
+
+	EXPECT_CALL(*listener, OnGameOver(EGameResult::Draw))
+		.Times(1);
+
+	game.MakeMovement(Position(7, 7), Position(7, 1));
+
+}
+
+
+TEST(OnPawnUpgrade_OnGameOver, AfterPawnUpgrade_IsStealMate)
 {
 	std::array<std::array<char, 8>, 8> alternativeBoard =
 	{
