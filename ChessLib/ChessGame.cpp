@@ -738,15 +738,6 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 	{
 		throw OutOfBoundsException("Final position is not a valid position");
 	}
-	if (!m_board[initialPosition.row][initialPosition.col])
-	{
-		throw InitialSquareIsEmptyException("Initial position is empty");
-	}
-	if (m_board[initialPosition.row][initialPosition.col]->GetColor() != m_turn)
-	{
-		throw OccupiedByEnemyPieceException("Your move is not possible");
-	}
-
 
 	if (m_state == EGameState::UpgradePawn)
 	{
@@ -754,11 +745,15 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 	}
 
 	PositionList possibleMoves = GetPossibleMoves(initialPosition);
-	if (std::find(possibleMoves.begin(), possibleMoves.end(), finalPosition) == possibleMoves.end()) 
+	if (std::find(possibleMoves.begin(), possibleMoves.end(), finalPosition) == possibleMoves.end())
 	{
 		if (!m_board[finalPosition.row][finalPosition.col])
 		{
-			throw NotInPossibleMovesException("Your move is not possible"); 
+			throw NotInPossibleMovesException("Your move is not possible");
+		}
+		if (m_board[finalPosition.row][finalPosition.col]->GetColor() != m_turn)
+		{
+			throw OccupiedByEnemyPieceException("Your move is not possible !");
 		}
 		else
 		{

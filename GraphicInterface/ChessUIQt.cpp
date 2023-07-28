@@ -171,59 +171,59 @@ void ChessUIQt::InitializeBoard(QGridLayout* mainGridLayout)
 
 void ChessUIQt::OnButtonClicked(const Position& position)
 {
-    //At col click
-    if (m_selectedCell.has_value()) 
-    {
-        if (m_selectedCell.value() == position)
-        {
-            m_grid[m_selectedCell.value().row][m_selectedCell.value().col]->setSelected(false);
-            m_selectedCell.reset();
-            UnhighlightPossibleMoves(m_game->GetPossibleMoves(position));
-        }
-        else
-        {
-            //TODO COMPLETE ME...
-            try
-            {
-                UnhighlightPossibleMoves(m_game->GetPossibleMoves(m_selectedCell.value()));
-                m_game->MakeMovement(m_selectedCell.value(), position);                                
-            }
-            catch (const OccupiedByOwnPieceException& e)
-            {
-                UnhighlightPossibleMoves(m_game->GetPossibleMoves(m_selectedCell.value()));
+	//At second click
+	if (m_selectedCell.has_value())
+	{
+		if (m_selectedCell.value() == position)
+		{
+			m_grid[m_selectedCell.value().row][m_selectedCell.value().col]->setSelected(false);
+			m_selectedCell.reset();
+			UnhighlightPossibleMoves(m_game->GetPossibleMoves(position));
+		}
+		else
+		{
+			//TODO COMPLETE ME...
+			try
+			{
+				UnhighlightPossibleMoves(m_game->GetPossibleMoves(m_selectedCell.value()));
+				m_game->MakeMovement(m_selectedCell.value(), position);
+			}
+			catch (const OccupiedByOwnPieceException& e)
+			{
+				UnhighlightPossibleMoves(m_game->GetPossibleMoves(m_selectedCell.value()));
 
 				m_grid[m_selectedCell.value().row][m_selectedCell.value().col]->setSelected(false);
-				m_selectedCell.reset();                
+				m_selectedCell.reset();
 
 				m_selectedCell = position;
 				m_grid[position.row][position.col]->setSelected(true);
 
-                AppendThrowMessage("");
+				AppendThrowMessage("");
 				HighlightPossibleMoves(m_game->GetPossibleMoves(m_selectedCell.value()));
 
-                return;
-            }
-            catch (const ChessException& e)
+				return;
+			}
+			catch (const ChessException& e)
 			{
 				HighlightPossibleMoves(m_game->GetPossibleMoves(m_selectedCell.value()));
-                AppendThrowMessage(e.what());
-                return;
-            }
+				AppendThrowMessage(e.what());
+				return;
+			}
 
-            //Unselect prev. pressed button
-            m_grid[m_selectedCell.value().row][m_selectedCell.value().col]->setSelected(false);
-            m_selectedCell.reset();			
-        }
-    }
-    //At row click
-    else 
-    {
-        m_selectedCell = position;
-        m_grid[position.row][position.col]->setSelected(true);
+			//Unselect prev. pressed button
+			m_grid[m_selectedCell.value().row][m_selectedCell.value().col]->setSelected(false);
+			m_selectedCell.reset();
+		}
+	}
+	//At first click
+	else
+	{
+		m_selectedCell = position;
+		m_grid[position.row][position.col]->setSelected(true);
 
-        //TODO Show possible moves here
-        HighlightPossibleMoves(m_game->GetPossibleMoves(position));
-    }
+		//TODO Show possible moves here
+		HighlightPossibleMoves(m_game->GetPossibleMoves(position));
+	}
 }
 
 void ChessUIQt::OnSaveButtonClicked()
