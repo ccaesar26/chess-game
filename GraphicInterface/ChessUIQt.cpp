@@ -822,6 +822,7 @@ void ChessUIQt::OnGameRestarted()
     InitializeButtons(mainGridLayout);
     InitializeTimers(mainGridLayout);
     InitializeHistory(mainGridLayout);
+	InitializeCapturedBoxes(mainGridLayout);
 
     mainWidget->setLayout(mainGridLayout);
     this->setCentralWidget(mainWidget);
