@@ -346,3 +346,33 @@ TEST(OnCheck, OnCheck_1)
 
 	game.MakeMovement(Position(7, 7), Position(0, 7));
 }
+
+TEST(OnGameOver, WhiteWins)
+{
+	std::array<std::array<char, 8>, 8> alternativeBoard =
+	{
+		//  0    1    2    3    4    5    6    7
+
+		   'K', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 0
+		   ' ', ' ', ' ', ' ', ' ', ' ', 'r', ' ',   // 1		
+		   ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 2
+		   ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 3
+		   ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 4
+		   ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 5
+		   ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 6
+		   'k', ' ', ' ', ' ', ' ', ' ', ' ', 'r'    // 7
+	};
+
+	ChessGame game(alternativeBoard, EColor::White);
+	auto listener = std::make_shared<MockListener>();
+	game.AddListener(listener);
+
+	EXPECT_CALL(*listener, OnMoveMade(Position(7, 7), Position(0, 7)))
+		.Times(1);
+
+	EXPECT_CALL(*listener, OnGameOver(EGameResult::WhitePlayerWon))
+		.Times(1);
+
+	game.MakeMovement(Position(7, 7), Position(0, 7));
+
+}
