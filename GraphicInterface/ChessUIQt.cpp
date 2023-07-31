@@ -312,17 +312,14 @@ void ChessUIQt::OnSaveButtonClicked()
 		this,
 		"Save game",
 		QDir::currentPath(),
-		tr("Chess file (*.fen, *.pgn);;All files (*.*)") 
+		tr("Chess file (*.fen *.pgn);;All files (*.*)") 
 	);
 
-	/*QFileDialog dialog(this);
-	dialog.setFileMode(QFileDialog::AnyFile);
-	dialog.setNameFilter(tr("*.fen"));
-	dialog.selectNameFilter("*.fen");
-	dialog.setViewMode(QFileDialog::Detail);
-	QStringList fileNames;
-	if (dialog.exec())
-		fileNames = dialog.selectedFiles();*/
+	QFile file(filename);
+	file.open(QIODevice::WriteOnly | QIODevice::Text);
+	QTextStream out(&file);
+	out << FENStringFromBoard();
+	file.close();
 }
 
 void ChessUIQt::OnLoadButtonClicked()
@@ -489,6 +486,44 @@ QString ChessUIQt::FENStringFromBoard() const
 		config.append('/');
 	}
 	config[config.size() - 1] = ' ';
+
+	switch (m_game->GetCurrentPlayer())
+	{
+	case EColor::White:
+		config.append("w ");
+		break;
+	case EColor::Black:
+		config.append("b ");
+		break;
+	}
+
+	bool castleFlag = false;
+	if (m_game->IsWhiteKingsideCastlingAvailable())
+	{
+		config.append('K');
+		castleFlag = true;
+	}
+	if (m_game->IsWhiteQueensideCastlingAvailable())
+	{
+		config.append('Q');
+		castleFlag = true;
+	}
+	if (m_game->IsBlackKingsideCastlingAvailable())
+	{
+		config.append('k');
+		castleFlag = true;
+	}
+	if (m_game->IsBlackQueensideCastlingAvailable())
+	{
+		config.append('q');
+		castleFlag = true;
+	}
+	if (!castleFlag)
+	{
+		config.append('-');
+	}
+
+	config.append(" - 0 0");
 
 	return config;
 }

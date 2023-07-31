@@ -6,6 +6,7 @@
 #include <QLabel>
 #include <QListWidget>
 #include <QFileDialog>
+#include <QFile>
 
 #include "GridButton.h"
 #include "IChessGame.h"
