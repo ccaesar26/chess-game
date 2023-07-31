@@ -13,6 +13,8 @@
 #include <QLabel>
 #include <QPalette>
 
+#include <QFileInfo>
+
 static EType ToETypeFromQString(const QString& s)
 {
     if (s == "Rook")
@@ -308,23 +310,39 @@ void ChessUIQt::OnButtonClicked(const Position& position)
 
 void ChessUIQt::OnSaveButtonClicked()
 {
-	QString filename = QFileDialog::getSaveFileName(
+	QString fileName = QFileDialog::getSaveFileName(
 		this,
 		"Save game",
-		QDir::currentPath(),
-		tr("Chess file (*.fen *.pgn);;All files (*.*)") 
+		QDir::homePath(),
+		tr("FEN File (*.fen);;PGN File (*.pgn);;All files (*.*)") 
 	);
 
-	QFile file(filename);
-	file.open(QIODevice::WriteOnly | QIODevice::Text);
-	QTextStream out(&file);
-	out << FENStringFromBoard();
-	file.close();
+	if (!fileName.isEmpty()) 
+	{ 
+		QFile file(fileName);
+		QString fileExtension = QFileInfo(fileName).suffix(); 
+
+		file.open(QIODevice::WriteOnly | QIODevice::Text);
+		
+		QTextStream out(&file);
+
+		if (fileExtension == "fen")
+		{
+			out << FENStringFromBoard();
+		} 
+		else if (fileExtension == "pgn")
+		{
+			// PGN call
+		}
+
+		file.close();
+	}
 }
 
 void ChessUIQt::OnLoadButtonClicked()
 {
     //TODO ...
+	LoadFENString("rnbqkbnr/ppppp1pp/8/5p2/3P4/5N2/PPP1PPPP/RNBQKB1R ");
 }
 
 void ChessUIQt::OnRestartButtonClicked()
@@ -473,7 +491,7 @@ QString ChessUIQt::FENStringFromBoard() const
 
 				if (m_grid[i][j]->GetColor() == PieceColor::black)
 				{
-					letter.toLower();
+					letter = letter.toLower();
 				}
 				config.append(letter);
 			}
@@ -526,6 +544,52 @@ QString ChessUIQt::FENStringFromBoard() const
 	config.append(" - 0 0");
 
 	return config;
+}
+
+void ChessUIQt::LoadFENString(QString FENString)
+{
+	std::array<std::array<char, 8>, 8> config;
+	
+	int k = 0;
+
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			QChar currP = FENString.at(k);
+			
+			if (currP.isDigit())
+			{
+				int numEmptySq = currP.digitValue();
+				while (numEmptySq)
+				{
+					numEmptySq--;
+					j++;
+				}
+			}
+
+			char c = currP.cell();
+			if (c >= 'a')
+			{
+				c = toupper(c);
+			}
+			else
+			{
+				c = tolower(c);
+			}
+			if (c == 'n')
+			{
+				c = 'h';
+			}
+			else if(c == 'N')
+			{
+				c = 'H';
+			}
+
+			k++;
+		}
+		k++;
+	}
 }
 
 void ChessUIQt::UpdateHistory()

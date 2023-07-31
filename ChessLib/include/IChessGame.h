@@ -4,6 +4,8 @@
 #include "IChessGameListener.h"
 
 using IChessGamePtr = std::shared_ptr<class IChessGame>;
+using CharBoard = std::array<std::array<char, 8>, 8>;
+using CastleValues = std::array<std::array<bool, 2>, 2>;
 
 class IChessGame
 {
@@ -11,6 +13,7 @@ public:
 	static  IChessGamePtr CreateGame();
 
 	virtual void ResetGame() = 0;
+	virtual void RestoreGame(const CharBoard& inputConfig, EColor turn = EColor::White, CastleValues castle = { true, true, true, true }) = 0;
 
 	virtual IPiecePtr GetIPiecePtr(Position pos) const = 0;
 
