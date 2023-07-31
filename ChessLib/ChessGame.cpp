@@ -281,6 +281,11 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 
 	if(pieceLetter!='P')
 		move += pieceLetter;
+	else
+	{
+		std::string cols = "abcdefgh";
+		move += cols[initialPosition.col];
+	}
 
 	Position pos = GetPiecePositionWithSameTypeThatCanMoveToFinalPosition(initialPosition,finalPosition, 
 		m_board[initialPosition.row][initialPosition.col]->GetType());
