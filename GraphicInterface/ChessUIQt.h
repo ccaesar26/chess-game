@@ -44,8 +44,6 @@ public:
     void OnGameOver(EGameResult result) override;
     void OnPawnUpgrade(Position pos) override;
     void OnCheck() override;
-
-
     void OnGameRestarted() override;
 
 public slots:
@@ -61,6 +59,10 @@ public slots:
 
 signals:
     void Exit();
+
+private:
+    // TODO: fen save/load methods
+    // TODO: pgn save/load methods
 
 private:
     std::array<std::array<GridButton*, 8>, 8> m_grid;
