@@ -39,39 +39,12 @@ ChessGame::ChessGame()
 	InitializeChessGame();
 }
 
-ChessGame::ChessGame(const CharBoard& inputConfig, EColor turn) 
+ChessGame::ChessGame(const CharBoard& inputConfig, EColor turn, CastleValues castle) 
 	: m_turn(turn)
 	, m_state(EGameState::MovingPiece)
+	, m_castle(castle)
 {
-	for (int i = 0; i < 2; i++)
-		for (int j = 0; j < 2; j++)
-			m_castle[i][j] = true;
-
-	m_kingPositions.resize(2);
-
-	for (int i = 0; i < 8; i++)
-	{
-		for (int j = 0; j< 8; j++)
-		{
-			if (inputConfig[i][j] == ' ')
-			{
-				continue;
-			}
-
-			EType type = GetType(inputConfig[i][j]);
-			EColor color = GetColor(inputConfig[i][j]);
-
-			m_board[i][j] = Piece::Produce(type, color);
-			if (type == EType::King)
-			{
-				m_kingPositions[(int)color] = Position(i, j);
-			}
-		}
-	}
-	if (CanBeCaptured(m_board, m_kingPositions[(int)turn]))
-	{
-		m_state = EGameState::CheckState;
-	}
+	InitializeChessGame(inputConfig, turn, castle);
 }
 
 void ChessGame::InitializeChessGame()
@@ -99,6 +72,39 @@ void ChessGame::InitializeChessGame()
 	}
 }
 
+void ChessGame::InitializeChessGame(const CharBoard& inputConfig, EColor turn, CastleValues castle)
+{
+	for (int i = 0; i < 2; i++)
+		for (int j = 0; j < 2; j++)
+			m_castle[i][j] = castle[i][j];
+
+	m_kingPositions.resize(2);
+
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			if (inputConfig[i][j] == ' ')
+			{
+				continue;
+			}
+
+			EType type = GetType(inputConfig[i][j]);
+			EColor color = GetColor(inputConfig[i][j]);
+
+			m_board[i][j] = Piece::Produce(type, color);
+			if (type == EType::King)
+			{
+				m_kingPositions[(int)color] = Position(i, j);
+			}
+		}
+	}
+	if (CanBeCaptured(m_board, m_kingPositions[(int)turn]))
+	{
+		m_state = EGameState::CheckState;
+	}
+}
+
 void ChessGame::ResetGame()
 {
 	ResetBoard();
@@ -108,6 +114,19 @@ void ChessGame::ResetGame()
 	m_boardConfigurationsRepetitons.clear();
 
 	InitializeChessGame();
+
+	Notify(ENotification::Reset);
+}
+
+void ChessGame::RestoreGame(const CharBoard& inputConfig, EColor turn /*= EColor::White*/, CastleValues castle /*= { true, true, true, true }*/)
+{
+	ResetBoard();
+
+	m_whitePiecesCaptured.clear();
+	m_blackPiecesCaptured.clear();
+	m_boardConfigurationsRepetitons.clear();
+
+	InitializeChessGame(inputConfig, turn, castle);
 
 	Notify(ENotification::Reset);
 }

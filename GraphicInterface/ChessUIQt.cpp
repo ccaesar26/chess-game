@@ -13,6 +13,8 @@
 #include <QLabel>
 #include <QPalette>
 
+#include <QFileInfo>
+
 static EType ToETypeFromQString(const QString& s)
 {
     if (s == "Rook")
@@ -308,26 +310,39 @@ void ChessUIQt::OnButtonClicked(const Position& position)
 
 void ChessUIQt::OnSaveButtonClicked()
 {
-	QString filename = QFileDialog::getSaveFileName(
+	QString fileName = QFileDialog::getSaveFileName(
 		this,
 		"Save game",
-		QDir::currentPath(),
-		tr("Chess file (*.fen, *.pgn);;All files (*.*)") 
+		QDir::homePath(),
+		tr("FEN File (*.fen);;PGN File (*.pgn);;All files (*.*)") 
 	);
 
-	/*QFileDialog dialog(this);
-	dialog.setFileMode(QFileDialog::AnyFile);
-	dialog.setNameFilter(tr("*.fen"));
-	dialog.selectNameFilter("*.fen");
-	dialog.setViewMode(QFileDialog::Detail);
-	QStringList fileNames;
-	if (dialog.exec())
-		fileNames = dialog.selectedFiles();*/
+	if (!fileName.isEmpty()) 
+	{ 
+		QFile file(fileName);
+		QString fileExtension = QFileInfo(fileName).suffix(); 
+
+		file.open(QIODevice::WriteOnly | QIODevice::Text);
+		
+		QTextStream out(&file);
+
+		if (fileExtension == "fen")
+		{
+			out << FENStringFromBoard();
+		} 
+		else if (fileExtension == "pgn")
+		{
+			// PGN call
+		}
+
+		file.close();
+	}
 }
 
 void ChessUIQt::OnLoadButtonClicked()
 {
     //TODO ...
+	LoadFENString("rnbqkbnr/ppppp1pp/8/5p2/3P4/5N2/PPP1PPPP/RNBQKB1R ");
 }
 
 void ChessUIQt::OnRestartButtonClicked()
@@ -431,6 +446,150 @@ void ChessUIQt::OnHistoryClicked(QListWidgetItem* item)
     int index = m_MovesList->currentRow();
     
     //TODO ...
+}
+
+QString ChessUIQt::FENStringFromBoard() const
+{
+	QString config;
+	int numEmptySq = 0;
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			QChar letter(0);
+			switch (m_grid[i][j]->GetType())
+			{
+			case PieceType::rook:
+				letter = 'R';
+				break;
+			case PieceType::knight:
+				letter = 'N';
+				break;
+			case PieceType::king:
+				letter = 'K';
+				break;
+			case PieceType::queen:
+				letter = 'Q';
+				break;
+			case PieceType::bishop:
+				letter = 'B';
+				break;
+			case PieceType::pawn:
+				letter = 'P';
+				break;
+			case PieceType::none:
+				numEmptySq++;
+				break;
+			}
+			if (letter != 0)
+			{
+				if (numEmptySq)
+				{
+					config.append(QChar(numEmptySq + '0'));
+					numEmptySq = 0;
+				}
+
+				if (m_grid[i][j]->GetColor() == PieceColor::black)
+				{
+					letter = letter.toLower();
+				}
+				config.append(letter);
+			}
+		}
+		if (numEmptySq)
+		{
+			config.append(QChar(numEmptySq + '0'));
+			numEmptySq = 0;
+		}
+		config.append('/');
+	}
+	config[config.size() - 1] = ' ';
+
+	switch (m_game->GetCurrentPlayer())
+	{
+	case EColor::White:
+		config.append("w ");
+		break;
+	case EColor::Black:
+		config.append("b ");
+		break;
+	}
+
+	bool castleFlag = false;
+	if (m_game->IsWhiteKingsideCastlingAvailable())
+	{
+		config.append('K');
+		castleFlag = true;
+	}
+	if (m_game->IsWhiteQueensideCastlingAvailable())
+	{
+		config.append('Q');
+		castleFlag = true;
+	}
+	if (m_game->IsBlackKingsideCastlingAvailable())
+	{
+		config.append('k');
+		castleFlag = true;
+	}
+	if (m_game->IsBlackQueensideCastlingAvailable())
+	{
+		config.append('q');
+		castleFlag = true;
+	}
+	if (!castleFlag)
+	{
+		config.append('-');
+	}
+
+	config.append(" - 0 0");
+
+	return config;
+}
+
+void ChessUIQt::LoadFENString(QString FENString)
+{
+	std::array<std::array<char, 8>, 8> config;
+	
+	int k = 0;
+
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			QChar currP = FENString.at(k);
+			
+			if (currP.isDigit())
+			{
+				int numEmptySq = currP.digitValue();
+				while (numEmptySq)
+				{
+					numEmptySq--;
+					j++;
+				}
+			}
+
+			char c = currP.cell();
+			if (c >= 'a')
+			{
+				c = toupper(c);
+			}
+			else
+			{
+				c = tolower(c);
+			}
+			if (c == 'n')
+			{
+				c = 'h';
+			}
+			else if(c == 'N')
+			{
+				c = 'H';
+			}
+
+			k++;
+		}
+		k++;
+	}
 }
 
 void ChessUIQt::UpdateHistory()

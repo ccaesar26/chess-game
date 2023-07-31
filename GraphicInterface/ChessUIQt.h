@@ -6,6 +6,7 @@
 #include <QLabel>
 #include <QListWidget>
 #include <QFileDialog>
+#include <QFile>
 
 #include "GridButton.h"
 #include "IChessGame.h"
@@ -64,6 +65,8 @@ signals:
 
 private:
     // TODO: fen save/load methods
+    QString FENStringFromBoard() const;
+    void LoadFENString(QString FENString);
     // TODO: pgn save/load methods
 
 private:

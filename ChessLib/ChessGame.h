@@ -56,9 +56,10 @@ public:
 	// Constructors //
 
 	ChessGame();
-	ChessGame(const CharBoard& inputConfig, EColor turn = EColor::White);
+	ChessGame(const CharBoard& inputConfig, EColor turn = EColor::White, CastleValues castle = { true, true, true, true });
 
 	void ResetGame() override;
+	void RestoreGame(const CharBoard& inputConfig, EColor turn = EColor::White, CastleValues castle = { true, true, true, true }) override;
 
 	// Setter for Castle Matrix // 
 
@@ -117,6 +118,7 @@ public:
 
 private:
 	void InitializeChessGame();
+	void InitializeChessGame(const CharBoard& inputConfig, EColor turn = EColor::White, CastleValues castle = {true, true, true, true});
 	void ResetBoard();
 
 	PieceList GetCheckPieces(Position& checkPos) const;
