@@ -106,6 +106,12 @@ public:
 
 	void AddCastle(Position kingPosition, PositionList& kingPossibleMoves) const;
 
+
+	bool IsWhiteKingsideCastlingAvailable() const override;
+	bool IsWhiteQueensideCastlingAvailable() const override;
+	bool IsBlackKingsideCastlingAvailable() const override;
+	bool IsBlackQueensideCastlingAvailable() const override;
+
 private:
 	void InitializeChessGame();
 	void ResetBoard();
@@ -144,7 +150,7 @@ private:
 	EGameState m_state;
 
 	// Row 1 is for White and Row 2 is for Black ! Column 1 is for left castle and Column 2 is for right castle
-	CastleValues m_Castle;    
+	CastleValues m_castle;    
 
 	std::unordered_map<std::array<std::array<char, 8>, 8>, int, HashFunctor> m_boardConfigurationsRepetitons;
 
