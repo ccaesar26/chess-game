@@ -314,25 +314,41 @@ void ChessUIQt::OnSaveButtonClicked()
 		this,
 		"Save game",
 		QDir::homePath(),
-		tr("FEN File (*.fen);;PGN File (*.pgn);;All files (*.*)") 
+		tr("FEN File (*.fen);;PGN File (*.pgn);;All files (*.*)")
 	);
 
-	if (!fileName.isEmpty()) 
-	{ 
+	if (!fileName.isEmpty())
+	{
 		QFile file(fileName);
-		QString fileExtension = QFileInfo(fileName).suffix(); 
+		QString fileExtension = QFileInfo(fileName).suffix();
 
-		file.open(QIODevice::WriteOnly | QIODevice::Text);
-		
+		if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+		{
+			// Error opening the file for writing, show a message box
+			QMessageBox::critical(this, "Error", "Failed to save the file.");
+			return;
+		}
+
 		QTextStream out(&file);
 
 		if (fileExtension == "fen")
 		{
 			out << FENStringFromBoard();
-		} 
+		}
 		else if (fileExtension == "pgn")
 		{
 			// PGN call
+		}
+		else
+		{
+			// Unsupported file format, show a message box
+			QMessageBox::warning(this, "Warning", "Unsupported file format.");
+		}
+
+		if (out.status() != QTextStream::Ok)
+		{
+			// Error occurred while writing to the file, show a message box
+			QMessageBox::critical(this, "Error", "Failed to write to the file.");
 		}
 
 		file.close();
@@ -341,8 +357,44 @@ void ChessUIQt::OnSaveButtonClicked()
 
 void ChessUIQt::OnLoadButtonClicked()
 {
-    //TODO ...
-	LoadFENString("rnbqkbnr/ppppp1pp/8/5p2/3P4/5N2/PPP1PPPP/RNBQKB1R ");
+	QString fileName = QFileDialog::getOpenFileName(
+		this,
+		"Load game",
+		QDir::homePath(),
+		tr("FEN File (*.fen);;PGN File (*.pgn);;All files (*.*)")
+	);
+
+	if (!fileName.isEmpty())
+	{
+		QFile file(fileName);
+		if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+		{
+			// Error opening the file, show a message box
+			QMessageBox::critical(this, "Error", "Failed to open the file.");
+			return;
+		}
+
+		QTextStream in(&file);
+		QString fileContent = in.readAll(); // Read the entire content of the file into a QString
+
+		file.close();
+
+		QString fileExtension = QFileInfo(fileName).suffix();
+
+		if (fileExtension == "fen")
+		{
+			LoadFENString(fileContent); // Pass the content to LoadFENString() method
+		}
+		else if (fileExtension == "pgn")
+		{
+			// PGN call
+		}
+		else
+		{
+			// Unsupported file format, show a message box
+			QMessageBox::warning(this, "Warning", "Unsupported file format.");
+		}
+	}
 }
 
 void ChessUIQt::OnRestartButtonClicked()
@@ -563,9 +615,16 @@ void ChessUIQt::LoadFENString(QString FENString)
 				int numEmptySq = currP.digitValue();
 				while (numEmptySq)
 				{
+					config[i][j] = ' ';
 					numEmptySq--;
 					j++;
 				}
+				k++;
+				if (j == 8)
+				{
+					break;
+				}
+				currP = FENString.at(k);
 			}
 
 			char c = currP.cell();
@@ -586,10 +645,44 @@ void ChessUIQt::LoadFENString(QString FENString)
 				c = 'H';
 			}
 
+			config[i][j] = c;
+
 			k++;
 		}
 		k++;
 	}
+
+	EColor turn = EColor::White;
+	if (FENString.at(k) == 'b')
+	{
+		turn = EColor::Black;
+	}
+
+	k += 2;
+
+	CastleValues cstVal = { false, false, false, false };
+	while (FENString.at(k) != ' ')
+	{
+		if (FENString.at(k) == 'K')
+		{
+			cstVal[0][1] = true;
+		}
+		else if (FENString.at(k) == '0')
+		{
+			cstVal[0][1] = true;
+		}
+		else if (FENString.at(k) == 'k')
+		{
+			cstVal[1][1] = true;
+		}
+		else if (FENString.at(k) == 'q')
+		{
+			cstVal[1][0] = true;
+		}
+		k++;
+	}
+
+	m_game->RestoreGame(config, turn, cstVal);
 }
 
 void ChessUIQt::UpdateHistory()
@@ -990,5 +1083,15 @@ void ChessUIQt::OnGameRestarted()
     this->setCentralWidget(mainWidget);
 
     StartGame();
+
+	switch (m_game->GetCurrentPlayer())
+	{
+	case EColor::White:
+		m_MessageLabel->setText("Waiting for white player\n");
+		break;
+	case EColor::Black:
+		m_MessageLabel->setText("Waiting for black player\n");
+		break;
+	}
 }
 

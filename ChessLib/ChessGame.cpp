@@ -74,6 +74,9 @@ void ChessGame::InitializeChessGame()
 
 void ChessGame::InitializeChessGame(const CharBoard& inputConfig, EColor turn, CastleValues castle)
 {
+	m_turn = turn;
+	m_state = EGameState::MovingPiece;
+
 	for (int i = 0; i < 2; i++)
 		for (int j = 0; j < 2; j++)
 			m_castle[i][j] = castle[i][j];
