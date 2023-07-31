@@ -5,19 +5,19 @@
 
 #include <iostream>
 
-TEST(MakeMovement, MoveOnEmptySquare)
+TEST(MakeMove, MoveOnEmptySquare)
 {
 	ChessGame g;
 
 	IPiecePtr toBeMoved = g.GetIPiecePtr(Position(6, 3));
 
-	g.MakeMovement(Position(6, 3), Position(4, 3));
+	g.MakeMove(Position(6, 3), Position(4, 3));
 
 	EXPECT_EQ(g.GetIPiecePtr(Position(6, 3)).get(), nullptr);
 	EXPECT_EQ(g.GetIPiecePtr(Position(4, 3)), toBeMoved);
 }
 
-TEST(MakeMovement, MoveAndCapture)
+TEST(MakeMove, MoveAndCapture)
 {
 	ChessGame g({
 		'R', ' ', 'B', 'Q', 'K', 'B', 'H', 'R',
@@ -33,14 +33,14 @@ TEST(MakeMovement, MoveAndCapture)
 	IPiecePtr toBeCaptured = g.GetIPiecePtr(Position(3, 1));
 	IPiecePtr toBeMoved = g.GetIPiecePtr(Position(5, 2));
 
-	g.MakeMovement(Position(5, 2), Position(3, 1));
+	g.MakeMove(Position(5, 2), Position(3, 1));
 
 	EXPECT_EQ(g.GetIPiecePtr(Position(3, 1)), toBeMoved);
 	EXPECT_EQ(g.GetIPiecePtr(Position(5, 2)).get(), nullptr);
 	EXPECT_EQ(g.GetCapturedPieces(EColor::Black).back(), toBeCaptured);
 }
 
-TEST(MakeMovement, MoveOutOfBounds)
+TEST(MakeMove, MoveOutOfBounds)
 {
 	ChessGame g({
 		'R', ' ', 'B', 'Q', 'K', 'B', 'H', 'R',
@@ -55,12 +55,12 @@ TEST(MakeMovement, MoveOutOfBounds)
 
 	IPiecePtr toBeMoved = g.GetIPiecePtr(Position(7, 6));
 
-	EXPECT_THROW(g.MakeMovement(Position(7, 6), Position(6, 8)), OutOfBoundsException);
+	EXPECT_THROW(g.MakeMove(Position(7, 6), Position(6, 8)), OutOfBoundsException);
 
 	EXPECT_EQ(g.GetIPiecePtr(Position(7, 6)), toBeMoved);
 }
 
-TEST(MakeMovement, MoveOnOccupiedByOwnPieceSquare)
+TEST(MakeMove, MoveOnOccupiedByOwnPieceSquare)
 {
 	ChessGame g({
 		'R', ' ', 'B', 'Q', 'K', 'B', 'H', 'R',
@@ -75,12 +75,12 @@ TEST(MakeMovement, MoveOnOccupiedByOwnPieceSquare)
 
 	IPiecePtr toBeMoved = g.GetIPiecePtr(Position(7, 0));
 
-	EXPECT_THROW(g.MakeMovement(Position(7, 0), Position(6, 0)), OccupiedByOwnPieceException);
+	EXPECT_THROW(g.MakeMove(Position(7, 0), Position(6, 0)), OccupiedByOwnPieceException);
 
 	EXPECT_EQ(g.GetIPiecePtr(Position(7, 0)), toBeMoved);
 }
 
-TEST(MakeMovement, CastleMove)
+TEST(MakeMove, CastleMove)
 {
 	ChessGame g({
 		'R', ' ', 'B', 'Q', 'K', 'B', 'H', 'R',
@@ -96,7 +96,7 @@ TEST(MakeMovement, CastleMove)
 	IPiecePtr king = g.GetIPiecePtr(Position(7, 4));
 	IPiecePtr rook = g.GetIPiecePtr(Position(7, 7));
 
-	g.MakeMovement(Position(7, 4), Position(7, 6));
+	g.MakeMove(Position(7, 4), Position(7, 6));
 
 	EXPECT_EQ(g.GetIPiecePtr(Position(7, 6)), king);
 	EXPECT_EQ(g.GetIPiecePtr(Position(7, 5)), rook);
@@ -105,7 +105,7 @@ TEST(MakeMovement, CastleMove)
 	EXPECT_EQ(g.GetIPiecePtr(Position(7, 7)).get(), nullptr);
 }
 
-TEST(MakeMovement, CastleMoveByPassingCheckState)
+TEST(MakeMove, CastleMoveByPassingCheckState)
 {
 	ChessGame g({
 		'R', ' ', 'B', 'Q', 'K', 'B', 'H', 'R',
@@ -121,7 +121,7 @@ TEST(MakeMovement, CastleMoveByPassingCheckState)
 	IPiecePtr king = g.GetIPiecePtr(Position(7, 4));
 	IPiecePtr rook = g.GetIPiecePtr(Position(7, 7));
 
-	EXPECT_THROW(g.MakeMovement(Position(7, 4), Position(7, 6)), NotInPossibleMovesException);
+	EXPECT_THROW(g.MakeMove(Position(7, 4), Position(7, 6)), NotInPossibleMovesException);
 
 	EXPECT_EQ(g.GetIPiecePtr(Position(7, 4)), king);
 	EXPECT_EQ(g.GetIPiecePtr(Position(7, 7)), rook);

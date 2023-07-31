@@ -25,7 +25,7 @@ TEST(TestIsStaleMate, Test_Stale_Mate_1)
 
 	// Tests //
 
-	game.MakeMovement(Position(0, 1), Position(6, 1));
+	game.MakeMove(Position(0, 1), Position(6, 1));
 
 	EXPECT_EQ(game.IsDraw(),true);
 }
@@ -52,7 +52,7 @@ TEST(TestIsStaleMate, Test_Stale_Mate_2)
 
 	// Tests //
 
-	game.MakeMovement(Position(1, 0), Position(6, 5));
+	game.MakeMove(Position(1, 0), Position(6, 5));
 
 	EXPECT_EQ(game.IsDraw(), true);
 }
@@ -79,7 +79,7 @@ TEST(TestIsStaleMate, Test_Stale_Mate_3)
 
 	// Tests //
 
-	game.MakeMovement(Position(1, 0), Position(6, 5));
+	game.MakeMove(Position(1, 0), Position(6, 5));
 
 	EXPECT_EQ(game.IsDraw(), false);
 }

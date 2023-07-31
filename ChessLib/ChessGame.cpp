@@ -137,10 +137,12 @@ EColor ChessGame::GetCurrentPlayer() const
 	return m_turn;
 }
 
-bool ChessGame::IsStaleMate() const
+bool ChessGame::CheckStaleMate() const
 {
 	if (m_state != EGameState::MovingPiece)
+	{
 		return false;
+	}
 	
 	for (int i = 0; i < 8; i++)
 	{
@@ -150,7 +152,9 @@ bool ChessGame::IsStaleMate() const
 			{
 				PositionList possibleMoves = GetPossibleMoves(Position(i, j));
 				if (!possibleMoves.empty())
+				{
 					return false;
+				}
 			}
 		}
 	}
@@ -163,7 +167,7 @@ bool ChessGame::IsGameOver() const
 		return true;
 }
 
-bool ChessGame::VerifyCheckMate() const
+bool ChessGame::CheckCheckMate() const
 {
 	if (m_state == EGameState::Draw)
 		return false;
@@ -195,7 +199,6 @@ bool ChessGame::VerifyCheckMate() const
 
 	if (checkPieces.front()->Is({ EType::King, EType::Pawn, EType::Horse }))
 	{
-		//Notify(ENotification::GameOver);
 		return true;
 	}
 
@@ -215,79 +218,132 @@ bool ChessGame::VerifyCheckMate() const
 	return true;
 }
 
-void ChessGame::MakeMovement(Position initialPos, Position finalPos)
+void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 {
-	MakeMove(initialPos, finalPos);
-
-	Notify(ENotification::MoveMade, initialPos, finalPos);
-
-	switch (m_state)
+	if (!IsInMatrix(initialPosition))
 	{
-	case EGameState::UpgradePawn:
-		Notify(ENotification::PawnUpgrade, initialPos, finalPos);
-	case EGameState::Draw:
-	case EGameState::WonByWhitePlayer:
-	case EGameState::WonByBlackPlayer:
+		throw OutOfBoundsException("Initial position is not a valid position");
+	}
+	if (!IsInMatrix(finalPosition))
+	{
+		throw OutOfBoundsException("Final position is not a valid position");
+	}
+
+	if (m_board[finalPosition.row][finalPosition.col] && m_board[finalPosition.row][finalPosition.col]->GetColor() == m_turn)
+	{
+		throw OccupiedByOwnPieceException("The final square is occupied by own piece");
+	}
+
+	PositionList possibleMoves = GetPossibleMoves(initialPosition);
+	if (std::find(possibleMoves.begin(), possibleMoves.end(), finalPosition) == possibleMoves.end())
+	{
+		throw NotInPossibleMovesException("Your move is not possible");
+	}
+
+	m_state = EGameState::MovingPiece;
+
+	if (m_board[finalPosition.row][finalPosition.col])
+	{
+		if (m_turn == EColor::White)
+		{
+			m_blackPiecesCaptured.push_back(m_board[finalPosition.row][finalPosition.col]);
+		}
+		else
+		{
+			m_whitePiecesCaptured.push_back(m_board[finalPosition.row][finalPosition.col]);
+		}
+	}
+
+	m_board[finalPosition.row][finalPosition.col] = m_board[initialPosition.row][initialPosition.col];
+	m_board[initialPosition.row][initialPosition.col].reset();
+	
+	if (m_board[finalPosition.row][finalPosition.col]->GetType() == EType::Rook)
+	{
+		// Make Castle Inaccessible if Rook moved
+		m_Castle[(int)m_turn][initialPosition.col % 2] = false;
+	}
+	else if (m_board[finalPosition.row][finalPosition.col]->GetType() == EType::King)
+	{
+		m_kingPositions[(int)m_turn] = finalPosition;
+		// Make Castle Inaccessible if King moved
+		m_Castle[(int)m_turn][0] = false;
+		m_Castle[(int)m_turn][1] = false;
+		if (initialPosition.col - finalPosition.col == 2)
+		{
+			m_board[finalPosition.row][finalPosition.col + 1] = m_board[finalPosition.row][0];
+			m_board[finalPosition.row][0].reset();
+			Notify(ENotification::MoveMade, Position(finalPosition.row, 0), Position(finalPosition.row, finalPosition.col + 1));
+		}
+		else if (initialPosition.col - finalPosition.col == -2)
+		{
+			m_board[finalPosition.row][finalPosition.col - 1] = m_board[finalPosition.row][7];
+			m_board[finalPosition.row][7].reset();
+			Notify(ENotification::MoveMade, Position(finalPosition.row, 7), Position(finalPosition.row, finalPosition.col - 1));
+		}
+		//
+	}
+
+	SwitchTurn();
+
+	Notify(ENotification::MoveMade, initialPosition, finalPosition);
+
+	if (m_board[finalPosition.row][finalPosition.col]->GetType() == EType::Pawn)
+	{
+		if (m_board[finalPosition.row][finalPosition.col]->GetColor() == EColor::White && finalPosition.row == 0)
+		{
+			m_state = EGameState::UpgradePawn;
+			Notify(ENotification::PawnUpgrade, finalPosition);
+		}
+		if (m_board[finalPosition.row][finalPosition.col]->GetColor() == EColor::Black && finalPosition.row == 7)
+		{
+			m_state = EGameState::UpgradePawn;
+			Notify(ENotification::PawnUpgrade, finalPosition);
+		}
+	}
+
+	m_state = EGameState::MovingPiece;
+		
+	if (CheckThreeFoldRepetition())
+	{
+		m_state = EGameState::Draw;
 		Notify(ENotification::GameOver);
-		break;
-	case EGameState::CheckState:
+	}
+
+	if (CanBeCaptured(m_board, m_kingPositions[(int)m_turn]) == true)
+	{
+		m_state = EGameState::CheckState;
 		Notify(ENotification::Check);
-		break;
-	default:
-		break;
+	}
+
+	if (CheckCheckMate())
+	{
+		m_state = m_turn == EColor::White ? EGameState::WonByBlackPlayer : EGameState::WonByWhitePlayer;
+		Notify(ENotification::GameOver);
+	}
+	else if (CheckStaleMate())
+	{
+		m_state = EGameState::Draw;
+		Notify(ENotification::GameOver);
 	}
 }
 
 void ChessGame::UpgradePawn(EType upgradeType)
 {
-	/*for (auto i = 0; i < upgradeType.size(); i++)
+	for (int i = 0; i < 8; i++)
 	{
-		upgradeType[i] = tolower(upgradeType[i]);
-	}*/
-
-	Position upgradePos;
-	if (m_turn == EColor::White)
-	{
-		for (int i = 0; i < 8; i++)
+		if (m_board[0][i] && m_board[0][i]->GetType() == EType::Pawn)
 		{
-			if (m_board[0][i] && m_board[0][i]->GetType() == EType::Pawn)
-			{
-				upgradePos.row = 0;
-				upgradePos.col = i;
-			}
+			m_board[0][i] = Piece::Produce(upgradeType, EColor::White);
+			return;
 		}
 	}
-	else
+	for (int i = 0; i < 8; i++)
 	{
-		for (int i = 0; i < 8; i++)
+		if (m_board[7][i] && m_board[7][i]->GetType() == EType::Pawn)
 		{
-			if (m_board[7][i] && m_board[7][i]->GetType() == EType::Pawn)
-			{
-				upgradePos.row = 7;
-				upgradePos.col = i;
-			}
+			m_board[7][i] = Piece::Produce(upgradeType, EColor::Black);
+			return;
 		}
-	}
-
-	m_board[upgradePos.row][upgradePos.col] = Piece::Produce(upgradeType, m_turn);
-	
-	m_state = EGameState::MovingPiece;
-
-	SwitchTurn();
-
-	if (CanBeCaptured(m_board, m_kingPositions[(int)m_turn]) == true)
-	{
-		m_state = EGameState::CheckState;
-	}
-
-	if (IsStaleMate())
-	{
-		m_state = EGameState::Draw;
-	}
-
-	if (VerifyCheckMate())
-	{
-		m_state = m_turn == EColor::White ? EGameState::WonByBlackPlayer : EGameState::WonByWhitePlayer;
 	}
 }
 
@@ -376,18 +432,30 @@ void ChessGame::RemoveListener(IChessGameListener* listener)
 
 void ChessGame::Notify(ENotification notif, Position init, Position fin)
 {
+	if (notif != ENotification::MoveMade)
+	{
+		return;
+	}
 	for (auto it = m_listeners.begin(); it != m_listeners.end(); it++)
 	{
 		if (auto sp = it->lock())
 		{
-			if (notif == ENotification::MoveMade)
-			{
-				sp->OnMoveMade(init, fin);
-			}
-			else if (notif == ENotification::PawnUpgrade)
-			{
-				sp->OnPawnUpgrade(init, fin);
-			}
+			sp->OnMoveMade(init, fin);
+		}
+	}
+}
+
+void ChessGame::Notify(ENotification notif, Position pos)
+{
+	if (notif != ENotification::PawnUpgrade)
+	{
+		return;
+	}
+	for (auto it = m_listeners.begin(); it != m_listeners.end(); it++)
+	{
+		if (auto sp = it->lock())
+		{
+			sp->OnPawnUpgrade(pos);
 		}
 	}
 }
@@ -730,139 +798,7 @@ bool ChessGame::CanBeCaptured(const ArrayBoard& board, Position toCapturePos) co
 	return false;
 }
 
-void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
-{
-	if (!IsInMatrix(initialPosition))
-	{
-		throw OutOfBoundsException("Initial position is not a valid position");
-	}
-	if (!IsInMatrix(finalPosition))
-	{
-		throw OutOfBoundsException("Final position is not a valid position");
-	}
-
-	if (m_state == EGameState::UpgradePawn)
-	{
-		throw InvalidStateException("You must upgrade pawn");
-	}
-
-	PositionList possibleMoves = GetPossibleMoves(initialPosition);
-	if (std::find(possibleMoves.begin(), possibleMoves.end(), finalPosition) == possibleMoves.end())
-	{
-		if (!m_board[finalPosition.row][finalPosition.col])
-		{
-			throw NotInPossibleMovesException("Your move is not possible");
-		}
-		if (m_board[finalPosition.row][finalPosition.col]->GetColor() != m_turn)
-		{
-			throw OccupiedByEnemyPieceException("Your move is not possible");
-		}
-		else
-		{
-			throw OccupiedByOwnPieceException("The final square is occupied by own piece");
-		}
-	}
-
-	if (m_board[finalPosition.row][finalPosition.col])
-	{
-		if (m_turn == EColor::White) 
-		{
-			m_blackPiecesCaptured.push_back(m_board[finalPosition.row][finalPosition.col]);
-		}
-		else
-		{
-			m_whitePiecesCaptured.push_back(m_board[finalPosition.row][finalPosition.col]);
-		}
-	}
-
-	m_board[finalPosition.row][finalPosition.col] = m_board[initialPosition.row][initialPosition.col];
-	m_board[initialPosition.row][initialPosition.col].reset();
-
-	m_state = EGameState::MovingPiece;
-	
-	// Make Castle Inaccessible if Rook moved // 
-
-	if (initialPosition.row == 0 || initialPosition.row == 7)   
-	{
-		if (initialPosition.col == 0)
-		{
-			m_Castle[(int)m_turn][0] = false;
-		}
-		else if (initialPosition.col == 7)
-		{
-			m_Castle[(int)m_turn][1] = false;
-		}
-	}
-
-	// End of Make Castle Inaccessible if Rook moved //
-
-	// Make Castle Inaccessible if King moved // 
-
-	if (m_board[finalPosition.row][finalPosition.col]->GetType() == EType::King)
-	{
-		m_kingPositions[(int)m_turn] = finalPosition;
-		m_Castle[(int)m_turn][0] = false;
-		m_Castle[(int)m_turn][1] = false;
-		if (initialPosition.col - finalPosition.col == 2)
-		{
-			m_board[finalPosition.row][finalPosition.col + 1] = m_board[finalPosition.row][0];
-			m_board[finalPosition.row][0].reset();
-			//Notify(ENotification::MoveMade, Position(finalPosition.row, 0), Position(finalPosition.row, finalPosition.col + 1));
-		}
-		else if (initialPosition.col - finalPosition.col == -2)
-		{
-			m_board[finalPosition.row][finalPosition.col - 1] = m_board[finalPosition.row][7];
-			m_board[finalPosition.row][7].reset();
-			//Notify(ENotification::MoveMade, Position(finalPosition.row, 7), Position(finalPosition.row, finalPosition.col - 1));
-		}
-	}  
-	// End of Make Castle Inaccessible if King moved //
-	else if (m_board[finalPosition.row][finalPosition.col]->GetType() == EType::Pawn)
-	{
-		if (m_board[finalPosition.row][finalPosition.col]->GetColor() == EColor::White && finalPosition.row == 0)
-		{
-			m_state = EGameState::UpgradePawn;
-			//Notify(ENotification::PawnUpgrade);
-			return;
-		}
-		if (m_board[finalPosition.row][finalPosition.col]->GetColor() == EColor::Black && finalPosition.row == 7)
-		{
-			m_state = EGameState::UpgradePawn;
-			//Notify(ENotification::PawnUpgrade);
-			return;
-		}
-	}
-	
-	// v  Save current configuration
-
-	if (SaveCurrentConfig() >= 2)
-	{
-		m_state = EGameState::Draw;
-	}
-
-	// ^  End of save current config
-
-	SwitchTurn();
-
-	if (CanBeCaptured(m_board, m_kingPositions[(int)m_turn]) == true)
-	{
-		m_state = EGameState::CheckState;
-		//Notify(ENotification::CheckState);
-	}
-
-	if (IsStaleMate())
-	{
-		m_state = EGameState::Draw;
-		return;
-	}
-
-	if (VerifyCheckMate())
-	{
-		m_state = m_turn == EColor::White ? EGameState::WonByBlackPlayer : EGameState::WonByWhitePlayer;
-	}
-}
-
-int ChessGame::SaveCurrentConfig()
+bool ChessGame::CheckThreeFoldRepetition()
 {
 	// r h b q k p -> white pieces
 	// R H B Q K P -> black pieces
@@ -883,7 +819,7 @@ int ChessGame::SaveCurrentConfig()
 	}
 
 	m_boardConfigurationsRepetitons[currConfig]++;
-	return m_boardConfigurationsRepetitons[currConfig];
+	return m_boardConfigurationsRepetitons[currConfig] >= 3;
 }
 
 // Static Methods //

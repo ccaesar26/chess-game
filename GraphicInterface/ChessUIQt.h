@@ -42,7 +42,7 @@ public:
 
     void OnMoveMade(Position init, Position fin) override;
     void OnGameOver(EGameResult result) override;
-    void OnPawnUpgrade(Position init, Position upPos) override;
+    void OnPawnUpgrade(Position pos) override;
     void OnCheck() override;
 
 

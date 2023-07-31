@@ -15,7 +15,7 @@ public:
 
 	virtual void OnGameOver(EGameResult result) = 0; // TODO winner/ draw enum
 	
-	virtual void OnPawnUpgrade(Position init, Position upPos) = 0; // TODO: ONLY ONE POSITION
+	virtual void OnPawnUpgrade(Position pos) = 0; // TODO: ONLY ONE POSITION
 	
 	virtual void OnCheck() = 0;
 	

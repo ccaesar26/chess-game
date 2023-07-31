@@ -22,7 +22,7 @@ public:
 
 	virtual bool IsGameOver() const = 0;
 
-	virtual void MakeMovement(Position initialPos, Position finalPos) = 0; // Position p1, Position p2
+	virtual void MakeMove(Position initialPos, Position finalPos) = 0; // Position p1, Position p2
 
 	virtual void UpgradePawn(EType upgradeType) = 0;
 	virtual void RequestDraw() = 0;

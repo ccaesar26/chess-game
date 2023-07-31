@@ -148,7 +148,7 @@ int main()
 				}
 			}
 			
-			g->MakeMovement(ic, ir, fc, fr);
+			g->MakeMove(ic, ir, fc, fr);
 
 			if (g->IsWaitingForUpgrade())
 			{
