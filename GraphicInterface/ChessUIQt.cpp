@@ -592,6 +592,25 @@ void ChessUIQt::LoadFENString(QString FENString)
 	}
 }
 
+//QString ChessUIQt::PGNStringFromBoard() const
+//{
+//	QString PGNString;
+//	MoveList history = m_game->GetMoveHistory();
+//
+//	std::string move;
+//	for (int i=0; i<history.size(); i++)
+//	{
+//		if (i % 2 != 0)
+//			move = history[i];
+//		else
+//		{
+//			move = move + " " + history[i];
+//			PGNString.append(QString::fromStdString(move));
+//		}	
+//	}
+//	return PGNString;
+//}
+
 void ChessUIQt::UpdateHistory()
 {
     m_MovesList->clear();
