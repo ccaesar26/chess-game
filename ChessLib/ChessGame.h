@@ -5,10 +5,12 @@
 
 #include <array>
 #include <unordered_map>
+#include <string>
 
 using ArrayBoard = std::array<std::array<PiecePtr, 8>, 8>;
 using CharBoard = std::array<std::array<char, 8>, 8>;
 using CastleValues = std::array<std::array<bool, 2>, 2>;
+using BoardPosition = std::pair<char, char>;
 
 enum class EGameState
 {
@@ -70,6 +72,7 @@ public:
 
 	IPieceList GetCapturedPieces(EColor color) const override;
 	EColor GetCurrentPlayer() const override;
+	MoveList GetMoveHistory() const override;
 
 	bool CheckStaleMate() const;
 	bool CheckCheckMate() const ;
@@ -132,10 +135,13 @@ private:
 
 	bool CanBeCaptured(const ArrayBoard& board, Position toCapturePos) const;
 
+	Position GetPiecePositionWithSameTypeThatCanMoveToFinalPosition(Position initialPos, Position finalPos, EType currentPieceType);
 
 	// Static Methods //
 
 	static bool IsInMatrix(Position piecePosition);
+
+	static BoardPosition ConvertToBoardPosition(Position pos);
 
 private:
 
@@ -159,4 +165,8 @@ private:
 	// Observable //
 
 	std::vector<IChessGameListenerWeakPtr> m_listeners;
+
+	// PGN //
+
+	MoveList m_MoveHistory;
 };

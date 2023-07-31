@@ -3,7 +3,11 @@
 #include "IPiece.h"
 #include "IChessGameListener.h"
 
+#include <vector>
+#include <string>
+
 using IChessGamePtr = std::shared_ptr<class IChessGame>;
+using MoveList = std::vector<std::string>;
 using CharBoard = std::array<std::array<char, 8>, 8>;
 using CastleValues = std::array<std::array<bool, 2>, 2>;
 
@@ -22,6 +26,8 @@ public:
 	virtual IPieceList GetCapturedPieces(EColor color) const = 0;
 
 	virtual EColor GetCurrentPlayer() const = 0;
+
+	virtual MoveList GetMoveHistory() const = 0;
 
 	virtual bool IsGameOver() const = 0;
 
