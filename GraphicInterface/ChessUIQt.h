@@ -69,6 +69,7 @@ private:
     void LoadFENString(QString FENString);
     // TODO: pgn save/load methods
     QString PGNStringFromBoard() const;
+    void LoadPGNString(QString PGNString);
 
 private:
     std::array<std::array<GridButton*, 8>, 8> m_grid;

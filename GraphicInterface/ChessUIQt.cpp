@@ -607,6 +607,18 @@ QString ChessUIQt::PGNStringFromBoard() const
 	return PGNString;
 }
 
+void ChessUIQt::LoadPGNString(QString PGNString)
+{
+	for (const QString& move : PGNString)
+	{
+		int dotIndex = move.indexOf('.');
+		QString move1 = move.left(dotIndex - 2);
+		QString move2 = move.right(dotIndex + 1);
+
+
+	}
+}
+
 void ChessUIQt::UpdateHistory()
 {
     m_MovesList->clear();
