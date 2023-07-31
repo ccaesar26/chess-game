@@ -912,10 +912,6 @@ void ChessUIQt::OnGameOver(EGameResult result)
 		{
             m_game->ResetGame();
 		}
-		else
-		{
-			Exit();
-		}
 		return;
 	}
 	
@@ -936,10 +932,6 @@ void ChessUIQt::OnGameOver(EGameResult result)
 	if (reply == QMessageBox::Yes)
 	{
         m_game->ResetGame();
-	}
-	else
-	{
-		Exit();
 	}
 }
 
