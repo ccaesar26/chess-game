@@ -5,6 +5,8 @@
 #include <QPushButton>
 #include <QLabel>
 #include <QListWidget>
+#include <QFileDialog>
+
 #include "GridButton.h"
 #include "IChessGame.h"
 #include "IChessGameListener.h"

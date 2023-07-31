@@ -308,8 +308,21 @@ void ChessUIQt::OnButtonClicked(const Position& position)
 
 void ChessUIQt::OnSaveButtonClicked()
 {
-    //TODO ...
-	FENStringFromBoard();
+	QString filename = QFileDialog::getSaveFileName(
+		this,
+		"Save game",
+		QDir::currentPath(),
+		tr("Chess file (*.fen, *.pgn);;All files (*.*)") 
+	);
+
+	/*QFileDialog dialog(this);
+	dialog.setFileMode(QFileDialog::AnyFile);
+	dialog.setNameFilter(tr("*.fen"));
+	dialog.selectNameFilter("*.fen");
+	dialog.setViewMode(QFileDialog::Detail);
+	QStringList fileNames;
+	if (dialog.exec())
+		fileNames = dialog.selectedFiles();*/
 }
 
 void ChessUIQt::OnLoadButtonClicked()

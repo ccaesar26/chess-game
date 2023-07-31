@@ -45,7 +45,7 @@ ChessGame::ChessGame(const CharBoard& inputConfig, EColor turn)
 {
 	for (int i = 0; i < 2; i++)
 		for (int j = 0; j < 2; j++)
-			m_Castle[i][j] = true;
+			m_castle[i][j] = true;
 
 	m_kingPositions.resize(2);
 
@@ -82,7 +82,7 @@ void ChessGame::InitializeChessGame()
 
 	for (int i = 0; i < 2; i++)
 		for (int j = 0; j < 2; j++)
-			m_Castle[i][j] = true;
+			m_castle[i][j] = true;
 
 	for (int j = 0; j < 8; j++)
 	{
@@ -114,7 +114,7 @@ void ChessGame::ResetGame()
 
 void ChessGame::SetCastleValues(const CastleValues& Castle)
 {
-	m_Castle = Castle;
+	m_castle = Castle;
 }
 
 // Virtual Implementations //
@@ -260,14 +260,14 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 	if (m_board[finalPosition.row][finalPosition.col]->GetType() == EType::Rook)
 	{
 		// Make Castle Inaccessible if Rook moved
-		m_Castle[(int)m_turn][initialPosition.col % 2] = false;
+		m_castle[(int)m_turn][initialPosition.col % 2] = false;
 	}
 	else if (m_board[finalPosition.row][finalPosition.col]->GetType() == EType::King)
 	{
 		m_kingPositions[(int)m_turn] = finalPosition;
 		// Make Castle Inaccessible if King moved
-		m_Castle[(int)m_turn][0] = false;
-		m_Castle[(int)m_turn][1] = false;
+		m_castle[(int)m_turn][0] = false;
+		m_castle[(int)m_turn][1] = false;
 		if (initialPosition.col - finalPosition.col == 2)
 		{
 			m_board[finalPosition.row][finalPosition.col + 1] = m_board[finalPosition.row][0];
@@ -508,7 +508,7 @@ void ChessGame::AddCastle(Position kingPosition, PositionList& kingPossibleMoves
 	PositionList toCheckPositions = { kingPosition,Position(kingPosition.row,kingPosition.col - 1)
 		, Position(kingPosition.row,kingPosition.col - 2) };
 
-	if (m_Castle[(int)king->GetColor()][0] == true)
+	if (m_castle[(int)king->GetColor()][0] == true)
 	{
 		if (m_board[kingPosition.row][0] && m_board[kingPosition.row][0]->Is(EType::Rook)
 			&& m_board[kingPosition.row][0]->GetColor() == m_turn)
@@ -544,7 +544,7 @@ void ChessGame::AddCastle(Position kingPosition, PositionList& kingPossibleMoves
 	toCheckPositions = { kingPosition,Position(kingPosition.row,kingPosition.col + 1)
 		, Position(kingPosition.row,kingPosition.col + 2) };
 
-	if (m_Castle[(int)king->GetColor()][1] == true)
+	if (m_castle[(int)king->GetColor()][1] == true)
 	{
 		if (m_board[kingPosition.row][7] && m_board[kingPosition.row][7]->GetType() == EType::Rook
 			&& m_board[kingPosition.row][7]->GetColor() == m_turn)
@@ -572,6 +572,26 @@ void ChessGame::AddCastle(Position kingPosition, PositionList& kingPossibleMoves
 			}
 		}
 	}
+}
+
+bool ChessGame::IsWhiteKingsideCastlingAvailable() const
+{
+	return m_castle[0][1];
+}
+
+bool ChessGame::IsWhiteQueensideCastlingAvailable() const
+{
+	return m_castle[0][0];
+}
+
+bool ChessGame::IsBlackKingsideCastlingAvailable() const
+{
+	return m_castle[1][1];
+}
+
+bool ChessGame::IsBlackQueensideCastlingAvailable() const
+{
+	return m_castle[1][0];
 }
 
 PositionList ChessGame::GetPossibleMoves(Position currentPos) const
