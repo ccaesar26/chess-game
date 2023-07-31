@@ -159,6 +159,7 @@
     <ClCompile Include="Bishop.cpp" />
     <ClCompile Include="ChessGame.cpp" />
     <ClCompile Include="Horse.cpp" />
+    <ClCompile Include="include\IChessGame.cpp" />
     <ClCompile Include="King.cpp" />
     <ClCompile Include="Pawn.cpp" />
     <ClCompile Include="Piece.cpp" />

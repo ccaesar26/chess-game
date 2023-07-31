@@ -71,6 +71,7 @@ public:
 
 	IPieceList GetCapturedPieces(EColor color) const override;
 	EColor GetCurrentPlayer() const override;
+	MoveList GetMoveHistory() const override;
 
 	bool CheckStaleMate() const;
 	bool CheckCheckMate() const ;
@@ -159,5 +160,5 @@ private:
 
 	// PGN //
 
-	std::vector<std::string> m_MoveHistory;
+	MoveList m_MoveHistory;
 };

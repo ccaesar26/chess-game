@@ -137,6 +137,11 @@ EColor ChessGame::GetCurrentPlayer() const
 	return m_turn;
 }
 
+MoveList ChessGame::GetMoveHistory() const
+{
+	return m_MoveHistory;
+}
+
 bool ChessGame::CheckStaleMate() const
 {
 	if (m_state != EGameState::MovingPiece)
