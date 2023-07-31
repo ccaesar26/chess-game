@@ -62,6 +62,7 @@ signals:
 
 private:
     // TODO: fen save/load methods
+    QString FENStringFromBoard() const;
     // TODO: pgn save/load methods
 
 private:

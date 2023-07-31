@@ -309,7 +309,7 @@ void ChessUIQt::OnButtonClicked(const Position& position)
 void ChessUIQt::OnSaveButtonClicked()
 {
     //TODO ...
-
+	FENStringFromBoard();
 }
 
 void ChessUIQt::OnLoadButtonClicked()
@@ -418,6 +418,66 @@ void ChessUIQt::OnHistoryClicked(QListWidgetItem* item)
     int index = m_MovesList->currentRow();
     
     //TODO ...
+}
+
+QString ChessUIQt::FENStringFromBoard() const
+{
+	QString config;
+	int numEmptySq = 0;
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			QChar letter(0);
+			switch (m_grid[i][j]->GetType())
+			{
+			case PieceType::rook:
+				letter = 'R';
+				break;
+			case PieceType::knight:
+				letter = 'N';
+				break;
+			case PieceType::king:
+				letter = 'K';
+				break;
+			case PieceType::queen:
+				letter = 'Q';
+				break;
+			case PieceType::bishop:
+				letter = 'B';
+				break;
+			case PieceType::pawn:
+				letter = 'P';
+				break;
+			case PieceType::none:
+				numEmptySq++;
+				break;
+			}
+			if (letter != 0)
+			{
+				if (numEmptySq)
+				{
+					config.append(QChar(numEmptySq + '0'));
+					numEmptySq = 0;
+				}
+
+				if (m_grid[i][j]->GetColor() == PieceColor::black)
+				{
+					letter.toLower();
+				}
+				config.append(letter);
+			}
+		}
+		if (numEmptySq)
+		{
+			config.append(QChar(numEmptySq + '0'));
+			numEmptySq = 0;
+		}
+		config.append('/');
+	}
+	config[config.size() - 1] = ' ';
+
+	return config;
 }
 
 void ChessUIQt::UpdateHistory()
