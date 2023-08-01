@@ -149,7 +149,7 @@ private:
 
 	static BoardPosition ConvertToBoardPosition(Position pos);
 
-	void ConvertMoveToPositions(std::string& move, Position initialPos, Position finalPos);
+	void ConvertMoveToPositions(std::string& move, Position& initialPos, Position& finalPos);
 
 private:
 

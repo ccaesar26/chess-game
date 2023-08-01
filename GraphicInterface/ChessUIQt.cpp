@@ -702,12 +702,9 @@ QString ChessUIQt::PGNStringFromBoard() const
 
 void ChessUIQt::LoadPGNString(QString PGNString)
 {
-	for (const QString& move : PGNString)
-	{
-		
-
-
-	}
+	std::string PGNNormalString = PGNString.toStdString();
+	m_game->LoadGameFromPGNFormat(PGNNormalString);
+	UpdateBoard();
 }
 
 void ChessUIQt::UpdateHistory()

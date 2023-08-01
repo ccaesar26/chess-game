@@ -3,6 +3,7 @@
 #include "ChessException.h"
 
 #include <cctype>
+#include <regex>
 
 // Local Static Functions //
 
@@ -144,7 +145,27 @@ void ChessGame::SetCastleValues(const CastleValues& Castle)
 
 void ChessGame::LoadGameFromPGNFormat(std::string& PGNString)
 {
-	// Aici Apelezi MakeMove(string move);
+	PGNString = std::regex_replace(PGNString, std::regex("\\b\\d+\\. |[+#x*]"), "");
+
+	std::string move="";
+
+	for (int i = 0; i < PGNString.size(); i++)
+	{
+		if (PGNString[i] != ' ')
+			move += PGNString[i];
+		else
+		{
+			//if (m_turn == EColor::White)	// Save Moves in MoveHistory // 
+			//	m_MoveHistory.push_back(std::to_string(m_MoveHistory.size()) + ". " + move);
+			//else
+			//{
+			//	m_MoveHistory[m_MoveHistory.size() - 1] += " ";
+			//	m_MoveHistory[m_MoveHistory.size() - 1] += move;
+			//}
+			MakeMoveFromString(move);
+			move = "";
+		}
+	}
 }
 
 IPiecePtr ChessGame::GetIPiecePtr(Position pos) const
@@ -452,6 +473,26 @@ void ChessGame::MakeMoveFromString(std::string& move)
 	// Copiezi din MakeMove
 	// Verifici daca e cazu sa apelezi pawn evolve
 	// Verifici daca e game Over
+	// Adaugi mutarea in pgn inainte sa o modifici
+
+	EType pawnEvolve;
+
+	int evolvePos = move.find('=');
+	if (evolvePos != -1)
+	{
+		pawnEvolve = Piece::GetTypeFromLetter(move[evolvePos + 1]);
+		move.erase(evolvePos, 2);
+	}
+
+	Position initialPos;
+	Position finalPos;
+
+	ConvertMoveToPositions(move, initialPos, finalPos);
+
+	// Make the movment // 
+
+	MakeMove(initialPos, finalPos);
+
 }
 
 void ChessGame::UpgradePawn(EType upgradeType)
@@ -1039,9 +1080,10 @@ void DeleteUnnecesaryCharactersFromMove(std::string& move)
 		if (PosToDelete != -1)
 			move.erase(PosToDelete, 1);
 	}
-	PosToDelete = move.find('.');
-	if (PosToDelete != -1)
-		move.erase(PosToDelete - 1, 2); // Delete the number of the move and the . //
+
+	PosToDelete = move.find(' ');
+	for (int i = 0; i <= PosToDelete; i++) // Delete the number of the move, the "." and the space after the dot // 
+		move.erase(0, 1);
 
 	std::string specialString = "1/2-1/2";
 	PosToDelete = move.find(specialString);
@@ -1049,20 +1091,18 @@ void DeleteUnnecesaryCharactersFromMove(std::string& move)
 		move.erase(PosToDelete, specialString.length());
 }
 
-void ChessGame::ConvertMoveToPositions(std::string& move, Position initialPos, Position finalPos)
+void ChessGame::ConvertMoveToPositions(std::string& move, Position& initialPos, Position& finalPos)
 {
 	// Verify castle before //
 
-	DeleteUnnecesaryCharactersFromMove(move);
+	int pos = move.length();
 
-	int pos = move[move.length()];
-
-	char finalRow = move[pos];
-	char finalCol = move[pos - 1];
+	char finalRow = move[pos - 1];
+	char finalCol = move[pos - 2];
 
 	finalPos.row = 8 - (finalRow - '0');
 	std::string cols = "abcdefgh";
-	finalPos.col = cols.find(finalCol) + 1;
+	finalPos.col = cols.find(finalCol);
 
 	char pieceLetter = move[0];
 	EType pieceType = Piece::GetTypeFromLetter(pieceLetter);
@@ -1079,7 +1119,7 @@ void ChessGame::ConvertMoveToPositions(std::string& move, Position initialPos, P
 		}
 		else  // If is col // 
 		{
-			initialPos.col = cols.find(move[1]) + 1;
+			initialPos.col = cols.find(move[1]);
 		}
 	}
 	else if (move.length() == 3 && move[0] >= 'a' && move[0] <= 'h')
@@ -1090,7 +1130,7 @@ void ChessGame::ConvertMoveToPositions(std::string& move, Position initialPos, P
 		}
 		else  // If is col // 
 		{
-			initialPos.col = cols.find(move[0]) + 1;
+			initialPos.col = cols.find(move[0]);
 		}
 	}
 
