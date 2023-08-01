@@ -14,6 +14,7 @@ public:
 
 	EColor GetColor() const override;
 	EType GetType() const override;
+	static EType GetTypeFromLetter(char pieceLetter);
 
 	bool Is(EType type) const;
 	bool Is(std::vector<EType> types) const;

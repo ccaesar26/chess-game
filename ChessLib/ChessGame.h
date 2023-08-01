@@ -68,6 +68,8 @@ public:
 
 	// Virtual Implementations //
 
+	void LoadGameFromPGNFormat(std::string& PGNString) override;
+
 	IPiecePtr GetIPiecePtr(Position pos) const override;
 	PositionList GetPossibleMoves(Position currentPos) const override;
 
@@ -80,6 +82,7 @@ public:
 	bool CheckThreeFoldRepetition();
 
 	void MakeMove(Position initialpOS, Position finalPos) override;
+	void MakeMoveFromString(std::string& move);
 
 	void UpgradePawn(EType upgradeType) override;
 
@@ -145,6 +148,8 @@ private:
 	static bool IsInMatrix(Position piecePosition);
 
 	static BoardPosition ConvertToBoardPosition(Position pos);
+
+	static void ConvertMoveToPositions(std::string& move, Position initialPos, Position finalPos);
 
 private:
 

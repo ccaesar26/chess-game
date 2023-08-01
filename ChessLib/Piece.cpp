@@ -44,6 +44,24 @@ EType Piece::GetType() const
 	return m_type;
 }
 
+EType Piece::GetTypeFromLetter(char pieceLetter)
+{	
+	switch (pieceLetter) {
+	case 'R':
+		return EType::Rook;
+	case 'N':
+		return EType::Horse;
+	case 'B':
+		return EType::Bishop;
+	case 'Q':
+		return EType::Queen;
+	case 'K':
+		return EType::King;
+	default:
+		return EType::Pawn;
+	}
+}
+
 bool Piece::Is(EType type) const
 {
 	return m_type == type;

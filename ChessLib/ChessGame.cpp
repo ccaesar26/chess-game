@@ -142,6 +142,11 @@ void ChessGame::SetCastleValues(const CastleValues& Castle)
 
 // Virtual Implementations //
 
+void ChessGame::LoadGameFromPGNFormat(std::string& PGNString)
+{
+	// Aici Apelezi MakeMove(string move);
+}
+
 IPiecePtr ChessGame::GetIPiecePtr(Position pos) const
 {
 	if(IsInMatrix(pos))
@@ -345,14 +350,16 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 		m_castle[(int)m_turn][1] = false;
 		if (initialPosition.col - finalPosition.col == 2)
 		{
-			move = "0-0-0";  // For PGN // 
+			move.resize(move.length() - 1);
+			move += "0-0-0";  // For PGN // 
 			m_board[finalPosition.row][finalPosition.col + 1] = m_board[finalPosition.row][0];
 			m_board[finalPosition.row][0].reset();
 			Notify(ENotification::MoveMade, Position(finalPosition.row, 0), Position(finalPosition.row, finalPosition.col + 1));
 		}
 		else if (initialPosition.col - finalPosition.col == -2)
 		{
-			move = "0-0";	// For PGN // 
+			move.resize(move.length() - 1);
+			move += "0-0";	// For PGN // 
 			m_board[finalPosition.row][finalPosition.col - 1] = m_board[finalPosition.row][7];
 			m_board[finalPosition.row][7].reset();
 			Notify(ENotification::MoveMade, Position(finalPosition.row, 7), Position(finalPosition.row, finalPosition.col - 1));
@@ -437,6 +444,14 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 	}
 
 	Notify(ENotification::HistoryUpdate);
+}
+
+void ChessGame::MakeMoveFromString(std::string& move)
+{
+	// Scoti caracterele de care nu ai nevoie in move. Retii piesa in care se transforma un pion daca este cazul.
+	// Copiezi din MakeMove
+	// Verifici daca e cazu sa apelezi pawn evolve
+	// Verifici daca e game Over
 }
 
 void ChessGame::UpgradePawn(EType upgradeType)
@@ -1002,5 +1017,61 @@ BoardPosition ChessGame::ConvertToBoardPosition(Position pos)
 	boardPos.first = possibleRows[pos.row];;
 	boardPos.second = possibleCols[pos.col];
 	return boardPos;
+}
+
+bool IsNumerical(char c)
+{
+	return c >= '0' && c <= '9';
+}
+
+bool IsLowerCaseLetter(char c)
+{
+	return c >= 'a' && c <= 'z';
+}
+
+void DeleteUnnecesaryCharactersFromMove(std::string& move)
+{
+	char specialCharacters[3] = { '+','#','x' };
+	int PosToDelete;
+	for (int i = 0; i < 3; i++)
+	{
+		PosToDelete = move.find(specialCharacters[i]);
+		if (PosToDelete != -1)
+			move.erase(PosToDelete, 1);
+	}
+
+	std::string specialString = "1/2-1/2";
+	PosToDelete = move.find(specialString);
+	if (PosToDelete != -1)
+		move.erase(PosToDelete, specialString.length());
+}
+
+void ChessGame::ConvertMoveToPositions(std::string& move, Position initialPos, Position finalPos)
+{
+	// Verify castle before //
+
+	DeleteUnnecesaryCharactersFromMove(move);
+
+	int pos = move[move.length()];
+	if (move[move.length()] == '=')
+		pos -= 2;		// Pos is the last position where I have information about finalPosition.Row
+
+	char finalRow = move[pos];
+	char finalCol = move[pos - 1];
+
+	finalPos.row = 8 - (finalRow - '0');
+	std::string cols = "abcdefgh";
+	finalPos.col = cols.find(finalCol) + 1;
+
+	char pieceLetter = move[0];
+	EType pieceType = Piece::GetTypeFromLetter(pieceLetter);
+
+	initialPos = Position(-1, -1);
+
+	if (move[0] >= 'A' && move[0] <= 'Z')
+	{
+		if(move[1] != fi)
+	}
+
 }
 
