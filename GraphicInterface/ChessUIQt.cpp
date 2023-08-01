@@ -337,7 +337,7 @@ void ChessUIQt::OnSaveButtonClicked()
 		}
 		else if (fileExtension == "pgn")
 		{
-			// PGN call
+			out << PGNStringFromBoard();
 		}
 		else
 		{
@@ -685,6 +685,33 @@ void ChessUIQt::LoadFENString(QString FENString)
 	m_game->RestoreGame(config, turn, cstVal);
 }
 
+QString ChessUIQt::PGNStringFromBoard() const
+{
+	QString PGNString;
+	MoveList history = m_game->GetMoveHistory();
+
+	std::string move;
+	for (int i = 0; i < history.size(); i++)
+	{
+		std::string move = history[i] + " ";
+		PGNString.append(QString::fromStdString(move));
+	}
+	PGNString.append("*");
+	return PGNString;
+}
+
+void ChessUIQt::LoadPGNString(QString PGNString)
+{
+	for (const QString& move : PGNString)
+	{
+		int dotIndex = move.indexOf('.');
+		QString move1 = move.left(dotIndex - 2);
+		QString move2 = move.right(dotIndex + 1);
+
+
+	}
+}
+
 void ChessUIQt::UpdateHistory()
 {
     m_MovesList->clear();
@@ -990,10 +1017,6 @@ void ChessUIQt::OnGameOver(EGameResult result)
 		{
             m_game->ResetGame();
 		}
-		else
-		{
-			Exit();
-		}
 		return;
 	}
 	
@@ -1014,10 +1037,6 @@ void ChessUIQt::OnGameOver(EGameResult result)
 	if (reply == QMessageBox::Yes)
 	{
         m_game->ResetGame();
-	}
-	else
-	{
-		Exit();
 	}
 }
 

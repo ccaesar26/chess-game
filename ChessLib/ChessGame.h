@@ -137,6 +137,8 @@ private:
 
 	Position GetPiecePositionWithSameTypeThatCanMoveToFinalPosition(Position initialPos, Position finalPos, EType currentPieceType);
 
+	void AddMove(Position finalPosition,std::string& move);	// Ads the move in history 
+
 	// Static Methods //
 
 	static bool IsInMatrix(Position piecePosition);
