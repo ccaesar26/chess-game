@@ -169,6 +169,28 @@ void ChessUIQt::InitializeButtons(QGridLayout* mainGridLayout)
     connect(drawButton, &QPushButton::pressed, this, &ChessUIQt::OnDrawButtonClicked);
     connect(saveClipboardButton, &QPushButton::pressed, this, &ChessUIQt::OnSaveInClipboardButtonClicked);
 
+	QString buttonStyle = "QPushButton {"
+		"    background-color: #65451F;"      // Background color
+		"    color: white;"                   // Text color
+		"    border: 2px solid #765827;"      // Border style
+		"    border-radius: 8px;"             // Border radius (rounded corners)
+		"    padding: 4px 8px;"             // Padding
+		"}"
+		"QPushButton:hover {"
+		"    background-color: #C8AE7D;"     // Color when hovered
+		"	 color: #65451F;"	
+		"}"
+		"QPushButton:pressed {"
+		"    background-color: #765827;"     // Color when pressed
+		"    color: white;"
+		"}";
+
+	saveButton->setStyleSheet(buttonStyle);
+	loadButton->setStyleSheet(buttonStyle);
+	restartButton->setStyleSheet(buttonStyle);
+	drawButton->setStyleSheet(buttonStyle);
+	saveClipboardButton->setStyleSheet(buttonStyle);
+
     buttonContainer->setLayout(btnGrid);
     mainGridLayout->addWidget(buttonContainer, 0, 0, 1, 1);
 }
@@ -183,6 +205,23 @@ void ChessUIQt::InitializeTimers(QGridLayout* mainGridLayout)
 
     QPushButton* pauseTimerBtn = new QPushButton("Pause | Resume");
     //TODO Create slot and connect button
+
+	QString buttonStyle = "QPushButton {"
+		"    background-color: #65451F;"      // Background color
+		"    color: white;"                   // Text color
+		"    border: 2px solid #765827;"      // Border style
+		"    border-radius: 8px;"             // Border radius (rounded corners)
+		"    padding: 4px 8px;"             // Padding
+		"}"
+		"QPushButton:hover {"
+		"    background-color: #C8AE7D;"     // Color when hovered
+		"	 color: #65451F;"
+		"}"
+		"QPushButton:pressed {"
+		"    background-color: #765827;"     // Color when pressed
+		"    color: white;"
+		"}";
+	pauseTimerBtn->setStyleSheet(buttonStyle);
 
     QLabel* whiteTimerLbl = new QLabel("White timer:");
 	whiteTimerLbl->setAlignment(Qt::AlignRight);
@@ -203,14 +242,30 @@ void ChessUIQt::InitializeTimers(QGridLayout* mainGridLayout)
 
 void ChessUIQt::InitializeHistory(QGridLayout* mainGridLayout)
 {
-    m_MovesList = new QListWidget();
-    m_MovesList->setMinimumWidth(250);
-    m_MovesList->setMaximumWidth(350);
-    connect(m_MovesList, &QListWidget::itemActivated, this, &ChessUIQt::OnHistoryClicked);
-    mainGridLayout->addWidget(m_MovesList, 1, 0, 1, 1);
-}
+	m_MovesList = new QListWidget();
+	m_MovesList->setMinimumWidth(240);
+	m_MovesList->setMaximumWidth(360);
+	m_MovesList->setFocusPolicy(Qt::NoFocus);
 
-#include <QLabel> // Include the QLabel header
+	QString buttonStyle = "QListWidget {"
+		"    border: 2px solid #765827;"       // Border style
+		"    border-radius: 8px;"              // Border radius (rounded corners)
+		"    padding: 4px 8px;"                // Padding
+		"    margin: 8px;"
+		"}"
+		"QListWidget::item:selected {"
+		"    background-color: #EAC696;"       // Green background color for selected item
+		"    color: #765827;"                    // White text color for selected item
+		"    border: 2px solid #EAC696;"
+		"    border-radius: 4px;"
+		"    outline: none;"
+		"}";
+
+	m_MovesList->setStyleSheet(buttonStyle);
+
+	connect(m_MovesList, &QListWidget::itemActivated, this, &ChessUIQt::OnHistoryClicked);
+	mainGridLayout->addWidget(m_MovesList, 1, 0, 1, 1);
+}
 
 void ChessUIQt::InitializeBoard(QGridLayout* mainGridLayout)
 {
