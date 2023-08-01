@@ -30,7 +30,8 @@ enum class ENotification
 	GameOver,
 	DrawProposal,
 	Check,
-	Reset
+	Reset,
+	HistoryUpdate
 };
 
 struct HashFunctor {
