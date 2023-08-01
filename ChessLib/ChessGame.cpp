@@ -281,16 +281,11 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 
 	if(pieceLetter!='P')
 		move += pieceLetter;
-	else
-	{
-		std::string cols = "abcdefgh";
-		move += cols[initialPosition.col];
-	}
 
 	Position pos = GetPiecePositionWithSameTypeThatCanMoveToFinalPosition(initialPosition,finalPosition, 
 		m_board[initialPosition.row][initialPosition.col]->GetType());
 
-	if (pos.row != -1 && pos.col != -1)
+	if (pos.row != -1 && pos.col != -1 && pieceLetter != 'P')
 	{
 		BoardPosition boardPos = ConvertToBoardPosition(initialPosition);
 		if (initialPosition.col == pos.col)
@@ -303,6 +298,11 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 
 	if (m_board[finalPosition.row][finalPosition.col])
 	{
+		if (pieceLetter == 'P')
+		{
+			std::string cols = "abcdefgh";
+			move += cols[initialPosition.col];
+		}
 		move += "x";	// For PGN // 
 		if (m_turn == EColor::White)
 		{
