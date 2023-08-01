@@ -1,11 +1,11 @@
 #include "ChessUIQt.h"
 #include "ChessUIQt.h"
 
-#include <QInputDialog>
-#include <QMessageBox>
-
 #include "IChessGame.h"
 #include "ChessException.h"
+
+#include <QInputDialog>
+#include <QMessageBox>
 
 #include <QClipboard>
 #include <QGuiApplication>
@@ -81,6 +81,7 @@ ChessUIQt::ChessUIQt(QWidget *parent)
 	QPalette palette = this->palette();
     palette.setColor(QPalette::Window, QColor("#F2D8D8"));
 	this->setPalette(palette);
+
 }
 
 ChessUIQt::~ChessUIQt()
@@ -143,9 +144,11 @@ void ChessUIQt::InitializeTimers(QGridLayout* mainGridLayout)
     //TODO Create slot and connect button
 
     QLabel* whiteTimerLbl = new QLabel("White timer:");
+	whiteTimerLbl->setAlignment(Qt::AlignRight);
     m_WhiteTimer = new QLabel("00:00:00");
+	m_WhiteTimer->setAlignment(Qt::AlignRight);
 
-    timerContainer->setFixedWidth(800);
+    timerContainer->setFixedWidth(680);
 
     timerGrid->addWidget(blackTimerLbl, 0, 0);
     timerGrid->addWidget(m_BlackTimer, 0, 1);
@@ -895,6 +898,7 @@ void ChessUIQt::UpdateCaptures()
 	}
 }
 
+{
 void ChessUIQt::HighlightPossibleMoves(const PositionList& possibleMoves)
 {
     for (const auto& position : possibleMoves) 
