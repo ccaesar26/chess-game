@@ -1093,7 +1093,22 @@ void DeleteUnnecesaryCharactersFromMove(std::string& move)
 
 void ChessGame::ConvertMoveToPositions(std::string& move, Position& initialPos, Position& finalPos)
 {
-	// Verify castle before //
+	// Verify Castle //
+
+	if (move == "0-0" || move == "0-0-0")
+	{
+		if (m_turn == EColor::White)
+			initialPos.row = finalPos.row = 7;
+		else
+			initialPos.row = finalPos.row = 0;
+
+		initialPos.col = 4;
+		
+		finalPos.col = (move == "0-0") ? 6 : 2;
+		return;
+	}
+
+	// End of Verify Castle //
 
 	int pos = move.length();
 
