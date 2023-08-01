@@ -274,16 +274,24 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 
 	std::string move;
 	if (m_turn == EColor::White)
+	{
 		move = std::to_string(m_MoveHistory.size() + 1) + ". ";
+	}
 	else
+	{
 		move = " ";
+	}
 
 	char pieceLetter = std::toupper(m_board[initialPosition.row][initialPosition.col]->ToLetter());
 	if (pieceLetter == 'H')
+	{
 		pieceLetter = 'N';
+	}
 
-	if(pieceLetter!='P')
+	if (pieceLetter != 'P')
+	{
 		move += pieceLetter;
+	}
 	else
 	{
 		std::string cols = "abcdefgh";
@@ -297,9 +305,13 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 	{
 		BoardPosition boardPos = ConvertToBoardPosition(initialPosition);
 		if (initialPosition.col == pos.col)
+		{	
 			move += boardPos.first;   // to convert 
-		else
+		}
+		else 
+		{
 			move += boardPos.second;
+		}
 	}
 
 	// For PGN End // 
@@ -424,6 +436,7 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 		Notify(ENotification::GameOver);
 	}
 
+	Notify(ENotification::HistoryUpdate);
 }
 
 void ChessGame::UpgradePawn(EType upgradeType)
@@ -582,6 +595,9 @@ void ChessGame::Notify(ENotification notif)
 				break;
 			case ENotification::Reset:
 				sp->OnGameRestarted();
+			case ENotification::HistoryUpdate:
+				sp->OnHistoryUpdate();
+				break;
 			default:
 				break;
 			}
@@ -941,7 +957,9 @@ void ChessGame::AddMove(Position finalPosition, std::string& move)
 		m_MoveHistory[m_MoveHistory.size() - 1] += move;
 	}
 	else
+	{
 		m_MoveHistory.push_back(move);
+	}
 }
 
 bool ChessGame::CheckThreeFoldRepetition()

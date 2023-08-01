@@ -14,6 +14,7 @@
 #include <QPalette>
 
 #include <QFileInfo>
+#include <QApplication>
 
 static EType ToETypeFromQString(const QString& s)
 {
@@ -73,6 +74,10 @@ ChessUIQt::ChessUIQt(QWidget *parent)
     mainWidget->setLayout(mainGridLayout);
     this->setCentralWidget(mainWidget);
 
+	// Set a custom font for the application
+	QFont customFont("Leelawadee UI", 11); // Replace "Arial" and 14 with your desired font family and size
+	QApplication::setFont(customFont);
+
 	QPalette palette = this->palette();
     palette.setColor(QPalette::Window, QColor("#F2D8D8"));
 	this->setPalette(palette);
@@ -113,8 +118,8 @@ void ChessUIQt::InitializeButtons(QGridLayout* mainGridLayout)
     btnGrid->addWidget(saveButton, 0, 0);
     btnGrid->addWidget(loadButton, 0, 1);
     btnGrid->addWidget(restartButton, 0, 2);
-    btnGrid->addWidget(drawButton, 0, 3);
-    btnGrid->addWidget(saveClipboardButton, 0, 4);
+    btnGrid->addWidget(drawButton, 1, 0);
+    btnGrid->addWidget(saveClipboardButton, 1, 1, 1, 2);
 
     connect(saveButton, &QPushButton::pressed, this, &ChessUIQt::OnSaveButtonClicked);
     connect(loadButton, &QPushButton::pressed, this, &ChessUIQt::OnLoadButtonClicked);
@@ -131,16 +136,16 @@ void ChessUIQt::InitializeTimers(QGridLayout* mainGridLayout)
     QWidget* timerContainer = new QWidget();
     QGridLayout* timerGrid = new QGridLayout();
 
-    QLabel* blackTimerLbl = new QLabel("Black timer: ");
+    QLabel* blackTimerLbl = new QLabel("Black timer:");
     m_BlackTimer = new QLabel("00:00:00");
 
-    QPushButton* pauseTimerBtn = new QPushButton(" Pause | Resume");
+    QPushButton* pauseTimerBtn = new QPushButton("Pause | Resume");
     //TODO Create slot and connect button
 
-    QLabel* whiteTimerLbl = new QLabel("    White timer: ");
+    QLabel* whiteTimerLbl = new QLabel("White timer:");
     m_WhiteTimer = new QLabel("00:00:00");
 
-    timerContainer->setFixedWidth(400);
+    timerContainer->setFixedWidth(800);
 
     timerGrid->addWidget(blackTimerLbl, 0, 0);
     timerGrid->addWidget(m_BlackTimer, 0, 1);
@@ -155,8 +160,8 @@ void ChessUIQt::InitializeTimers(QGridLayout* mainGridLayout)
 void ChessUIQt::InitializeHistory(QGridLayout* mainGridLayout)
 {
     m_MovesList = new QListWidget();
-    m_MovesList->setMinimumWidth(350);
-    m_MovesList->setMaximumWidth(450);
+    m_MovesList->setMinimumWidth(250);
+    m_MovesList->setMaximumWidth(350);
     connect(m_MovesList, &QListWidget::itemActivated, this, &ChessUIQt::OnHistoryClicked);
     mainGridLayout->addWidget(m_MovesList, 1, 0, 1, 1);
 }
@@ -324,7 +329,6 @@ void ChessUIQt::OnSaveButtonClicked()
 
 		if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
 		{
-			// Error opening the file for writing, show a message box
 			QMessageBox::critical(this, "Error", "Failed to save the file.");
 			return;
 		}
@@ -341,13 +345,11 @@ void ChessUIQt::OnSaveButtonClicked()
 		}
 		else
 		{
-			// Unsupported file format, show a message box
 			QMessageBox::warning(this, "Warning", "Unsupported file format.");
 		}
 
 		if (out.status() != QTextStream::Ok)
 		{
-			// Error occurred while writing to the file, show a message box
 			QMessageBox::critical(this, "Error", "Failed to write to the file.");
 		}
 
@@ -369,13 +371,12 @@ void ChessUIQt::OnLoadButtonClicked()
 		QFile file(fileName);
 		if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
 		{
-			// Error opening the file, show a message box
 			QMessageBox::critical(this, "Error", "Failed to open the file.");
 			return;
 		}
 
 		QTextStream in(&file);
-		QString fileContent = in.readAll(); // Read the entire content of the file into a QString
+		QString fileContent = in.readAll();
 
 		file.close();
 
@@ -383,15 +384,14 @@ void ChessUIQt::OnLoadButtonClicked()
 
 		if (fileExtension == "fen")
 		{
-			LoadFENString(fileContent); // Pass the content to LoadFENString() method
+			LoadFENString(fileContent);
 		}
 		else if (fileExtension == "pgn")
 		{
-			// PGN call
+			LoadPGNString(fileContent);
 		}
 		else
 		{
-			// Unsupported file format, show a message box
 			QMessageBox::warning(this, "Warning", "Unsupported file format.");
 		}
 	}
@@ -714,13 +714,14 @@ void ChessUIQt::LoadPGNString(QString PGNString)
 
 void ChessUIQt::UpdateHistory()
 {
-    m_MovesList->clear();
+	m_MovesList->clear();
 
-    //TODO modify me...
-    int numMoves = 10;
-    for (int i = 0; i < numMoves; i++) {
-        m_MovesList->addItem("#1   Color: Black   Move: A1 A2");
-    }
+	MoveList history = m_game->GetMoveHistory();
+
+	for (auto it : history)
+	{
+		m_MovesList->addItem(QString::fromStdString(it));
+	}
 }
 
 void ChessUIQt::UpdateBoard()
@@ -1112,5 +1113,10 @@ void ChessUIQt::OnGameRestarted()
 		m_MessageLabel->setText("Waiting for black player\n");
 		break;
 	}
+}
+
+void ChessUIQt::OnHistoryUpdate()
+{
+	UpdateHistory();
 }
 

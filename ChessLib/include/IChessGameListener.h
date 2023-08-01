@@ -21,6 +21,8 @@ public:
 	
 	virtual void OnGameRestarted() = 0;
 
+	virtual void OnHistoryUpdate() = 0;
+
 	virtual ~IChessGameListener() = default;
 };
 
