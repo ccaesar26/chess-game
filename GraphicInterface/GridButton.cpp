@@ -3,7 +3,10 @@
 void GridButton::mouseReleaseEvent(QMouseEvent* event)
 {
 	QPushButton::mouseReleaseEvent(event);
-	emit(Clicked(m_Position.ToPair()));
+	if (isEnabled()) 
+	{
+		emit Clicked(m_Position.ToPair());
+	}
 }
 
 void GridButton::updatePiece()

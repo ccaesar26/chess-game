@@ -19,25 +19,22 @@ public:
 	virtual void ResetGame() = 0;
 	virtual void RestoreGame(const CharBoard& inputConfig, EColor turn = EColor::White, CastleValues castle = { true, true, true, true }) = 0;
 
-	virtual IPiecePtr GetIPiecePtr(Position pos) const = 0;
-
-	virtual PositionList GetPossibleMoves(Position currentPos) const = 0;
-
-	virtual IPieceList GetCapturedPieces(EColor color) const = 0;
-
-	virtual EColor GetCurrentPlayer() const = 0;
-
-	virtual MoveList GetMoveHistory() const = 0;
-
-	virtual bool IsGameOver() const = 0;
+	virtual IPiecePtr		GetIPiecePtr(Position pos) const = 0;
+	virtual PositionList	GetPossibleMoves(Position currentPos) const = 0;
+	virtual IPieceList		GetCapturedPieces(EColor color) const = 0;
+	virtual EColor			GetCurrentPlayer() const = 0;
+	virtual MoveList		GetMoveHistory() const = 0;
+	virtual CharBoard		GetBoardAtIndex(int index) const = 0;
 
 	virtual void MakeMove(Position initialPos, Position finalPos) = 0; // Position p1, Position p2
 
 	virtual void UpgradePawn(EType upgradeType) = 0;
+	
 	virtual void RequestDraw() = 0;
 	virtual void AcceptDrawProposal() = 0;
 	virtual void DeclineDrawProposal() = 0;
 
+	virtual bool IsGameOver() const = 0;
 	virtual bool IsDraw() const = 0;
 	virtual bool IsWaitingForDrawResponse() const = 0;
 	virtual bool IsWonByWhitePlayer() const = 0;

@@ -4,7 +4,7 @@
 
 #include <cctype>
 
-// Local Static Functions //
+// --->		Local Static Functions				<--- //
 
 static EType GetType(char c)
 {
@@ -25,7 +25,7 @@ static EColor GetColor(char c)
 	return islower(c) ? EColor::White : EColor::Black;
 }
 
-// Producer //
+// --->		Producer 							<--- //
 
 IChessGamePtr IChessGame::CreateGame()
 {
@@ -47,9 +47,14 @@ ChessGame::ChessGame(const CharBoard& inputConfig, EColor turn, CastleValues cas
 	InitializeChessGame(inputConfig, turn, castle);
 }
 
+// Virtual implementations //
+// Initializers
+
 void ChessGame::InitializeChessGame()
 {
 	m_MoveHistory.clear();
+	m_boardConfigurations.clear();
+	m_boardConfigFrequency.clear();
 	m_turn = EColor::White;
 	m_kingPositions = { Position(7 ,4), Position(0, 4) };
 	m_state = EGameState::MovingPiece;
@@ -71,12 +76,36 @@ void ChessGame::InitializeChessGame()
 		m_board[0][i] = Piece::Produce(TYPES[i], EColor::Black);
 		m_board[7][i] = Piece::Produce(TYPES[i], EColor::White);
 	}
+
+	m_boardConfigFrequency[CharBoard({
+			'R', 'H', 'B', 'Q', 'K', 'B', 'H', 'R',
+			'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P',
+			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
+			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
+			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
+			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
+			'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p',
+			'r', 'h', 'b', 'q', 'k', 'b', 'h', 'r'
+		})] = 1;
+
+	m_boardConfigurations.push_back(CharBoard({
+			'R', 'H', 'B', 'Q', 'K', 'B', 'H', 'R',
+			'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P',
+			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
+			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
+			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
+			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
+			'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p',
+			'r', 'h', 'b', 'q', 'k', 'b', 'h', 'r'
+		}));
 }
 
 void ChessGame::InitializeChessGame(const CharBoard& inputConfig, EColor turn, CastleValues castle)
 {
 	m_turn = turn;
 	m_state = EGameState::MovingPiece;
+	m_boardConfigurations.clear();
+	m_boardConfigFrequency.clear();
 
 	for (int i = 0; i < 2; i++)
 		for (int j = 0; j < 2; j++)
@@ -107,6 +136,9 @@ void ChessGame::InitializeChessGame(const CharBoard& inputConfig, EColor turn, C
 	{
 		m_state = EGameState::CheckState;
 	}
+
+	m_boardConfigFrequency[inputConfig] = 1;
+	m_boardConfigurations.push_back(inputConfig);
 }
 
 void ChessGame::ResetGame()
@@ -115,7 +147,7 @@ void ChessGame::ResetGame()
 
 	m_whitePiecesCaptured.clear();
 	m_blackPiecesCaptured.clear();
-	m_boardConfigurationsRepetitons.clear();
+	m_boardConfigFrequency.clear();
 
 	InitializeChessGame();
 
@@ -128,7 +160,7 @@ void ChessGame::RestoreGame(const CharBoard& inputConfig, EColor turn /*= EColor
 
 	m_whitePiecesCaptured.clear();
 	m_blackPiecesCaptured.clear();
-	m_boardConfigurationsRepetitons.clear();
+	m_boardConfigFrequency.clear();
 
 	InitializeChessGame(inputConfig, turn, castle);
 
@@ -138,6 +170,27 @@ void ChessGame::RestoreGame(const CharBoard& inputConfig, EColor turn /*= EColor
 void ChessGame::SetCastleValues(const CastleValues& Castle)
 {
 	m_castle = Castle;
+}
+
+void ChessGame::SaveConfiguration()
+{
+	std::array<std::array<char, 8>, 8> currConfig;
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			if (m_board[i][j])
+			{
+				currConfig[i][j] = m_board[i][j]->ToLetter();
+			}
+			else
+			{
+				currConfig[i][j] = ' ';
+			}
+		}
+	}
+	m_boardConfigFrequency[currConfig] ++;
+	m_boardConfigurations.push_back(currConfig);
 }
 
 // Virtual Implementations //
@@ -163,6 +216,11 @@ EColor ChessGame::GetCurrentPlayer() const
 MoveList ChessGame::GetMoveHistory() const
 {
 	return m_MoveHistory;
+}
+
+CharBoard ChessGame::GetBoardAtIndex(int index) const
+{
+	return m_boardConfigurations.at(index);
 }
 
 bool ChessGame::CheckStaleMate() const
@@ -383,7 +441,7 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 			Notify(ENotification::PawnUpgrade, finalPosition);
 
 			// For PGN // 
-			pieceLetter= std::toupper(m_board[finalPosition.row][finalPosition.col]->ToLetter());  
+			pieceLetter = std::toupper(m_board[finalPosition.row][finalPosition.col]->ToLetter());
 			move += "=";
 			move += pieceLetter;
 		}
@@ -398,6 +456,8 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 			move += pieceLetter;
 		}
 	}
+
+	SaveConfiguration();
 
 	m_state = EGameState::MovingPiece;
 
@@ -964,26 +1024,14 @@ void ChessGame::AddMove(Position finalPosition, std::string& move)
 
 bool ChessGame::CheckThreeFoldRepetition()
 {
-	// r h b q k p -> white pieces
-	// R H B Q K P -> black pieces
-	std::array<std::array<char, 8>, 8> currConfig;
-	for (int i = 0; i < 8; i++)
+	for (auto it : m_boardConfigFrequency)
 	{
-		for (int j = 0; j < 8; j++)
+		if (it.second >= 3)
 		{
-			if (m_board[i][j])
-			{
-				currConfig[i][j] = m_board[i][j]->ToLetter();
-			}
-			else
-			{
-				currConfig[i][j] = ' ';
-			}
+			return true;
 		}
 	}
-
-	m_boardConfigurationsRepetitons[currConfig]++;
-	return m_boardConfigurationsRepetitons[currConfig] >= 3;
+	return false;
 }
 
 // Static Methods //

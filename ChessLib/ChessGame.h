@@ -8,7 +8,8 @@
 #include <string>
 
 using ArrayBoard = std::array<std::array<PiecePtr, 8>, 8>;
-using CharBoard = std::array<std::array<char, 8>, 8>;
+using ChessMap = std::unordered_map<std::array<std::array<char, 8>, 8>, int, struct HashFunctor>;
+using ChessVector = std::vector<std::array<std::array<char, 8>, 8>>;
 using CastleValues = std::array<std::array<bool, 2>, 2>;
 using BoardPosition = std::pair<char, char>;
 
@@ -59,25 +60,17 @@ public:
 	ChessGame();
 	ChessGame(const CharBoard& inputConfig, EColor turn = EColor::White, CastleValues castle = { true, true, true, true });
 
+	// Virtual Implementations //
+
 	void ResetGame() override;
 	void RestoreGame(const CharBoard& inputConfig, EColor turn = EColor::White, CastleValues castle = { true, true, true, true }) override;
 
-	// Setter for Castle Matrix // 
-
-	void SetCastleValues(const CastleValues& Castle);
-
-	// Virtual Implementations //
-
-	IPiecePtr GetIPiecePtr(Position pos) const override;
-	PositionList GetPossibleMoves(Position currentPos) const override;
-
-	IPieceList GetCapturedPieces(EColor color) const override;
-	EColor GetCurrentPlayer() const override;
-	MoveList GetMoveHistory() const override;
-
-	bool CheckStaleMate() const;
-	bool CheckCheckMate() const ;
-	bool CheckThreeFoldRepetition();
+	IPiecePtr		GetIPiecePtr(Position pos) const override;
+	PositionList	GetPossibleMoves(Position currentPos) const override;
+	IPieceList		GetCapturedPieces(EColor color) const override;
+	EColor			GetCurrentPlayer() const override;
+	MoveList		GetMoveHistory() const override;
+	CharBoard		GetBoardAtIndex(int index) const override;
 
 	void MakeMove(Position initialpOS, Position finalPos) override;
 
@@ -87,68 +80,66 @@ public:
 	void AcceptDrawProposal() override;
 	void DeclineDrawProposal() override;
 
-	bool IsDraw() const override;
 	bool IsGameOver() const override;
-	bool IsCheckState() const override;
-
+	bool IsDraw() const override;
+	bool IsWaitingForDrawResponse() const override;
 	bool IsWonByWhitePlayer() const override;
 	bool IsWonByBlackPlayer() const override;
-
 	bool IsWaitingForUpgrade() const override;
-	bool IsWaitingForDrawResponse() const override;
-
-	// Observable //
-
-	void AddListener(IChessGameListenerPtr listener);
-	void RemoveListener(IChessGameListener* listener);
-	void Notify(ENotification notif, Position init, Position fin); // different implementations
-	void Notify(ENotification notif, Position pos);
-	void Notify(ENotification notif); // different implementations
-
-	// Game's Logic //
-
-	PiecePtr GetPiece(Position pos, const ArrayBoard& board) const;
-
-	void AddCastle(Position kingPosition, PositionList& kingPossibleMoves) const;
-
+	bool IsCheckState() const override;
 
 	bool IsWhiteKingsideCastlingAvailable() const override;
 	bool IsWhiteQueensideCastlingAvailable() const override;
 	bool IsBlackKingsideCastlingAvailable() const override;
 	bool IsBlackQueensideCastlingAvailable() const override;
 
+	void AddListener(IChessGameListenerPtr listener) override;
+	void RemoveListener(IChessGameListener* listener) override;
+
 private:
+
+	// Game's Logic //
+
 	void InitializeChessGame();
 	void InitializeChessGame(const CharBoard& inputConfig, EColor turn = EColor::White, CastleValues castle = {true, true, true, true});
+
 	void ResetBoard();
 
-	PieceList GetCheckPieces(Position& checkPos) const;
+	PiecePtr		GetPiece(Position pos, const ArrayBoard& board) const;
+	PieceList		GetCheckPieces(Position& checkPos) const;
+	Position		GetMovingDirections(const Position& checkPiecePos) const;
+	PositionList	GetToBlockPositions(const Position& checkPiecePos) const;
+	Position		GetPiecePositionWithSameTypeThatCanMoveToFinalPosition(Position initialPos, Position finalPos, EType currentPieceType);
+	
+	void AddCastle(Position kingPosition, PositionList& kingPossibleMoves) const;
+	void AddMove(Position finalPosition, std::string& move);	// Ads the move in history 
+	
+	void SetCastleValues(const CastleValues& Castle);
+
+	void SaveConfiguration();
+
+	bool CheckStaleMate() const;
+	bool CheckCheckMate() const ;
+	bool CheckThreeFoldRepetition();
 
 	bool CheckPieceCanBeCaptured(const Position& checkPiecePos) const;
-
-	Position GetMovingDirections(const Position& checkPiecePos) const;
-
-	PositionList GetToBlockPositions(const Position& checkPiecePos) const;
-	
+	bool CanBeCaptured(const ArrayBoard& board, Position toCapturePos) const;
 	bool KingsWayCanBeBlocked(const PositionList& toBlockPositions) const;
 
 	void SwitchTurn();
 
-	bool CanBeCaptured(const ArrayBoard& board, Position toCapturePos) const;
+	// Observable //
 
-	Position GetPiecePositionWithSameTypeThatCanMoveToFinalPosition(Position initialPos, Position finalPos, EType currentPieceType);
-
-	void AddMove(Position finalPosition,std::string& move);	// Ads the move in history 
+	void Notify(ENotification notif, Position init, Position fin);
+	void Notify(ENotification notif, Position pos);
+	void Notify(ENotification notif);
 
 	// Static Methods //
 
 	static bool IsInMatrix(Position piecePosition);
-
 	static BoardPosition ConvertToBoardPosition(Position pos);
 
 private:
-
-	// Private Members //
 
 	ArrayBoard m_board;
 	EColor m_turn;
@@ -160,16 +151,14 @@ private:
 
 	EGameState m_state;
 
-	// Row 1 is for White and Row 2 is for Black ! Column 1 is for left castle and Column 2 is for right castle
-	CastleValues m_castle;    
+	CastleValues m_castle;    // Row 1 is for White and Row 2 is for Black ! Column 1 is for left castle and Column 2 is for right castle
 
-	std::unordered_map<std::array<std::array<char, 8>, 8>, int, HashFunctor> m_boardConfigurationsRepetitons;
+	ChessMap m_boardConfigFrequency;
+	ChessVector m_boardConfigurations;
+
+	MoveList m_MoveHistory;
 
 	// Observable //
 
 	std::vector<IChessGameListenerWeakPtr> m_listeners;
-
-	// PGN //
-
-	MoveList m_MoveHistory;
 };

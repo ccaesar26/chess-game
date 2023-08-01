@@ -37,7 +37,7 @@ static EType ToETypeFromQString(const QString& s)
     }
 }
 
-static PieceType ToPieceTypeFromEType(const EType t)
+static PieceType ToPieceTypeFromEType(const EType& t)
 {
     switch (t)
     {
@@ -56,6 +56,46 @@ static PieceType ToPieceTypeFromEType(const EType t)
 	default:
         return PieceType::none;
     }
+}
+
+static std::pair<PieceType, PieceColor> ToPieceFromQChar(const QChar& c)
+{
+	PieceType type = PieceType::none;
+	PieceColor color = PieceColor::none;
+	if (!c.isLetter())
+	{
+		return std::make_pair(type, color);
+	}
+	if (c.isUpper())
+	{
+		color = PieceColor::black;
+	}
+	else
+	{
+		color = PieceColor::white;
+	}
+	switch (c.toLower().toLatin1())
+	{
+	case 'r':
+		type = PieceType::rook;
+		break;
+	case 'h':
+		type = PieceType::knight;
+		break;
+	case 'b':
+		type = PieceType::bishop;
+		break;
+	case 'q':
+		type = PieceType::queen;
+		break;
+	case 'k':
+		type = PieceType::king;
+		break;
+	case 'p':
+		type = PieceType::pawn;
+		break;
+	}
+	return std::make_pair(type, color);
 }
 
 ChessUIQt::ChessUIQt(QWidget *parent)
@@ -497,11 +537,48 @@ void ChessUIQt::OnSaveInClipboardButtonClicked()
     clipboard->setText(textToCopy);
 }
 
-void ChessUIQt::OnHistoryClicked(QListWidgetItem* item)
+void ChessUIQt::OnHistoryClicked(QListWidgetItem* selectedItem)
 {
-    int index = m_MovesList->currentRow();
-    
-    //TODO ...
+    int selectedIndex = m_MovesList->currentRow();
+
+	bool isLastHistoryItem = (selectedIndex == m_MovesList->count() - 1);
+
+	for (int i = 0; i < 8; i++) 
+	{
+		for (int j = 0; j < 8; j++) 
+		{
+			if (!isLastHistoryItem)
+			{
+				// Disconnect Clicked signal from m_grid if a history item is selected
+				disconnect(m_grid[i][j], &GridButton::Clicked, this, &ChessUIQt::OnButtonClicked);
+			}
+			else
+			{
+				// Reconnect Clicked signal to m_grid if the last history item is selected
+				connect(m_grid[i][j], &GridButton::Clicked, this, &ChessUIQt::OnButtonClicked);
+			}
+		}
+	}
+
+	CharBoard board;
+	if (isLastHistoryItem)
+	{
+		board = m_game->GetBoardAtIndex((selectedIndex + 1) * 2 - 1);
+	}
+	else
+	{
+		board = m_game->GetBoardAtIndex((selectedIndex + 1) * 2);
+	}
+
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			m_grid[i][j]->setPiece(ToPieceFromQChar(board[i][j]));
+			m_grid[i][j]->setSelected(false);
+			m_grid[i][j]->setHighlighted(false);
+		}
+	}
 }
 
 QString ChessUIQt::FENStringFromBoard() const

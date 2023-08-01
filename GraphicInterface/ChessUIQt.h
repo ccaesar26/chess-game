@@ -59,7 +59,6 @@ public slots:
     void OnDrawButtonClicked();
     void OnSaveInClipboardButtonClicked();
     void OnHistoryClicked(QListWidgetItem* item);
-    
 
 signals:
     void Exit();
