@@ -16,6 +16,7 @@
 #include <QFileInfo>
 #include <QApplication>
 
+
 static EType ToETypeFromQString(const QString& s)
 {
     if (s == "Rook")
@@ -898,7 +899,6 @@ void ChessUIQt::UpdateCaptures()
 	}
 }
 
-{
 void ChessUIQt::HighlightPossibleMoves(const PositionList& possibleMoves)
 {
     for (const auto& position : possibleMoves) 
