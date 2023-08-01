@@ -1031,7 +1031,7 @@ bool IsLowerCaseLetter(char c)
 
 void DeleteUnnecesaryCharactersFromMove(std::string& move)
 {
-	char specialCharacters[3] = { '+','#','x' };
+	char specialCharacters[3] = { '+','#','x'};
 	int PosToDelete;
 	for (int i = 0; i < 3; i++)
 	{
@@ -1039,6 +1039,9 @@ void DeleteUnnecesaryCharactersFromMove(std::string& move)
 		if (PosToDelete != -1)
 			move.erase(PosToDelete, 1);
 	}
+	PosToDelete = move.find('.');
+	if (PosToDelete != -1)
+		move.erase(PosToDelete - 1, 2); // Delete the number of the move and the . //
 
 	std::string specialString = "1/2-1/2";
 	PosToDelete = move.find(specialString);
@@ -1053,8 +1056,6 @@ void ChessGame::ConvertMoveToPositions(std::string& move, Position initialPos, P
 	DeleteUnnecesaryCharactersFromMove(move);
 
 	int pos = move[move.length()];
-	if (move[move.length()] == '=')
-		pos -= 2;		// Pos is the last position where I have information about finalPosition.Row
 
 	char finalRow = move[pos];
 	char finalCol = move[pos - 1];
@@ -1068,10 +1069,49 @@ void ChessGame::ConvertMoveToPositions(std::string& move, Position initialPos, P
 
 	initialPos = Position(-1, -1);
 
-	if (move[0] >= 'A' && move[0] <= 'Z')
+	// Save data about initial Position if we have data about it // 
+
+	if (move.length() == 4)    
 	{
-		if(move[1] != fi)
+		if (move[1] >= '0' && move[1] <= '8')   // If is row // 
+		{
+			initialPos.row = 8 - (move[1] - '0');
+		}
+		else  // If is col // 
+		{
+			initialPos.col = cols.find(move[1]) + 1;
+		}
+	}
+	else if (move.length() == 3 && move[0] >= 'a' && move[0] <= 'h')
+	{
+		if (move[0] >= '0' && move[0] <= '8')   // If is row // 
+		{
+			initialPos.row = 8 - (move[0] - '0');
+		}
+		else  // If is col // 
+		{
+			initialPos.col = cols.find(move[0]) + 1;
+		}
 	}
 
+	// Set the values for the initial position // 
+
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			if (m_board[i][j] && m_board[i][j]->GetColor() == m_turn && m_board[i][j]->GetType() == pieceType)
+			{
+				PositionList possibleMoves = GetPossibleMoves(Position(i, j));
+				if (std::find(possibleMoves.begin(), possibleMoves.end(), finalPos) != possibleMoves.end())
+				{
+					if (initialPos.row == -1 && initialPos.col == -1)
+						initialPos = Position(i, j);
+					else if (i == initialPos.row || j == initialPos.col)
+						initialPos = Position(i, j);
+				}
+			}
+		}
+	}
 }
 
