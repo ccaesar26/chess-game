@@ -376,20 +376,17 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 		move += pieceLetter;
 	}
 
-	Position pos = GetPiecePositionWithSameTypeThatCanMoveToFinalPosition(initialPosition,finalPosition, 
+	Position pos = GetPiecePositionWithSameTypeThatCanMoveToFinalPosition(initialPosition, finalPosition,
 		m_board[initialPosition.row][initialPosition.col]->GetType());
 
-	if (pos.row != -1 && pos.col != -1 && pieceLetter != 'P')
+	if (pos.col != -1 && pieceLetter != 'P')
 	{
-		BoardPosition boardPos = ConvertToBoardPosition(initialPosition);
-		if (initialPosition.col == pos.col)
-		{	
-			move += boardPos.first;   // to convert 
-		}
-		else 
-		{
-			move += boardPos.second;
-		}
+		std::string cols = "abcdefgh";
+		move += cols[initialPosition.col];
+	}
+	if (pos.row != -1 && pieceLetter != 'P')
+	{
+		move = move + std::to_string(8 - initialPosition.row);
 	}
 
 	// For PGN End // 
@@ -414,7 +411,7 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 
 	m_board[finalPosition.row][finalPosition.col] = m_board[initialPosition.row][initialPosition.col];
 	m_board[initialPosition.row][initialPosition.col].reset();
-	
+
 	if (m_board[finalPosition.row][finalPosition.col]->GetType() == EType::Rook)
 	{
 		// Make Castle Inaccessible if Rook moved
@@ -447,7 +444,7 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 
 	// For PGN  Begin // 
 
-	if (move[move.size()-1] != '0')
+	if (move[move.size() - 1] != '0')
 	{
 		BoardPosition boardPos = ConvertToBoardPosition(finalPosition);
 		move += boardPos.second;
@@ -468,7 +465,7 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 			Notify(ENotification::PawnUpgrade, finalPosition);
 
 			// For PGN // 
-			pieceLetter= std::toupper(m_board[finalPosition.row][finalPosition.col]->ToLetter());  
+			pieceLetter = std::toupper(m_board[finalPosition.row][finalPosition.col]->ToLetter());
 			if (pieceLetter == 'H')
 			{
 				pieceLetter = 'N';
@@ -483,7 +480,7 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 			Notify(ENotification::PawnUpgrade, finalPosition);
 
 			// For PGN //
-			pieceLetter = std::toupper(m_board[finalPosition.row][finalPosition.col]->ToLetter());	
+			pieceLetter = std::toupper(m_board[finalPosition.row][finalPosition.col]->ToLetter());
 			if (pieceLetter == 'H')
 			{
 				pieceLetter = 'N';
@@ -498,10 +495,10 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 	m_state = EGameState::MovingPiece;
 
 	AddMove(finalPosition, move);	// For PGN //
-		
+
 	if (CheckThreeFoldRepetition())
 	{
-		m_MoveHistory[m_MoveHistory.size()-1] += "1/2-1/2";		// For PGN //
+		m_MoveHistory[m_MoveHistory.size() - 1] += "1/2-1/2";		// For PGN //
 
 		m_state = EGameState::Draw;
 		Notify(ENotification::GameOver);
@@ -512,7 +509,7 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 		m_MoveHistory[m_MoveHistory.size() - 1] += "+";		// For PGN //
 
 		m_state = EGameState::CheckState;
-		Notify(ENotification::Check);	
+		Notify(ENotification::Check);
 	}
 
 	if (CheckCheckMate())
@@ -522,7 +519,7 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 		m_MoveHistory[m_MoveHistory.size() - 1] += "#";
 
 		m_state = m_turn == EColor::White ? EGameState::WonByBlackPlayer : EGameState::WonByWhitePlayer;
-		Notify(ENotification::GameOver);	
+		Notify(ENotification::GameOver);
 	}
 	else if (CheckStaleMate())
 	{
@@ -610,17 +607,14 @@ void ChessGame::MakeMoveFromString(std::string& move)
 	Position pos = GetPiecePositionWithSameTypeThatCanMoveToFinalPosition(initialPosition, finalPosition,
 		m_board[initialPosition.row][initialPosition.col]->GetType());
 
-	if (pos.row != -1 && pos.col != -1 && pieceLetter != 'P')
+	if (pos.col != -1 && pieceLetter != 'P')
 	{
-		BoardPosition boardPos = ConvertToBoardPosition(initialPosition);
-		if (initialPosition.col == pos.col)
-		{
-			move += boardPos.first;   // to convert 
-		}
-		else
-		{
-			move += boardPos.second;
-		}
+		std::string cols = "abcdefgh";
+		move += cols[initialPosition.col];
+	}
+	if (pos.row != -1 && pieceLetter != 'P')
+	{
+		move = move + std::to_string(8 - initialPosition.row);
 	}
 
 	// For PGN End // 
@@ -1256,20 +1250,50 @@ bool ChessGame::CanBeCaptured(const ArrayBoard& board, Position toCapturePos) co
 
 Position ChessGame::GetPiecePositionWithSameTypeThatCanMoveToFinalPosition(Position initialPos, Position finalPos, EType currentPieceType)
 {
+	bool sameRow = false;
+	bool sameCol = false;
+
+	PositionList sameTypePos;
+
 	for (int i = 0; i < 8; i++)
 	{
 		for (int j = 0; j < 8; j++)
 		{
-			if (m_board[i][j] && m_board[i][j]->GetColor() == m_turn && m_board[i][j]->GetType() == currentPieceType && Position(i,j) != initialPos)
+			if (m_board[i][j] && m_board[i][j]->GetColor() == m_turn && m_board[i][j]->GetType() == currentPieceType && Position(i, j) != initialPos)
 			{
 				PositionList possibleMoves = GetPossibleMoves(Position(i, j));
 				if (std::find(possibleMoves.begin(), possibleMoves.end(), finalPos) != possibleMoves.end())
-					return Position(i, j);
+				{
+					sameTypePos.push_back(Position(i, j));
+				}
 			}
 		}
 	}
-	return Position(-1, -1);
+
+	for (auto& pos : sameTypePos)
+	{
+		if (initialPos.row == pos.row)
+			sameRow = true;
+		if (initialPos.col == pos.col)
+			sameCol = true;
+	}
+
+	if (sameTypePos.empty())
+		return Position(-1, -1);
+
+	if (sameRow && sameCol)
+		return Position(1, 1);
+
+	if (!sameRow && !sameCol)
+		return Position(-1, 1);
+
+	if (sameRow && !sameCol)
+		return Position(-1, 1);
+
+	if (!sameRow && sameCol)
+		return Position(1, -1);
 }
+
 
 void ChessGame::AddMove(Position finalPosition, std::string& move)
 {
@@ -1377,9 +1401,15 @@ void ChessGame::ConvertMoveToPositions(std::string& move, Position& initialPos, 
 
 	initialPos = Position(-1, -1);
 
-	// Save data about initial Position if we have data about it // 
+	// New Code //
 
-	if (move.length() == 4)    
+	if (move.length() == 5)
+	{
+		initialPos.col = cols.find(move[1]);
+		initialPos.row = 8 - (move[2] - '0');
+		return;
+	}
+	else if (move.length() == 4)
 	{
 		if (move[1] >= '0' && move[1] <= '8')   // If is row // 
 		{
@@ -1390,17 +1420,45 @@ void ChessGame::ConvertMoveToPositions(std::string& move, Position& initialPos, 
 			initialPos.col = cols.find(move[1]);
 		}
 	}
-	else if (move.length() == 3 && move[0] >= 'a' && move[0] <= 'h')
+	else if (move.length() == 3)
 	{
-		if (move[0] >= '0' && move[0] <= '8')   // If is row // 
+		if (move[0] < 'A' || move[0]>'H')
 		{
-			initialPos.row = 8 - (move[0] - '0');
-		}
-		else  // If is col // 
-		{
-			initialPos.col = cols.find(move[0]);
+			if (move[0] >= '0' && move[0] <= '8')   // If is row // 
+			{
+				initialPos.row = 8 - (move[0] - '0');
+			}
+			else  // If is col // 
+			{
+				initialPos.col = cols.find(move[0]);
+			}
 		}
 	}
+
+	//// Save data about initial Position if we have data about it // 
+
+	//if (move.length() == 4)    
+	//{
+	//	if (move[1] >= '0' && move[1] <= '8')   // If is row // 
+	//	{
+	//		initialPos.row = 8 - (move[1] - '0');
+	//	}
+	//	else  // If is col // 
+	//	{
+	//		initialPos.col = cols.find(move[1]);
+	//	}
+	//}
+	//else if (move.length() == 3 && move[0] >= 'a' && move[0] <= 'h')
+	//{
+	//	if (move[0] >= '0' && move[0] <= '8')   // If is row // 
+	//	{
+	//		initialPos.row = 8 - (move[0] - '0');
+	//	}
+	//	else  // If is col // 
+	//	{
+	//		initialPos.col = cols.find(move[0]);
+	//	}
+	//}
 
 	// Set the values for the initial position // 
 
@@ -1413,10 +1471,21 @@ void ChessGame::ConvertMoveToPositions(std::string& move, Position& initialPos, 
 				PositionList possibleMoves = GetPossibleMoves(Position(i, j));
 				if (std::find(possibleMoves.begin(), possibleMoves.end(), finalPos) != possibleMoves.end())
 				{
+					/*if (i == initialPos.row && j == initialPos.col)
+					{
+						initialPos = Position(i, j);
+						return;
+					}*/
 					if (initialPos.row == -1 && initialPos.col == -1)
+					{
 						initialPos = Position(i, j);
+						return;
+					}
 					else if (i == initialPos.row || j == initialPos.col)
+					{
 						initialPos = Position(i, j);
+						return;
+					}
 				}
 			}
 		}
