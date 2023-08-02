@@ -155,13 +155,6 @@ void ChessGame::LoadGameFromPGNFormat(std::string& PGNString)
 			move += PGNString[i];
 		else
 		{
-			//if (m_turn == EColor::White)	// Save Moves in MoveHistory // 
-			//	m_MoveHistory.push_back(std::to_string(m_MoveHistory.size()) + ". " + move);
-			//else
-			//{
-			//	m_MoveHistory[m_MoveHistory.size() - 1] += " ";
-			//	m_MoveHistory[m_MoveHistory.size() - 1] += move;
-			//}
 			MakeMoveFromString(move);
 			move = "";
 		}

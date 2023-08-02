@@ -23,6 +23,8 @@ public:
 
 	MOCK_METHOD(void, OnGameRestarted, (), (override));
 
+	MOCK_METHOD(void, OnHistoryUpdate, (), (override));
+
 };
 
 TEST(OnMoveMadeIsCalled, LegalMove1) 
