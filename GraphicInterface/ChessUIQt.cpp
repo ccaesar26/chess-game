@@ -462,7 +462,7 @@ void ChessUIQt::OnLoadButtonClicked()
 		this,
 		"Load game",
 		QDir::homePath(),
-		tr("FEN File (*.fen);;PGN File (*.pgn);;All files (*.*)")
+		tr("PGN File(*.pgn);;FEN File (*.fen);;All files (*.*)")
 	);
 
 	if (!fileName.isEmpty())
