@@ -5,7 +5,7 @@
 class IFormatListener
 {
 public:
-	virtual void OnMoveMade(const std::array<std::array<char, 8>, 8>& board, Position initPos, Position finalPos) = 0;
+	//virtual void OnMoveMade(Position initPos, Position finalPos, ) = 0;
 
 	virtual ~IFormatListener() = default;
 };
