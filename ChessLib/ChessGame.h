@@ -104,7 +104,6 @@ public:
 	void RemoveListener(IChessGameListener* listener) override;
 
 	void SetCastleValues(const CastleValues& Castle);
-	bool CheckCheckMate() const ;
 private:
 
 	// Game's Logic //
