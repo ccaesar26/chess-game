@@ -148,9 +148,11 @@
     <ClInclude Include="Horse.h" />
     <ClInclude Include="include\IChessGame.h" />
     <ClInclude Include="include\IChessGameListener.h" />
+    <ClInclude Include="include\IFormatListener.h" />
     <ClInclude Include="include\IPiece.h" />
     <ClInclude Include="King.h" />
     <ClInclude Include="Pawn.h" />
+    <ClInclude Include="PGNFormat.h" />
     <ClInclude Include="Piece.h" />
     <ClInclude Include="Queen.h" />
     <ClInclude Include="Rook.h" />
@@ -159,9 +161,9 @@
     <ClCompile Include="Bishop.cpp" />
     <ClCompile Include="ChessGame.cpp" />
     <ClCompile Include="Horse.cpp" />
-    <ClCompile Include="include\IChessGame.cpp" />
     <ClCompile Include="King.cpp" />
     <ClCompile Include="Pawn.cpp" />
+    <ClCompile Include="PGNFormat.cpp" />
     <ClCompile Include="Piece.cpp" />
     <ClCompile Include="Queen.cpp" />
     <ClCompile Include="Rook.cpp" />

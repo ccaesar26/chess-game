@@ -462,7 +462,7 @@ void ChessUIQt::OnLoadButtonClicked()
 		this,
 		"Load game",
 		QDir::homePath(),
-		tr("FEN File (*.fen);;PGN File (*.pgn);;All files (*.*)")
+		tr("PGN File(*.pgn);;FEN File (*.fen);;All files (*.*)")
 	);
 
 	if (!fileName.isEmpty())
@@ -841,6 +841,26 @@ void ChessUIQt::LoadPGNString(QString PGNString)
 	std::string PGNNormalString = PGNString.toStdString();
 	m_game->LoadGameFromPGNFormat(PGNNormalString);
 	UpdateBoard();
+	UpdateCaptures();
+	switch (m_game->GetCurrentPlayer())
+	{
+	case EColor::Black:
+		UpdateMessage("Waiting for black player");
+		break;
+	case EColor::White:
+		UpdateMessage("Waiting for white player");
+		break;
+	default:
+		break;
+	}
+	if (m_game->IsCheckState())
+	{
+		QString s = m_MessageLabel->text();
+		s.remove(s.size() - 1, 1);
+		s.append(" - ");
+		s.append("Solve check\n");
+		m_MessageLabel->setText(s);
+	}
 }
 
 void ChessUIQt::UpdateHistory()
@@ -917,6 +937,14 @@ void ChessUIQt::UpdateBoard()
 
 void ChessUIQt::UpdateCaptures()
 {
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			m_capturedGrid[i][j]->setPiece(std::make_pair(PieceType::none, PieceColor::none));
+		}
+	}
+
 	IPieceList capturedByWhite = m_game->GetCapturedPieces(EColor::Black);
 
 	auto it = capturedByWhite.begin();

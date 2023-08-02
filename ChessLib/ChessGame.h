@@ -76,6 +76,8 @@ public:
 
 	void LoadGameFromPGNFormat(std::string& PGNString) override;
 
+	bool CheckCheckMate() const ;
+
 	void MakeMove(Position initialpOS, Position finalPos) override;
 	void MakeMoveFromString(std::string& move);
 
@@ -120,7 +122,6 @@ private:
 	
 	void AddCastle(Position kingPosition, PositionList& kingPossibleMoves) const;
 	void AddMove(Position finalPosition, std::string& move);	// Ads the move in history 
-	
 
 	void SaveConfiguration();
 
