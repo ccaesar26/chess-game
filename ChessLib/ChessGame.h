@@ -71,17 +71,10 @@ public:
 	EColor			GetCurrentPlayer() const override;
 	MoveList		GetMoveHistory() const override;
 	CharBoard		GetBoardAtIndex(int index) const override;
-	// Setter for Castle Matrix // 
-
-	void SetCastleValues(const CastleValues& Castle);
 
 	// Virtual Implementations //
 
 	void LoadGameFromPGNFormat(std::string& PGNString) override;
-
-	bool CheckStaleMate() const;
-	bool CheckCheckMate() const ;
-	bool CheckThreeFoldRepetition();
 
 	void MakeMove(Position initialpOS, Position finalPos) override;
 	void MakeMoveFromString(std::string& move);
@@ -108,6 +101,8 @@ public:
 	void AddListener(IChessGameListenerPtr listener) override;
 	void RemoveListener(IChessGameListener* listener) override;
 
+	void SetCastleValues(const CastleValues& Castle);
+	bool CheckCheckMate() const ;
 private:
 
 	// Game's Logic //
@@ -126,12 +121,10 @@ private:
 	void AddCastle(Position kingPosition, PositionList& kingPossibleMoves) const;
 	void AddMove(Position finalPosition, std::string& move);	// Ads the move in history 
 	
-	void SetCastleValues(const CastleValues& Castle);
 
 	void SaveConfiguration();
 
 	bool CheckStaleMate() const;
-	bool CheckCheckMate() const ;
 	bool CheckThreeFoldRepetition();
 
 	bool CheckPieceCanBeCaptured(const Position& checkPiecePos) const;
