@@ -71,8 +71,20 @@ public:
 	EColor			GetCurrentPlayer() const override;
 	MoveList		GetMoveHistory() const override;
 	CharBoard		GetBoardAtIndex(int index) const override;
+	// Setter for Castle Matrix // 
+
+	void SetCastleValues(const CastleValues& Castle);
+
+	// Virtual Implementations //
+
+	void LoadGameFromPGNFormat(std::string& PGNString) override;
+
+	bool CheckStaleMate() const;
+	bool CheckCheckMate() const ;
+	bool CheckThreeFoldRepetition();
 
 	void MakeMove(Position initialpOS, Position finalPos) override;
+	void MakeMoveFromString(std::string& move);
 
 	void UpgradePawn(EType upgradeType) override;
 
@@ -138,6 +150,8 @@ private:
 
 	static bool IsInMatrix(Position piecePosition);
 	static BoardPosition ConvertToBoardPosition(Position pos);
+
+	void ConvertMoveToPositions(std::string& move, Position& initialPos, Position& finalPos);
 
 private:
 

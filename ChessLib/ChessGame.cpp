@@ -3,6 +3,7 @@
 #include "ChessException.h"
 
 #include <cctype>
+#include <regex>
 
 // --->		Local Static Functions				<--- //
 
@@ -194,6 +195,24 @@ void ChessGame::SaveConfiguration()
 }
 
 // Virtual Implementations //
+
+void ChessGame::LoadGameFromPGNFormat(std::string& PGNString)
+{
+	PGNString = std::regex_replace(PGNString, std::regex("\\b\\d+\\. |[+#x*]"), "");
+
+	std::string move="";
+
+	for (int i = 0; i < PGNString.size(); i++)
+	{
+		if (PGNString[i] != ' ')
+			move += PGNString[i];
+		else
+		{
+			MakeMoveFromString(move);
+			move = "";
+		}
+	}
+}
 
 IPiecePtr ChessGame::GetIPiecePtr(Position pos) const
 {
@@ -403,14 +422,16 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 		m_castle[(int)m_turn][1] = false;
 		if (initialPosition.col - finalPosition.col == 2)
 		{
-			move = "0-0-0";  // For PGN // 
+			move.resize(move.length() - 1);
+			move += "0-0-0";  // For PGN // 
 			m_board[finalPosition.row][finalPosition.col + 1] = m_board[finalPosition.row][0];
 			m_board[finalPosition.row][0].reset();
 			Notify(ENotification::MoveMade, Position(finalPosition.row, 0), Position(finalPosition.row, finalPosition.col + 1));
 		}
 		else if (initialPosition.col - finalPosition.col == -2)
 		{
-			move = "0-0";	// For PGN // 
+			move.resize(move.length() - 1);
+			move += "0-0";	// For PGN // 
 			m_board[finalPosition.row][finalPosition.col - 1] = m_board[finalPosition.row][7];
 			m_board[finalPosition.row][7].reset();
 			Notify(ENotification::MoveMade, Position(finalPosition.row, 7), Position(finalPosition.row, finalPosition.col - 1));
@@ -441,7 +462,12 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 			Notify(ENotification::PawnUpgrade, finalPosition);
 
 			// For PGN // 
-			pieceLetter = std::toupper(m_board[finalPosition.row][finalPosition.col]->ToLetter());
+			pieceLetter= std::toupper(m_board[finalPosition.row][finalPosition.col]->ToLetter());  
+			if (pieceLetter == 'H')
+			{
+				pieceLetter = 'N';
+			}
+
 			move += "=";
 			move += pieceLetter;
 		}
@@ -452,6 +478,10 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 
 			// For PGN //
 			pieceLetter = std::toupper(m_board[finalPosition.row][finalPosition.col]->ToLetter());	
+			if (pieceLetter == 'H')
+			{
+				pieceLetter = 'N';
+			}
 			move += "=";
 			move += pieceLetter;
 		}
@@ -494,6 +524,228 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 
 		m_state = EGameState::Draw;
 		Notify(ENotification::GameOver);
+	}
+
+	Notify(ENotification::HistoryUpdate);
+}
+
+void ChessGame::MakeMoveFromString(std::string& move)
+{
+	// Scoti caracterele de care nu ai nevoie in move. Retii piesa in care se transforma un pion daca este cazul.
+	// Copiezi din MakeMove
+	// Verifici daca e cazu sa apelezi pawn evolve
+	// Verifici daca e game Over
+	// Adaugi mutarea in pgn inainte sa o modifici
+
+	EType upgradeType;
+
+	int evolvePos = move.find('=');
+	if (evolvePos != -1)
+	{
+		upgradeType = Piece::GetTypeFromLetter(move[evolvePos + 1]);
+		move.erase(evolvePos, 2);
+	}
+
+	Position initialPosition;
+	Position finalPosition;
+
+	ConvertMoveToPositions(move, initialPosition, finalPosition);
+
+	// Make the movment // 
+
+	//MakeMove(initialPos, finalPos);
+
+	if (!IsInMatrix(initialPosition))
+	{
+		throw OutOfBoundsException("Initial position is not a valid position");
+	}
+	if (!IsInMatrix(finalPosition))
+	{
+		throw OutOfBoundsException("Final position is not a valid position");
+	}
+
+	if (m_board[finalPosition.row][finalPosition.col] && m_board[finalPosition.row][finalPosition.col]->GetColor() == m_turn)
+	{
+		throw OccupiedByOwnPieceException("The final square is occupied by own piece");
+	}
+
+	PositionList possibleMoves = GetPossibleMoves(initialPosition);
+	if (std::find(possibleMoves.begin(), possibleMoves.end(), finalPosition) == possibleMoves.end())
+	{
+		throw NotInPossibleMovesException("Your move is not possible");
+	}
+
+	m_state = EGameState::MovingPiece;
+
+	// For PGN Begin // 
+	
+	move = "";
+
+	if (m_turn == EColor::White)
+	{
+		move = std::to_string(m_MoveHistory.size() + 1) + ". ";
+	}
+	else
+	{
+		move = " ";
+	}
+
+	char pieceLetter = std::toupper(m_board[initialPosition.row][initialPosition.col]->ToLetter());
+	if (pieceLetter == 'H')
+	{
+		pieceLetter = 'N';
+	}
+
+	if (pieceLetter != 'P')
+	{
+		move += pieceLetter;
+	}
+
+	Position pos = GetPiecePositionWithSameTypeThatCanMoveToFinalPosition(initialPosition, finalPosition,
+		m_board[initialPosition.row][initialPosition.col]->GetType());
+
+	if (pos.row != -1 && pos.col != -1 && pieceLetter != 'P')
+	{
+		BoardPosition boardPos = ConvertToBoardPosition(initialPosition);
+		if (initialPosition.col == pos.col)
+		{
+			move += boardPos.first;   // to convert 
+		}
+		else
+		{
+			move += boardPos.second;
+		}
+	}
+
+	// For PGN End // 
+
+	if (m_board[finalPosition.row][finalPosition.col])
+	{
+		if (pieceLetter == 'P')
+		{
+			std::string cols = "abcdefgh";
+			move += cols[initialPosition.col];
+		}
+		move += "x";	// For PGN // 
+		if (m_turn == EColor::White)
+		{
+			m_blackPiecesCaptured.push_back(m_board[finalPosition.row][finalPosition.col]);
+		}
+		else
+		{
+			m_whitePiecesCaptured.push_back(m_board[finalPosition.row][finalPosition.col]);
+		}
+	}
+
+	m_board[finalPosition.row][finalPosition.col] = m_board[initialPosition.row][initialPosition.col];
+	m_board[initialPosition.row][initialPosition.col].reset();
+
+	if (m_board[finalPosition.row][finalPosition.col]->GetType() == EType::Rook)
+	{
+		// Make Castle Inaccessible if Rook moved
+		m_castle[(int)m_turn][initialPosition.col % 2] = false;
+	}
+	else if (m_board[finalPosition.row][finalPosition.col]->GetType() == EType::King)
+	{
+		m_kingPositions[(int)m_turn] = finalPosition;
+		// Make Castle Inaccessible if King moved
+		m_castle[(int)m_turn][0] = false;
+		m_castle[(int)m_turn][1] = false;
+		if (initialPosition.col - finalPosition.col == 2)
+		{
+			move.resize(move.length() - 1);
+			move += "0-0-0";  // For PGN // 
+			m_board[finalPosition.row][finalPosition.col + 1] = m_board[finalPosition.row][0];
+			m_board[finalPosition.row][0].reset();
+			Notify(ENotification::MoveMade, Position(finalPosition.row, 0), Position(finalPosition.row, finalPosition.col + 1));
+		}
+		else if (initialPosition.col - finalPosition.col == -2)
+		{
+			move.resize(move.length() - 1);
+			move += "0-0";	// For PGN // 
+			m_board[finalPosition.row][finalPosition.col - 1] = m_board[finalPosition.row][7];
+			m_board[finalPosition.row][7].reset();
+			//Notify(ENotification::MoveMade, Position(finalPosition.row, 7), Position(finalPosition.row, finalPosition.col - 1));
+		}
+		//
+	}
+
+	// For PGN  Begin // 
+
+	if (move[move.size() - 1] != '0')	// If the move is not Castle //
+	{
+		BoardPosition boardPos = ConvertToBoardPosition(finalPosition);
+		move += boardPos.second;
+		move += boardPos.first;
+	}
+
+	// For PGN  End // 
+
+	SwitchTurn();
+
+	if (m_board[finalPosition.row][finalPosition.col]->GetType() == EType::Pawn)
+	{
+		if (m_board[finalPosition.row][finalPosition.col]->GetColor() == EColor::White && finalPosition.row == 0)
+		{
+			UpgradePawn(upgradeType);
+
+			// For PGN // 
+			pieceLetter = std::toupper(m_board[finalPosition.row][finalPosition.col]->ToLetter());
+			if (pieceLetter == 'H')
+			{
+				pieceLetter = 'N';
+			}
+			move += "=";
+			move += pieceLetter;
+		}
+		if (m_board[finalPosition.row][finalPosition.col]->GetColor() == EColor::Black && finalPosition.row == 7)
+		{
+			UpgradePawn(upgradeType);
+
+			// For PGN //
+			pieceLetter = std::toupper(m_board[finalPosition.row][finalPosition.col]->ToLetter());
+			if (pieceLetter == 'H')
+			{
+				pieceLetter = 'N';
+			}
+			move += "=";
+			move += pieceLetter;
+		}
+	}
+
+	AddMove(finalPosition, move);	// For PGN //
+
+	if (CheckThreeFoldRepetition())
+	{
+		m_MoveHistory[m_MoveHistory.size() - 1] += "1/2-1/2";		// For PGN //
+
+		m_state = EGameState::Draw;
+		//Notify(ENotification::GameOver);
+	}
+
+	if (CanBeCaptured(m_board, m_kingPositions[(int)m_turn]) == true)
+	{
+		m_MoveHistory[m_MoveHistory.size() - 1] += "+";		// For PGN //
+
+		m_state = EGameState::CheckState;
+		//Notify(ENotification::Check);
+	}
+
+	if (CheckCheckMate())
+	{
+		// For PGN //
+		m_MoveHistory[m_MoveHistory.size() - 1].resize(m_MoveHistory[m_MoveHistory.size() - 1].length() - 1);
+		m_MoveHistory[m_MoveHistory.size() - 1] += "#";
+
+		m_state = m_turn == EColor::White ? EGameState::WonByBlackPlayer : EGameState::WonByWhitePlayer;
+		//Notify(ENotification::GameOver);
+	}
+	else if (CheckStaleMate())
+	{
+		m_MoveHistory[m_MoveHistory.size() - 1] += "1/2-1/2";	// For PGN // 
+
+		m_state = EGameState::Draw;
+		//Notify(ENotification::GameOver);
 	}
 
 	Notify(ENotification::HistoryUpdate);
@@ -1050,5 +1302,115 @@ BoardPosition ChessGame::ConvertToBoardPosition(Position pos)
 	boardPos.first = possibleRows[pos.row];;
 	boardPos.second = possibleCols[pos.col];
 	return boardPos;
+}
+
+bool IsNumerical(char c)
+{
+	return c >= '0' && c <= '9';
+}
+
+bool IsLowerCaseLetter(char c)
+{
+	return c >= 'a' && c <= 'z';
+}
+
+void DeleteUnnecesaryCharactersFromMove(std::string& move)
+{
+	char specialCharacters[3] = { '+','#','x'};
+	int PosToDelete;
+	for (int i = 0; i < 3; i++)
+	{
+		PosToDelete = move.find(specialCharacters[i]);
+		if (PosToDelete != -1)
+			move.erase(PosToDelete, 1);
+	}
+
+	PosToDelete = move.find(' ');
+	for (int i = 0; i <= PosToDelete; i++) // Delete the number of the move, the "." and the space after the dot // 
+		move.erase(0, 1);
+
+	std::string specialString = "1/2-1/2";
+	PosToDelete = move.find(specialString);
+	if (PosToDelete != -1)
+		move.erase(PosToDelete, specialString.length());
+}
+
+void ChessGame::ConvertMoveToPositions(std::string& move, Position& initialPos, Position& finalPos)
+{
+	// Verify Castle //
+
+	if (move == "0-0" || move == "0-0-0")
+	{
+		if (m_turn == EColor::White)
+			initialPos.row = finalPos.row = 7;
+		else
+			initialPos.row = finalPos.row = 0;
+
+		initialPos.col = 4;
+		
+		finalPos.col = (move == "0-0") ? 6 : 2;
+		return;
+	}
+
+	// End of Verify Castle //
+
+	int pos = move.length();
+
+	char finalRow = move[pos - 1];
+	char finalCol = move[pos - 2];
+
+	finalPos.row = 8 - (finalRow - '0');
+	std::string cols = "abcdefgh";
+	finalPos.col = cols.find(finalCol);
+
+	char pieceLetter = move[0];
+	EType pieceType = Piece::GetTypeFromLetter(pieceLetter);
+
+	initialPos = Position(-1, -1);
+
+	// Save data about initial Position if we have data about it // 
+
+	if (move.length() == 4)    
+	{
+		if (move[1] >= '0' && move[1] <= '8')   // If is row // 
+		{
+			initialPos.row = 8 - (move[1] - '0');
+		}
+		else  // If is col // 
+		{
+			initialPos.col = cols.find(move[1]);
+		}
+	}
+	else if (move.length() == 3 && move[0] >= 'a' && move[0] <= 'h')
+	{
+		if (move[0] >= '0' && move[0] <= '8')   // If is row // 
+		{
+			initialPos.row = 8 - (move[0] - '0');
+		}
+		else  // If is col // 
+		{
+			initialPos.col = cols.find(move[0]);
+		}
+	}
+
+	// Set the values for the initial position // 
+
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			if (m_board[i][j] && m_board[i][j]->GetColor() == m_turn && m_board[i][j]->GetType() == pieceType)
+			{
+				PositionList possibleMoves = GetPossibleMoves(Position(i, j));
+				if (std::find(possibleMoves.begin(), possibleMoves.end(), finalPos) != possibleMoves.end())
+				{
+					if (initialPos.row == -1 && initialPos.col == -1)
+						initialPos = Position(i, j);
+					else if (i == initialPos.row || j == initialPos.col)
+						initialPos = Position(i, j);
+				}
+			}
+		}
+	}
 }
 

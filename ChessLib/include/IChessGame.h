@@ -26,6 +26,8 @@ public:
 	virtual MoveList		GetMoveHistory() const = 0;
 	virtual CharBoard		GetBoardAtIndex(int index) const = 0;
 
+	virtual void LoadGameFromPGNFormat(std::string& PGNString) = 0;
+
 	virtual void MakeMove(Position initialPos, Position finalPos) = 0; // Position p1, Position p2
 
 	virtual void UpgradePawn(EType upgradeType) = 0;
