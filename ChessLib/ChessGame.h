@@ -79,9 +79,7 @@ public:
 
 	void LoadGameFromPGNFormat(std::string& PGNString) override;
 
-	bool CheckStaleMate() const;
 	bool CheckCheckMate() const ;
-	bool CheckThreeFoldRepetition();
 
 	void MakeMove(Position initialpOS, Position finalPos) override;
 	void MakeMoveFromString(std::string& move);
@@ -125,13 +123,10 @@ private:
 	
 	void AddCastle(Position kingPosition, PositionList& kingPossibleMoves) const;
 	void AddMove(Position finalPosition, std::string& move);	// Ads the move in history 
-	
-	void SetCastleValues(const CastleValues& Castle);
 
 	void SaveConfiguration();
 
 	bool CheckStaleMate() const;
-	bool CheckCheckMate() const ;
 	bool CheckThreeFoldRepetition();
 
 	bool CheckPieceCanBeCaptured(const Position& checkPiecePos) const;

@@ -56,6 +56,9 @@ void ChessGame::InitializeChessGame()
 	m_MoveHistory.clear();
 	m_boardConfigurations.clear();
 	m_boardConfigFrequency.clear();
+	m_whitePiecesCaptured.clear();
+	m_blackPiecesCaptured.clear();
+
 	m_turn = EColor::White;
 	m_kingPositions = { Position(7 ,4), Position(0, 4) };
 	m_state = EGameState::MovingPiece;
@@ -198,6 +201,9 @@ void ChessGame::SaveConfiguration()
 
 void ChessGame::LoadGameFromPGNFormat(std::string& PGNString)
 {
+	ResetBoard();
+	InitializeChessGame();
+
 	PGNString = std::regex_replace(PGNString, std::regex("\\b\\d+\\. |[+#x*]"), "");
 
 	std::string move="";
@@ -715,6 +721,8 @@ void ChessGame::MakeMoveFromString(std::string& move)
 
 	AddMove(finalPosition, move);	// For PGN //
 
+	SaveConfiguration();
+
 	if (CheckThreeFoldRepetition())
 	{
 		m_MoveHistory[m_MoveHistory.size() - 1] += "1/2-1/2";		// For PGN //
@@ -747,6 +755,7 @@ void ChessGame::MakeMoveFromString(std::string& move)
 		m_state = EGameState::Draw;
 		//Notify(ENotification::GameOver);
 	}
+
 
 	Notify(ENotification::HistoryUpdate);
 }
