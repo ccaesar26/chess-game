@@ -51,6 +51,12 @@
     <ClInclude Include="include\IChessGameListener.h">
       <Filter>Header Files\API</Filter>
     </ClInclude>
+    <ClInclude Include="include\IFormat.h">
+      <Filter>Header Files\API</Filter>
+    </ClInclude>
+    <ClInclude Include="include\IFormatListener.h">
+      <Filter>Header Files\API</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Bishop.cpp">
@@ -75,9 +81,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Rook.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="include\IChessGame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
