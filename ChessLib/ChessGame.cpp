@@ -214,7 +214,21 @@ void ChessGame::LoadGameFromPGNFormat(std::string& fileName)
 	auto moves = reader.GetMoves();
 	for (auto& move : moves)
 	{
-		MakeMoveFromString(move);
+		EType upgradeType=EType::Pawn;
+
+		int evolvePos = move.find('=');
+		if (evolvePos != -1)
+		{
+			upgradeType = Piece::GetTypeFromLetter(move[evolvePos + 1]);
+			move.erase(evolvePos, 2);
+		}
+
+		Position initialPosition;
+		Position finalPosition;
+
+		ConvertMoveToPositions(move, initialPosition, finalPosition);
+
+		MakeMove(initialPosition,finalPosition,false,upgradeType);
 	}
 
 	//if (!reader.LoadFromFile(file))
@@ -348,24 +362,24 @@ bool ChessGame::CheckCheckMate() const
 	return true;
 }
 
-void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
+void ChessGame::MakeMove(Position initialPos, Position finalPos, bool EnableNotification /*= true*/, EType upgradeType /*= EType::Pawn*/)
 {
-	if (!IsInMatrix(initialPosition))
+	if (!IsInMatrix(initialPos))
 	{
 		throw OutOfBoundsException("Initial position is not a valid position");
 	}
-	if (!IsInMatrix(finalPosition))
+	if (!IsInMatrix(finalPos))
 	{
 		throw OutOfBoundsException("Final position is not a valid position");
 	}
 
-	if (m_board[finalPosition.row][finalPosition.col] && m_board[finalPosition.row][finalPosition.col]->GetColor() == m_turn)
+	if (m_board[finalPos.row][finalPos.col] && m_board[finalPos.row][finalPos.col]->GetColor() == m_turn)
 	{
 		throw OccupiedByOwnPieceException("The final square is occupied by own piece");
 	}
 
-	PositionList possibleMoves = GetPossibleMoves(initialPosition);
-	if (std::find(possibleMoves.begin(), possibleMoves.end(), finalPosition) == possibleMoves.end())
+	PositionList possibleMoves = GetPossibleMoves(initialPos);
+	if (std::find(possibleMoves.begin(), possibleMoves.end(), finalPos) == possibleMoves.end())
 	{
 		throw NotInPossibleMovesException("Your move is not possible");
 	}
@@ -379,7 +393,7 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 	if (m_turn == EColor::White)
 		move = std::to_string(m_turnCount + 1) + ". ";
 
-	char pieceLetter = std::toupper(m_board[initialPosition.row][initialPosition.col]->ToLetter());
+	char pieceLetter = std::toupper(m_board[initialPos.row][initialPos.col]->ToLetter());
 	if (pieceLetter == 'H')
 	{
 		pieceLetter = 'N';
@@ -390,77 +404,78 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 		move += pieceLetter;
 	}
 
-	Position pos = GetPiecePositionWithSameTypeThatCanMoveToFinalPosition(initialPosition, finalPosition,
-		m_board[initialPosition.row][initialPosition.col]->GetType());
+	Position pos = GetPiecePositionWithSameTypeThatCanMoveToFinalPosition(initialPos, finalPos,
+		m_board[initialPos.row][initialPos.col]->GetType());
 
 	if (pos.col != -1 && pieceLetter != 'P')
 	{
 		std::string cols = "abcdefgh";
-		move += cols[initialPosition.col];
+		move += cols[initialPos.col];
 	}
 	if (pos.row != -1 && pieceLetter != 'P')
 	{
-		move = move + std::to_string(8 - initialPosition.row);
+		move = move + std::to_string(8 - initialPos.row);
 	}
 
 	// For PGN End // 
 
-	if (m_board[finalPosition.row][finalPosition.col])
+	if (m_board[finalPos.row][finalPos.col])
 	{
 		if (pieceLetter == 'P')
 		{
 			std::string cols = "abcdefgh";
-			move += cols[initialPosition.col];
+			move += cols[initialPos.col];
 		}
 		move += "x";	// For PGN // 
 		if (m_turn == EColor::White)
 		{
-			m_blackPiecesCaptured.push_back(m_board[finalPosition.row][finalPosition.col]);
+			m_blackPiecesCaptured.push_back(m_board[finalPos.row][finalPos.col]);
 		}
 		else
 		{
-			m_whitePiecesCaptured.push_back(m_board[finalPosition.row][finalPosition.col]);
+			m_whitePiecesCaptured.push_back(m_board[finalPos.row][finalPos.col]);
 		}
 	}
 
-	m_board[finalPosition.row][finalPosition.col] = m_board[initialPosition.row][initialPosition.col];
-	m_board[initialPosition.row][initialPosition.col].reset();
+	m_board[finalPos.row][finalPos.col] = m_board[initialPos.row][initialPos.col];
+	m_board[initialPos.row][initialPos.col].reset();
 
-	if (m_board[finalPosition.row][finalPosition.col]->GetType() == EType::Rook)
+	if (m_board[finalPos.row][finalPos.col]->GetType() == EType::Rook)
 	{
 		// Make Castle Inaccessible if Rook moved
-		m_castle[(int)m_turn][initialPosition.col % 2] = false;
+		m_castle[(int)m_turn][initialPos.col % 2] = false;
 	}
-	else if (m_board[finalPosition.row][finalPosition.col]->GetType() == EType::King)
+	else if (m_board[finalPos.row][finalPos.col]->GetType() == EType::King)
 	{
-		m_kingPositions[(int)m_turn] = finalPosition;
+		m_kingPositions[(int)m_turn] = finalPos;
 		// Make Castle Inaccessible if King moved
 		m_castle[(int)m_turn][0] = false;
 		m_castle[(int)m_turn][1] = false;
-		if (initialPosition.col - finalPosition.col == 2)
+		if (initialPos.col - finalPos.col == 2)
 		{
 			move.resize(move.length() - 1);
 			move += "0-0-0";  // For PGN // 
-			m_board[finalPosition.row][finalPosition.col + 1] = m_board[finalPosition.row][0];
-			m_board[finalPosition.row][0].reset();
-			Notify(ENotification::MoveMade, Position(finalPosition.row, 0), Position(finalPosition.row, finalPosition.col + 1));
+			m_board[finalPos.row][finalPos.col + 1] = m_board[finalPos.row][0];
+			m_board[finalPos.row][0].reset();
+			if(EnableNotification)
+				Notify(ENotification::MoveMade, Position(finalPos.row, 0), Position(finalPos.row, finalPos.col + 1));
 		}
-		else if (initialPosition.col - finalPosition.col == -2)
+		else if (initialPos.col - finalPos.col == -2)
 		{
 			move.resize(move.length() - 1);
 			move += "0-0";	// For PGN // 
-			m_board[finalPosition.row][finalPosition.col - 1] = m_board[finalPosition.row][7];
-			m_board[finalPosition.row][7].reset();
-			Notify(ENotification::MoveMade, Position(finalPosition.row, 7), Position(finalPosition.row, finalPosition.col - 1));
+			m_board[finalPos.row][finalPos.col - 1] = m_board[finalPos.row][7];
+			m_board[finalPos.row][7].reset();
+			if (EnableNotification)
+				Notify(ENotification::MoveMade, Position(finalPos.row, 7), Position(finalPos.row, finalPos.col - 1));
 		}
-		//
 	}
 
 	// For PGN  Begin // 
 
 	if (move.length() == 0 || move[move.length() - 1] != '0')
 	{
-		BoardPosition boardPos = ConvertToBoardPosition(finalPosition);
+		BoardPosition boardPos = ConvertToBoardPosition(finalPos);
 		move += boardPos.second;
 		move += boardPos.first;
 	}
@@ -469,17 +484,23 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 
 	SwitchTurn();
 
-	Notify(ENotification::MoveMade, initialPosition, finalPosition);
+	if(EnableNotification) 
+		Notify(ENotification::MoveMade, initialPos, finalPos);
 
-	if (m_board[finalPosition.row][finalPosition.col]->GetType() == EType::Pawn)
+	if (m_board[finalPos.row][finalPos.col]->GetType() == EType::Pawn)
 	{
-		if (m_board[finalPosition.row][finalPosition.col]->GetColor() == EColor::White && finalPosition.row == 0)
+		if (m_board[finalPos.row][finalPos.col]->GetColor() == EColor::White && finalPos.row == 0)
 		{
-			m_state = EGameState::UpgradePawn;
-			Notify(ENotification::PawnUpgrade, finalPosition);
+			if (EnableNotification)
+			{
+				m_state = EGameState::UpgradePawn;
+				Notify(ENotification::PawnUpgrade, finalPos);
+			}
+			else
+				UpgradePawn(upgradeType);		
 
 			// For PGN // 
-			pieceLetter = std::toupper(m_board[finalPosition.row][finalPosition.col]->ToLetter());
+			pieceLetter = std::toupper(m_board[finalPos.row][finalPos.col]->ToLetter());
 			if (pieceLetter == 'H')
 			{
 				pieceLetter = 'N';
@@ -488,13 +509,18 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 			move += "=";
 			move += pieceLetter;
 		}
-		if (m_board[finalPosition.row][finalPosition.col]->GetColor() == EColor::Black && finalPosition.row == 7)
+		if (m_board[finalPos.row][finalPos.col]->GetColor() == EColor::Black && finalPos.row == 7)
 		{
-			m_state = EGameState::UpgradePawn;
-			Notify(ENotification::PawnUpgrade, finalPosition);
+			if (EnableNotification)
+			{
+				m_state = EGameState::UpgradePawn;
+				Notify(ENotification::PawnUpgrade, finalPos);
+			}
+			else
+				UpgradePawn(upgradeType);
 
 			// For PGN //
-			pieceLetter = std::toupper(m_board[finalPosition.row][finalPosition.col]->ToLetter());
+			pieceLetter = std::toupper(m_board[finalPos.row][finalPos.col]->ToLetter());
 			if (pieceLetter == 'H')
 			{
 				pieceLetter = 'N';
@@ -513,7 +539,7 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 		move += " 1/2-1/2";		// For PGN //
 
 		m_state = EGameState::Draw;
-		Notify(ENotification::GameOver);
+			Notify(ENotification::GameOver);
 	}
 
 	if (CanBeCaptured(m_board, m_kingPositions[(int)m_turn]) == true)
@@ -521,7 +547,7 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 		move += "+";		// For PGN //
 
 		m_state = EGameState::CheckState;
-		Notify(ENotification::Check);
+			Notify(ENotification::Check);
 	}
 
 	if (CheckCheckMate())
@@ -529,7 +555,7 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 		move[move.length()-1] = '#';	// For PGN //
 
 		m_state = m_turn == EColor::White ? EGameState::WonByBlackPlayer : EGameState::WonByWhitePlayer;
-		Notify(ENotification::GameOver);
+			Notify(ENotification::GameOver);
 	}
 	else if (CheckStaleMate())
 	{

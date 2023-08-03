@@ -82,7 +82,7 @@ public:
 
 	bool CheckCheckMate() const ;
 
-	void MakeMove(Position initialpOS, Position finalPos) override;
+	void MakeMove(Position initialPos, Position finalPos, bool EnableNotification = true, EType upgradeType = EType::Pawn) override;
 	void MakeMoveFromString(std::string& move);
 
 	void UpgradePawn(EType upgradeType) override;

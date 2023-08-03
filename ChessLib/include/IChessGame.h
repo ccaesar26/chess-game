@@ -32,7 +32,7 @@ public:
 
 	//virtual std::string GetFEN() const = 0;
 
-	virtual void MakeMove(Position initialPos, Position finalPos) = 0; // Position p1, Position p2
+	virtual void MakeMove(Position initialPos, Position finalPos, bool EnableNotification = true, EType upgradeType = EType::Pawn) = 0;
 
 	virtual void UpgradePawn(EType upgradeType) = 0;
 	
