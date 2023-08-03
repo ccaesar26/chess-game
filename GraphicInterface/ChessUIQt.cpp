@@ -249,9 +249,8 @@ void ChessUIQt::InitializeHistory(QGridLayout* mainGridLayout)
 {
 	m_MovesTable = new QTableWidget(); // Use QTableWidget instead of QListWidget
 	m_MovesTable->setRowCount(0);      // Set initial row count
-	m_MovesTable->setColumnCount(2);   
-	m_MovesTable->setMinimumWidth(240);
-	m_MovesTable->setMaximumWidth(360);
+	m_MovesTable->setColumnCount(2);  
+	m_MovesTable->setFixedWidth(220);
 	m_MovesTable->setFocusPolicy(Qt::NoFocus);
 
 	m_MovesTable->horizontalHeader()->setVisible(false);
@@ -264,6 +263,7 @@ void ChessUIQt::InitializeHistory(QGridLayout* mainGridLayout)
 		"    border-radius: 8px;"
 		"    margin: 8px;"
 		"    background-color: white;"
+		"    gridline-color: transparent;"
 		"}"
 		"QTableWidget::item {"
 		"    padding: 2px;"
@@ -272,7 +272,7 @@ void ChessUIQt::InitializeHistory(QGridLayout* mainGridLayout)
 		"QTableWidget::item:selected {"
 		"    background-color: #5A5A5A;"
 		"    color: white;"
-		"    border: 2px solid #5A5A5A;"
+		"    border: none;"
 		"    border-radius: 4px;"
 		"    outline: none;"
 		"}";
