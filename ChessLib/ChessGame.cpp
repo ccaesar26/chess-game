@@ -558,9 +558,7 @@ void ChessGame::MakeMoveFromString(std::string& move)
 
 	ConvertMoveToPositions(move, initialPosition, finalPosition);
 
-	// Make the movment // 
-
-	//MakeMove(initialPos, finalPos);
+	// Make the actual move //
 
 	if (!IsInMatrix(initialPosition))
 	{
@@ -1415,33 +1413,6 @@ void ChessGame::ConvertMoveToPositions(std::string& move, Position& initialPos, 
 		}
 	}
 
-	//// Save data about initial Position if we have data about it // 
-
-	//if (move.length() == 4)    
-	//{
-	//	if (move[1] >= '0' && move[1] <= '8')   // If is row // 
-	//	{
-	//		initialPos.row = 8 - (move[1] - '0');
-	//	}
-	//	else  // If is col // 
-	//	{
-	//		initialPos.col = cols.find(move[1]);
-	//	}
-	//}
-	//else if (move.length() == 3 && move[0] >= 'a' && move[0] <= 'h')
-	//{
-	//	if (move[0] >= '0' && move[0] <= '8')   // If is row // 
-	//	{
-	//		initialPos.row = 8 - (move[0] - '0');
-	//	}
-	//	else  // If is col // 
-	//	{
-	//		initialPos.col = cols.find(move[0]);
-	//	}
-	//}
-
-	// Set the values for the initial position // 
-
 	for (int i = 0; i < 8; i++)
 	{
 		for (int j = 0; j < 8; j++)
@@ -1451,11 +1422,6 @@ void ChessGame::ConvertMoveToPositions(std::string& move, Position& initialPos, 
 				PositionList possibleMoves = GetPossibleMoves(Position(i, j));
 				if (std::find(possibleMoves.begin(), possibleMoves.end(), finalPos) != possibleMoves.end())
 				{
-					/*if (i == initialPos.row && j == initialPos.col)
-					{
-						initialPos = Position(i, j);
-						return;
-					}*/
 					if (initialPos.row == -1 && initialPos.col == -1)
 					{
 						initialPos = Position(i, j);
@@ -1471,4 +1437,3 @@ void ChessGame::ConvertMoveToPositions(std::string& move, Position& initialPos, 
 		}
 	}
 }
-
