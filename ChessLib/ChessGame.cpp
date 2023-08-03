@@ -512,7 +512,7 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 
 	if (CheckCheckMate())
 	{
-		move += "#";	// For PGN //
+		move[move.length()-1] = '#';	// For PGN //
 
 		m_state = m_turn == EColor::White ? EGameState::WonByBlackPlayer : EGameState::WonByWhitePlayer;
 		Notify(ENotification::GameOver);
@@ -729,7 +729,7 @@ void ChessGame::MakeMoveFromString(std::string& move)
 	if (CheckCheckMate())
 	{
 		// For PGN //
-		move += "#";
+		move[move.length() - 1] = '#';
 
 		m_state = m_turn == EColor::White ? EGameState::WonByBlackPlayer : EGameState::WonByWhitePlayer;
 		//Notify(ENotification::GameOver);
