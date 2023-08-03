@@ -242,12 +242,10 @@ void ChessUIQt::InitializeTimers(QGridLayout* mainGridLayout)
 
 void ChessUIQt::InitializeHistory(QGridLayout* mainGridLayout)
 {
-	m_MovesTable = new QTableWidget(); // Use QTableWidget instead of QListWidget
-	m_MovesTable->setRowCount(0);      // Set initial row count
-	m_MovesTable->setColumnCount(2);   
-	m_MovesTable->setMinimumWidth(240);
-	m_MovesTable->setMaximumWidth(360);
-	m_MovesTable->setFocusPolicy(Qt::NoFocus);
+	m_MovesList = new QListWidget();
+	m_MovesList->setMinimumWidth(240);
+	m_MovesList->setMaximumWidth(360);
+	m_MovesList->setFocusPolicy(Qt::NoFocus);
 
 	QString buttonStyle = "QListWidget {"
 		"    border: 2px solid #765827;"       // Border style
