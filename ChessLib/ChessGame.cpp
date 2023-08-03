@@ -40,7 +40,7 @@ ChessGame::ChessGame()
 	InitializeChessGame();
 }
 
-ChessGame::ChessGame(const CharBoard& inputConfig, EColor turn, CastleValues castle) 
+ChessGame::ChessGame(const CharBoard& inputConfig, EColor turn, CastleValues castle)
 	: m_turn(turn)
 	, m_state(EGameState::MovingPiece)
 	, m_castle(castle)
@@ -53,11 +53,11 @@ ChessGame::ChessGame(const CharBoard& inputConfig, EColor turn, CastleValues cas
 
 void ChessGame::InitializeChessGame()
 {
-	m_MoveHistory.clear();
 	m_boardConfigurations.clear();
 	m_boardConfigFrequency.clear();
 	m_whitePiecesCaptured.clear();
 	m_blackPiecesCaptured.clear();
+	m_turnCount = 0;
 
 	m_turn = EColor::White;
 	m_kingPositions = { Position(7 ,4), Position(0, 4) };
@@ -220,6 +220,11 @@ void ChessGame::LoadGameFromPGNFormat(std::string& PGNString)
 	}
 }
 
+std::string ChessGame::GetPGNFormat() const
+{
+	return m_PGNFormat.GetPGNFormat();
+}
+
 IPiecePtr ChessGame::GetIPiecePtr(Position pos) const
 {
 	if(IsInMatrix(pos))
@@ -236,11 +241,6 @@ IPieceList ChessGame::GetCapturedPieces(EColor color) const
 EColor ChessGame::GetCurrentPlayer() const
 {
 	return m_turn;
-}
-
-MoveList ChessGame::GetMoveHistory() const
-{
-	return m_MoveHistory;
 }
 
 CharBoard ChessGame::GetBoardAtIndex(int index) const
@@ -363,7 +363,7 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 	std::string move;
 	if (m_turn == EColor::White)
 	{
-		move = std::to_string(m_MoveHistory.size() + 1) + ". ";
+		move = std::to_string(m_turnCount + 1) + ". ";
 	}
 	else
 	{
@@ -499,11 +499,9 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 
 	m_state = EGameState::MovingPiece;
 
-	AddMove(finalPosition, move);	// For PGN //
-
 	if (CheckThreeFoldRepetition())
 	{
-		m_MoveHistory[m_MoveHistory.size() - 1] += "1/2-1/2";		// For PGN //
+		move += "1/2-1/2";		// For PGN //
 
 		m_state = EGameState::Draw;
 		Notify(ENotification::GameOver);
@@ -511,7 +509,7 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 
 	if (CanBeCaptured(m_board, m_kingPositions[(int)m_turn]) == true)
 	{
-		m_MoveHistory[m_MoveHistory.size() - 1] += "+";		// For PGN //
+		move += "+";		// For PGN //
 
 		m_state = EGameState::CheckState;
 		Notify(ENotification::Check);
@@ -519,32 +517,26 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 
 	if (CheckCheckMate())
 	{
-		// For PGN //
-		m_MoveHistory[m_MoveHistory.size() - 1].resize(m_MoveHistory[m_MoveHistory.size() - 1].length() - 1);
-		m_MoveHistory[m_MoveHistory.size() - 1] += "#";
+		move += "#";	// For PGN //
 
 		m_state = m_turn == EColor::White ? EGameState::WonByBlackPlayer : EGameState::WonByWhitePlayer;
 		Notify(ENotification::GameOver);
 	}
 	else if (CheckStaleMate())
 	{
-		m_MoveHistory[m_MoveHistory.size() - 1] += "1/2-1/2";	// For PGN // 
+		move += "1/2-1/2";	// For PGN // 
 
 		m_state = EGameState::Draw;
 		Notify(ENotification::GameOver);
 	}
+
+	m_PGNFormat.AddMove(move);
 
 	Notify(ENotification::HistoryUpdate);
 }
 
 void ChessGame::MakeMoveFromString(std::string& move)
 {
-	// Scoti caracterele de care nu ai nevoie in move. Retii piesa in care se transforma un pion daca este cazul.
-	// Copiezi din MakeMove
-	// Verifici daca e cazu sa apelezi pawn evolve
-	// Verifici daca e game Over
-	// Adaugi mutarea in pgn inainte sa o modifici
-
 	EType upgradeType;
 
 	int evolvePos = move.find('=');
@@ -591,7 +583,7 @@ void ChessGame::MakeMoveFromString(std::string& move)
 
 	if (m_turn == EColor::White)
 	{
-		move = std::to_string(m_MoveHistory.size() + 1) + ". ";
+		move = std::to_string(m_turnCount + 1) + ". ";
 	}
 	else
 	{
@@ -718,13 +710,11 @@ void ChessGame::MakeMoveFromString(std::string& move)
 		}
 	}
 
-	AddMove(finalPosition, move);	// For PGN //
-
 	SaveConfiguration();
 
 	if (CheckThreeFoldRepetition())
 	{
-		m_MoveHistory[m_MoveHistory.size() - 1] += "1/2-1/2";		// For PGN //
+		move += "1/2-1/2";		// For PGN //
 
 		m_state = EGameState::Draw;
 		//Notify(ENotification::GameOver);
@@ -732,7 +722,7 @@ void ChessGame::MakeMoveFromString(std::string& move)
 
 	if (CanBeCaptured(m_board, m_kingPositions[(int)m_turn]) == true)
 	{
-		m_MoveHistory[m_MoveHistory.size() - 1] += "+";		// For PGN //
+		move += "+";		// For PGN //
 
 		m_state = EGameState::CheckState;
 		//Notify(ENotification::Check);
@@ -741,20 +731,20 @@ void ChessGame::MakeMoveFromString(std::string& move)
 	if (CheckCheckMate())
 	{
 		// For PGN //
-		m_MoveHistory[m_MoveHistory.size() - 1].resize(m_MoveHistory[m_MoveHistory.size() - 1].length() - 1);
-		m_MoveHistory[m_MoveHistory.size() - 1] += "#";
+		move += "#";
 
 		m_state = m_turn == EColor::White ? EGameState::WonByBlackPlayer : EGameState::WonByWhitePlayer;
 		//Notify(ENotification::GameOver);
 	}
 	else if (CheckStaleMate())
 	{
-		m_MoveHistory[m_MoveHistory.size() - 1] += "1/2-1/2";	// For PGN // 
+		move += "1/2-1/2";	// For PGN // 
 
 		m_state = EGameState::Draw;
 		//Notify(ENotification::GameOver);
 	}
 
+	m_PGNFormat.AddMove(move);
 
 	Notify(ENotification::HistoryUpdate);
 }
@@ -1309,19 +1299,6 @@ Position ChessGame::GetPiecePositionWithSameTypeThatCanMoveToFinalPosition(Posit
 
 	if (!sameRow && sameCol)
 		return Position(1, -1);
-}
-
-
-void ChessGame::AddMove(Position finalPosition, std::string& move)
-{
-	if (m_board[finalPosition.row][finalPosition.col]->GetColor() == EColor::Black && !m_MoveHistory.empty())
-	{
-		m_MoveHistory[m_MoveHistory.size() - 1] += move;
-	}
-	else
-	{
-		m_MoveHistory.push_back(move);
-	}
 }
 
 bool ChessGame::CheckThreeFoldRepetition()

@@ -148,7 +148,6 @@
     <ClInclude Include="Horse.h" />
     <ClInclude Include="include\IChessGame.h" />
     <ClInclude Include="include\IChessGameListener.h" />
-    <ClInclude Include="include\IFormatListener.h" />
     <ClInclude Include="include\IPiece.h" />
     <ClInclude Include="King.h" />
     <ClInclude Include="Pawn.h" />

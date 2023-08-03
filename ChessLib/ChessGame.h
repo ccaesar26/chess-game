@@ -2,6 +2,7 @@
 
 #include "IChessGame.h"
 #include "Piece.h"
+#include "PGNFormat.h"
 
 #include <array>
 #include <unordered_map>
@@ -65,17 +66,19 @@ public:
 	void ResetGame() override;
 	void RestoreGame(const CharBoard& inputConfig, EColor turn = EColor::White, CastleValues castle = { true, true, true, true }) override;
 
-	IPiecePtr		GetIPiecePtr(Position pos) const override;
-	PositionList	GetPossibleMoves(Position currentPos) const override;
-	IPieceList		GetCapturedPieces(EColor color) const override;
-	EColor			GetCurrentPlayer() const override;
-	MoveList		GetMoveHistory() const override;
-	CharBoard		GetBoardAtIndex(int index) const override;
-	int				GetNumberOfMoves()  const override;
+	IPiecePtr GetIPiecePtr(Position pos) const override;
+	PositionList GetPossibleMoves(Position currentPos) const override;
+	IPieceList GetCapturedPieces(EColor color) const override;
+	EColor GetCurrentPlayer() const override;
+	CharBoard GetBoardAtIndex(int index) const override;
+	// Setter for Castle Matrix // 
+
+	void SetCastleValues(const CastleValues& Castle);
 
 	// Virtual Implementations //
 
 	void LoadGameFromPGNFormat(std::string& PGNString) override;
+	std::string GetPGNFormat() const override;
 
 	bool CheckCheckMate() const ;
 
@@ -114,14 +117,13 @@ private:
 
 	void ResetBoard();
 
-	PiecePtr		GetPiece(Position pos, const ArrayBoard& board) const;
-	PieceList		GetCheckPieces(Position& checkPos) const;
-	Position		GetMovingDirections(const Position& checkPiecePos) const;
-	PositionList	GetToBlockPositions(const Position& checkPiecePos) const;
-	Position		GetPiecePositionWithSameTypeThatCanMoveToFinalPosition(Position initialPos, Position finalPos, EType currentPieceType);
+	PiecePtr GetPiece(Position pos, const ArrayBoard& board) const;
+	PieceList GetCheckPieces(Position& checkPos) const;
+	Position GetMovingDirections(const Position& checkPiecePos) const;
+	PositionList GetToBlockPositions(const Position& checkPiecePos) const;
+	Position GetPiecePositionWithSameTypeThatCanMoveToFinalPosition(Position initialPos, Position finalPos, EType currentPieceType);
 	
 	void AddCastle(Position kingPosition, PositionList& kingPossibleMoves) const;
-	void AddMove(Position finalPosition, std::string& move);	// Ads the move in history 
 
 	void SaveConfiguration();
 
@@ -152,6 +154,7 @@ private:
 
 	ArrayBoard m_board;
 	EColor m_turn;
+	int m_turnCount;
 
 	PositionList m_kingPositions;
 
@@ -165,7 +168,7 @@ private:
 	ChessMap m_boardConfigFrequency;
 	ChessVector m_boardConfigurations;
 
-	MoveList m_MoveHistory;
+	PGNFormat m_PGNFormat;
 
 	// Observable //
 

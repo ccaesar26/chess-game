@@ -19,15 +19,14 @@ public:
 	virtual void ResetGame() = 0;
 	virtual void RestoreGame(const CharBoard& inputConfig, EColor turn = EColor::White, CastleValues castle = { true, true, true, true }) = 0;
 
-	virtual IPiecePtr		GetIPiecePtr(Position pos) const = 0;
-	virtual PositionList	GetPossibleMoves(Position currentPos) const = 0;
-	virtual IPieceList		GetCapturedPieces(EColor color) const = 0;
-	virtual EColor			GetCurrentPlayer() const = 0;
-	virtual MoveList		GetMoveHistory() const = 0;
-	virtual CharBoard		GetBoardAtIndex(int index) const = 0;
-	virtual int				GetNumberOfMoves() const = 0;
+	virtual IPiecePtr GetIPiecePtr(Position pos) const = 0;
+	virtual PositionList GetPossibleMoves(Position currentPos) const = 0;
+	virtual IPieceList GetCapturedPieces(EColor color) const = 0;
+	virtual EColor GetCurrentPlayer() const = 0;
+	virtual CharBoard GetBoardAtIndex(int index) const = 0;
 
 	virtual void LoadGameFromPGNFormat(std::string& PGNString) = 0;
+	virtual std::string GetPGNFormat() const = 0;
 
 	virtual void MakeMove(Position initialPos, Position finalPos) = 0; // Position p1, Position p2
 

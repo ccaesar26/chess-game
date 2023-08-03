@@ -866,14 +866,9 @@ void ChessUIQt::LoadFENString(QString FENString)
 QString ChessUIQt::PGNStringFromBoard() const
 {
 	QString PGNString;
-	MoveList history = m_game->GetMoveHistory();
+	std::string PGNFormat = m_game->GetPGNFormat();
 
-	std::string move;
-	for (int i = 0; i < history.size(); i++)
-	{
-		std::string move = history[i] + " ";
-		PGNString.append(QString::fromStdString(move));
-	}
+	PGNString = QString::fromStdString(PGNFormat);
 	PGNString.append("*");
 	return PGNString;
 }
