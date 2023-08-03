@@ -120,7 +120,7 @@ ChessUIQt::ChessUIQt(QWidget *parent)
 	QApplication::setFont(customFont);
 
 	QPalette palette = this->palette();
-    palette.setColor(QPalette::Window, QColor("#F2D8D8"));
+    palette.setColor(QPalette::Window, QColor("#A4907C"));
 	this->setPalette(palette);
 
 }
@@ -250,8 +250,12 @@ void ChessUIQt::InitializeHistory(QGridLayout* mainGridLayout)
 	QString buttonStyle = "QListWidget {"
 		"    border: 2px solid #765827;"       // Border style
 		"    border-radius: 8px;"              // Border radius (rounded corners)
-		"    padding: 4px 8px;"                // Padding
 		"    margin: 8px;"
+		"    background-color: white;"
+		"}"
+		"QListWidget::item {"
+		//"	 padding: 2px;"
+		"    margin: 2px;"
 		"}"
 		"QListWidget::item:selected {"
 		"    background-color: #EAC696;"       // Green background color for selected item
@@ -284,7 +288,7 @@ void ChessUIQt::InitializeBoard(QGridLayout* mainGridLayout)
 		rowLabel->setFont(rowFont);
 
 		QPalette rowPalette = rowLabel->palette();
-		rowPalette.setColor(QPalette::WindowText, QColor("#84A7A1"));
+		rowPalette.setColor(QPalette::WindowText, QColor("#FFD89C"));
 		rowLabel->setPalette(rowPalette);
 
 		for (int j = 0; j < 8; j++)
@@ -307,7 +311,7 @@ void ChessUIQt::InitializeBoard(QGridLayout* mainGridLayout)
         colLabel->setFont(colFont);
 
 		QPalette colPalette = colLabel->palette();
-		colPalette.setColor(QPalette::WindowText, QColor("#84A7A1"));
+		colPalette.setColor(QPalette::WindowText, QColor("#FFD89C"));
 		colLabel->setPalette(colPalette);
 	}
 
