@@ -79,6 +79,7 @@ public:
 	// Virtual Implementations //
 
 	void LoadGameFromPGNFormat(std::string& PGNString) override;
+	std::string GetPGNFormat() const override;
 
 	bool CheckCheckMate() const ;
 
@@ -165,8 +166,6 @@ private:
 
 	ChessMap m_boardConfigFrequency;
 	ChessVector m_boardConfigurations;
-
-	MoveList m_MoveHistory;
 
 	PGNFormat m_PGNFormat;
 
