@@ -2,6 +2,7 @@
 
 #include "IChessGame.h"
 #include "Piece.h"
+#include "PGNFormat.h"
 
 #include <array>
 #include <unordered_map>
@@ -115,11 +116,11 @@ private:
 
 	void ResetBoard();
 
-	PiecePtr		GetPiece(Position pos, const ArrayBoard& board) const;
-	PieceList		GetCheckPieces(Position& checkPos) const;
-	Position		GetMovingDirections(const Position& checkPiecePos) const;
-	PositionList	GetToBlockPositions(const Position& checkPiecePos) const;
-	Position		GetPiecePositionWithSameTypeThatCanMoveToFinalPosition(Position initialPos, Position finalPos, EType currentPieceType);
+	PiecePtr GetPiece(Position pos, const ArrayBoard& board) const;
+	PieceList GetCheckPieces(Position& checkPos) const;
+	Position GetMovingDirections(const Position& checkPiecePos) const;
+	PositionList GetToBlockPositions(const Position& checkPiecePos) const;
+	Position GetPiecePositionWithSameTypeThatCanMoveToFinalPosition(Position initialPos, Position finalPos, EType currentPieceType);
 	
 	void AddCastle(Position kingPosition, PositionList& kingPossibleMoves) const;
 	void AddMove(Position finalPosition, std::string& move);	// Ads the move in history 
@@ -166,6 +167,8 @@ private:
 	ChessVector m_boardConfigurations;
 
 	MoveList m_MoveHistory;
+
+	PGNFormat m_PGNFormat;
 
 	// Observable //
 

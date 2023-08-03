@@ -529,17 +529,13 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 		Notify(ENotification::GameOver);
 	}
 
+	m_PGNFormat.AddMove(move);
+
 	Notify(ENotification::HistoryUpdate);
 }
 
 void ChessGame::MakeMoveFromString(std::string& move)
 {
-	// Scoti caracterele de care nu ai nevoie in move. Retii piesa in care se transforma un pion daca este cazul.
-	// Copiezi din MakeMove
-	// Verifici daca e cazu sa apelezi pawn evolve
-	// Verifici daca e game Over
-	// Adaugi mutarea in pgn inainte sa o modifici
-
 	EType upgradeType;
 
 	int evolvePos = move.find('=');
