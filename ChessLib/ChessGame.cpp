@@ -892,6 +892,21 @@ void ChessGame::Notify(ENotification notif, Position pos)
 	}
 }
 
+void ChessGame::Notify(ENotification notif, std::string move)
+{
+	if (notif != ENotification::HistoryUpdate)
+	{
+		return;
+	}
+	for (auto it = m_listeners.begin(); it != m_listeners.end(); it++)
+	{
+		if (auto sp = it->lock())
+		{
+			sp->OnHistoryUpdate(move);
+		}
+	}
+}
+
 void ChessGame::Notify(ENotification notif)
 {
 	for (auto it = m_listeners.begin(); it != m_listeners.end(); it++)
@@ -915,9 +930,6 @@ void ChessGame::Notify(ENotification notif)
 				break;
 			case ENotification::Reset:
 				sp->OnGameRestarted();
-			case ENotification::HistoryUpdate:
-				sp->OnHistoryUpdate();
-				break;
 			default:
 				break;
 			}

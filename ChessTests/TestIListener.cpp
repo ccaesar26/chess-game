@@ -23,7 +23,7 @@ public:
 
 	MOCK_METHOD(void, OnGameRestarted, (), (override));
 
-	MOCK_METHOD(void, OnHistoryUpdate, (), (override));
+	MOCK_METHOD(void, OnHistoryUpdate, (std::string move), (override));
 
 };
 
@@ -35,7 +35,7 @@ TEST(OnMoveMadeIsCalled, LegalMove1)
 
 	game.AddListener(listener);
 
-	EXPECT_CALL(*listener, OnHistoryUpdate())
+	EXPECT_CALL(*listener, OnHistoryUpdate(::testing::_))
 		.Times(::testing::AnyNumber());
 
 	EXPECT_CALL(*listener, OnMoveMade(Position(6, 4), Position(4, 4)))
@@ -166,7 +166,7 @@ TEST(ListenersFunction, GameSimulation_1)
 	auto listener = std::make_shared<MockListener>();
 	game.AddListener(listener);
 
-	EXPECT_CALL(*listener, OnHistoryUpdate())
+	EXPECT_CALL(*listener, OnHistoryUpdate(::testing::_))
 		.Times(::testing::AnyNumber());
 
 	try

@@ -1,5 +1,8 @@
 #pragma once
+
 #include "IPiece.h"
+
+#include <string>
 
 enum class EGameResult
 {
@@ -21,7 +24,7 @@ public:
 	
 	virtual void OnGameRestarted() = 0;
 
-	virtual void OnHistoryUpdate() = 0;
+	virtual void OnHistoryUpdate(std::string move) = 0;
 
 	virtual ~IChessGameListener() = default;
 };

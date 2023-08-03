@@ -16,6 +16,8 @@
 #include <QFileInfo>
 #include <QApplication>
 
+#include <QHeaderView>
+
 
 static EType ToETypeFromQString(const QString& s)
 {
@@ -242,34 +244,67 @@ void ChessUIQt::InitializeTimers(QGridLayout* mainGridLayout)
 
 void ChessUIQt::InitializeHistory(QGridLayout* mainGridLayout)
 {
-	m_MovesList = new QListWidget();
-	m_MovesList->setMinimumWidth(240);
-	m_MovesList->setMaximumWidth(360);
-	m_MovesList->setFocusPolicy(Qt::NoFocus);
+	m_MovesTable = new QTableWidget(); // Use QTableWidget instead of QListWidget
+	m_MovesTable->setRowCount(0);      // Set initial row count
+	m_MovesTable->setColumnCount(2);   // Set the number of columns
+	m_MovesTable->setMinimumWidth(240);
+	m_MovesTable->setMaximumWidth(360);
+	m_MovesTable->setFocusPolicy(Qt::NoFocus);
 
-	QString buttonStyle = "QListWidget {"
-		"    border: 2px solid #765827;"       // Border style
-		"    border-radius: 8px;"              // Border radius (rounded corners)
+	m_MovesTable->horizontalHeader()->setVisible(false);
+	m_MovesTable->verticalHeader()->setVisible(false);
+
+	QString cellStyle = "QTableWidget {"
+		"    border: 2px solid #765827;"
+		"    border-radius: 8px;"
 		"    margin: 8px;"
 		"    background-color: white;"
 		"}"
-		"QListWidget::item {"
-		//"	 padding: 2px;"
+		"QTableWidget::item {"
+		"    padding: 2px;"
 		"    margin: 2px;"
 		"}"
-		"QListWidget::item:selected {"
-		"    background-color: #EAC696;"       // Green background color for selected item
-		"    color: #765827;"                    // White text color for selected item
+		"QTableWidget::item:selected {"
+		"    background-color: #EAC696;"
+		"    color: #765827;"
 		"    border: 2px solid #EAC696;"
 		"    border-radius: 4px;"
 		"    outline: none;"
 		"}";
 
-	m_MovesList->setStyleSheet(buttonStyle);
+	m_MovesTable->setStyleSheet(cellStyle);
 
-	connect(m_MovesList, &QListWidget::itemActivated, this, &ChessUIQt::OnHistoryClicked);
-	mainGridLayout->addWidget(m_MovesList, 1, 0, 1, 1);
+	connect(m_MovesTable, &QTableWidget::itemActivated, this, &ChessUIQt::OnHistoryClicked);
+	mainGridLayout->addWidget(m_MovesTable, 1, 0, 1, 1);
 }
+
+// Function to add a move to the history
+void ChessUIQt::AddMoveToHistory(const QString& moveText)
+{
+	int rowCount = m_MovesTable->rowCount();
+	QTableWidgetItem* moveItem = new QTableWidgetItem(moveText);
+
+	bool isFirstCol = false;
+	for (auto it : moveText)
+	{
+		if (it == '.')
+		{
+			isFirstCol = true;
+			break;
+		}
+	}
+
+	if (isFirstCol)
+	{
+		m_MovesTable->insertRow(rowCount);
+		m_MovesTable->setItem(rowCount, 0, moveItem);
+	}
+	else
+	{
+		m_MovesTable->setItem(rowCount, 1, moveItem);
+	}
+}
+
 
 void ChessUIQt::InitializeBoard(QGridLayout* mainGridLayout)
 {
@@ -596,11 +631,11 @@ void ChessUIQt::OnSaveInClipboardButtonClicked()
     clipboard->setText(textToCopy);
 }
 
-void ChessUIQt::OnHistoryClicked(QListWidgetItem* selectedItem)
+void ChessUIQt::OnHistoryClicked(QTableWidgetItem* item)
 {
-    int selectedIndex = m_MovesList->currentRow();
+    int selectedIndex = m_MovesTable->currentRow();
 
-	bool isLastHistoryItem = (selectedIndex == m_MovesList->count() - 1);
+	bool isLastHistoryItem = (selectedIndex == m_MovesTable->rowCount() - 1);
 
 	for (int i = 0; i < 8; i++) 
 	{
@@ -869,13 +904,13 @@ void ChessUIQt::LoadPGNString(QString PGNString)
 
 void ChessUIQt::UpdateHistory()
 {
-	m_MovesList->clear();
+	m_MovesTable->clear();
 
 	MoveList history = m_game->GetMoveHistory();
 
 	for (auto it : history)
 	{
-		m_MovesList->addItem(QString::fromStdString(it));
+		AddMoveToHistory(QString::fromStdString(it));
 	}
 }
 
@@ -1278,7 +1313,7 @@ void ChessUIQt::OnGameRestarted()
 	}
 }
 
-void ChessUIQt::OnHistoryUpdate()
+void ChessUIQt::OnHistoryUpdate(std::string move)
 {
 	UpdateHistory();
 }

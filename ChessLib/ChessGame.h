@@ -138,6 +138,7 @@ private:
 
 	void Notify(ENotification notif, Position init, Position fin);
 	void Notify(ENotification notif, Position pos);
+	void Notify(ENotification notif, std::string move);
 	void Notify(ENotification notif);
 
 	// Static Methods //
