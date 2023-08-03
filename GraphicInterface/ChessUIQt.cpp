@@ -122,7 +122,7 @@ ChessUIQt::ChessUIQt(QWidget *parent)
 	QApplication::setFont(customFont);
 
 	QPalette palette = this->palette();
-    palette.setColor(QPalette::Window, QColor("#A4907C"));
+    palette.setColor(QPalette::Window, QColor("#1A1A1A"));
 	this->setPalette(palette);
 
 }
@@ -143,7 +143,11 @@ void ChessUIQt::InitializeMessage(QGridLayout * mainGridLayout)
     m_MessageLabel = new QLabel();
     m_MessageLabel->setText("Waiting for white player\n");
     m_MessageLabel->setAlignment(Qt::AlignCenter);
-    m_MessageLabel->setStyleSheet("font-size: 20px; font-weight: bold;");
+    m_MessageLabel->setStyleSheet(
+	"	font-size: 20px;"
+	"	font-weight: bold;"
+	"   color: #D3D3D3;"
+	);
 
     mainGridLayout->addWidget(m_MessageLabel, 0, 1, 1, 3);
 }
@@ -172,18 +176,17 @@ void ChessUIQt::InitializeButtons(QGridLayout* mainGridLayout)
     connect(saveClipboardButton, &QPushButton::pressed, this, &ChessUIQt::OnSaveInClipboardButtonClicked);
 
 	QString buttonStyle = "QPushButton {"
-		"    background-color: #65451F;"      // Background color
+		"    background-color: #7B7B7B;"      // Background color
 		"    color: white;"                   // Text color
-		"    border: 2px solid #765827;"      // Border style
+		"    border: 2px solid #343434;"      // Border style
 		"    border-radius: 8px;"             // Border radius (rounded corners)
 		"    padding: 4px 8px;"             // Padding
 		"}"
 		"QPushButton:hover {"
-		"    background-color: #C8AE7D;"     // Color when hovered
-		"	 color: #65451F;"	
+		"    background-color: #555555;"     // Color when hovered
 		"}"
 		"QPushButton:pressed {"
-		"    background-color: #765827;"     // Color when pressed
+		"    background-color: #3F3F3F;"     // Color when pressed
 		"    color: white;"
 		"}";
 
@@ -255,7 +258,7 @@ void ChessUIQt::InitializeHistory(QGridLayout* mainGridLayout)
 	m_MovesTable->verticalHeader()->setVisible(false);
 
 	QString cellStyle = "QTableWidget {"
-		"    border: 2px solid #765827;"
+		"    border: 2px solid #343434;"
 		"    border-radius: 8px;"
 		"    margin: 8px;"
 		"    background-color: white;"
@@ -265,9 +268,9 @@ void ChessUIQt::InitializeHistory(QGridLayout* mainGridLayout)
 		"    margin: 2px;"
 		"}"
 		"QTableWidget::item:selected {"
-		"    background-color: #EAC696;"
+		"    background-color: #5A5A5A;"
 		"    color: #765827;"
-		"    border: 2px solid #EAC696;"
+		"    border: 2px solid #5A5A5A;"
 		"    border-radius: 4px;"
 		"    outline: none;"
 		"}";
@@ -365,7 +368,7 @@ void ChessUIQt::InitializeCapturedBoxes(QGridLayout* mainGridLayout)
 		for (int j = 0; j < 8; j++)
 		{
 			m_capturedGrid[i][j] = new GridButton({ j,i }, PieceType::none, PieceColor::none);
-			m_capturedGrid[i][j]->setStyleSheet("background-color: #d6c4b8; border: none;");
+			m_capturedGrid[i][j]->setStyleSheet("background-color: #343434; border: none;");
 			capturedGrid1->addWidget(m_capturedGrid[i][j], j, i);
 			capturedGrid1->setSpacing(0);
 		}
@@ -383,7 +386,7 @@ void ChessUIQt::InitializeCapturedBoxes(QGridLayout* mainGridLayout)
 		for (int j = 0; j < 8; j++)
 		{
 			m_capturedGrid[i][j] = new GridButton({ j,i }, PieceType::none, PieceColor::none);
-			m_capturedGrid[i][j]->setStyleSheet("background-color: #d6c4b8; border: none;");
+			m_capturedGrid[i][j]->setStyleSheet("background-color: #343434; border: none;");
 			capturedGrid2->addWidget(m_capturedGrid[i][j], j, i);
 			capturedGrid2->setSpacing(0);
 		}
@@ -1033,7 +1036,7 @@ void ChessUIQt::UpdateCaptures()
 			m_capturedGrid[i][j]->setPiece(newPiece);
 			m_capturedGrid[i][j]->setSelected(false);
 			m_capturedGrid[i][j]->setHighlighted(false);
-			m_capturedGrid[i][j]->setStyleSheet("background-color: #d6c4b8; border: none;");
+			m_capturedGrid[i][j]->setStyleSheet("background-color: #343434; border: none;");
 
 			it++;
 		}
@@ -1088,7 +1091,7 @@ void ChessUIQt::UpdateCaptures()
 			m_capturedGrid[i][j]->setPiece(newPiece);
 			m_capturedGrid[i][j]->setSelected(false);
 			m_capturedGrid[i][j]->setHighlighted(false);
-			m_capturedGrid[i][j]->setStyleSheet("background-color: #d6c4b8; border: none;");
+			m_capturedGrid[i][j]->setStyleSheet("background-color: #343434; border: none;");
 
 			it++;
 		}
