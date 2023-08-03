@@ -249,7 +249,7 @@ void ChessUIQt::InitializeHistory(QGridLayout* mainGridLayout)
 {
 	m_MovesTable = new QTableWidget(); // Use QTableWidget instead of QListWidget
 	m_MovesTable->setRowCount(0);      // Set initial row count
-	m_MovesTable->setColumnCount(2);   // Set the number of columns
+	m_MovesTable->setColumnCount(2);   
 	m_MovesTable->setMinimumWidth(240);
 	m_MovesTable->setMaximumWidth(360);
 	m_MovesTable->setFocusPolicy(Qt::NoFocus);
