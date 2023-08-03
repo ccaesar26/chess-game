@@ -2,7 +2,7 @@
 
 #include "IChessGame.h"
 #include "Piece.h"
-#include "PGNFormat.h"
+#include "PGNBuilder.h"
 
 #include <array>
 #include <unordered_map>
@@ -167,7 +167,7 @@ private:
 	ChessMap m_boardConfigFrequency;
 	ChessVector m_boardConfigurations;
 
-	PGNFormat m_PGNFormat;
+	PGNBuilder m_PGNFormat;
 
 	// Observable //
 

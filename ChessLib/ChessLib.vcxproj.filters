@@ -51,7 +51,7 @@
     <ClInclude Include="include\IChessGameListener.h">
       <Filter>Header Files\API</Filter>
     </ClInclude>
-    <ClInclude Include="PGNFormat.h">
+    <ClInclude Include="PGNBuilder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -80,7 +80,7 @@
     <ClCompile Include="Rook.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PGNFormat.cpp">
+    <ClCompile Include="PGNBuilder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

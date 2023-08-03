@@ -2,12 +2,12 @@
 
 #include <string>
 
-class PGNFormat
+class PGNBuilder
 {
 
 public:
 
-	PGNFormat();
+	PGNBuilder();
 
 	std::string GetPGNFormat() const;
 

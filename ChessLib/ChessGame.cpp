@@ -204,27 +204,28 @@ void ChessGame::LoadGameFromPGNFormat(std::string& PGNString)
 	ResetBoard();
 	InitializeChessGame();
 
-	PGNReader reader;
-	if (!reader.LoadFromFile(file))
-		// ....
-	auto moves = reader.GetMoves();
-	for (const auto& move : moves)
-		MakeMoveFromString(move);
+	//PGNReader reader;
+	//if (!reader.LoadFromFile(file))
+	//	// ....
+	//auto moves = reader.GetMoves();
+	//for (const auto& move : moves)
+	//	MakeMoveFromString(move);
 
-	PGNString = std::regex_replace(PGNString, std::regex("\\b\\d+\\. |[+#x*]"), "");
+	//PGNString = std::regex_replace(PGNString, std::regex("\\b\\d+\\. |[+#x*]"), "");
 
-	std::string move="";
+	//std::string move="";
 
-	for (int i = 0; i < PGNString.size(); i++)
-	{
-		if (PGNString[i] != ' ')
-			move += PGNString[i];
-		else
-		{
-			MakeMoveFromString(move);
-			move = "";
-		}
-	}
+	//for (int i = 0; i < PGNString.size(); i++)
+	//{
+	//	if (PGNString[i] != ' ')
+	//		move += PGNString[i];
+	//	else
+	//	{
+	//		MakeMoveFromString(move);
+	//		move = "";
+	//	}
+	//}
+	return;
 }
 
 std::string ChessGame::GetPGNFormat() const
@@ -363,6 +364,7 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 	// For PGN Begin // 
 
 	std::string move;
+
 	if (m_turn == EColor::White)
 		move = std::to_string(m_turnCount + 1) + ". ";
 
@@ -445,7 +447,7 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 
 	// For PGN  Begin // 
 
-	if (move[move.size() - 1] != '0')
+	if (move.length() == 0 || move[move.length() - 1] != '0')
 	{
 		BoardPosition boardPos = ConvertToBoardPosition(finalPosition);
 		move += boardPos.second;
@@ -662,7 +664,7 @@ void ChessGame::MakeMoveFromString(std::string& move)
 
 	// For PGN  Begin // 
 
-	if (move[move.size() - 1] != '0')	// If the move is not Castle //
+	if (move.length() == 0 || move[move.length() - 1] != '0')// If the move is not Castle //
 	{
 		BoardPosition boardPos = ConvertToBoardPosition(finalPosition);
 		move += boardPos.second;
