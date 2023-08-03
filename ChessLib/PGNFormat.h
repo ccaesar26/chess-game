@@ -11,7 +11,12 @@ public:
 
 	std::string GetPGNFormat() const;
 
+	/*void SetDate(const std::string& date);
+	void Set(EHeaderType type, const std::string& value);*/
+
 	void AddMove(const std::string& move);
+
+	bool Save(const std::string& filename);
 
 private:
 
