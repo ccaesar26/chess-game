@@ -204,6 +204,13 @@ void ChessGame::LoadGameFromPGNFormat(std::string& PGNString)
 	ResetBoard();
 	InitializeChessGame();
 
+	PGNReader reader;
+	if (!reader.LoadFromFile(file))
+		// ....
+	auto moves = reader.GetMoves();
+	for (const auto& move : moves)
+		MakeMoveFromString(move);
+
 	PGNString = std::regex_replace(PGNString, std::regex("\\b\\d+\\. |[+#x*]"), "");
 
 	std::string move="";
@@ -921,8 +928,6 @@ void ChessGame::Notify(ENotification notif)
 				break;
 			case ENotification::Reset:
 				sp->OnGameRestarted();
-			default:
-				break;
 			}
 		}
 	}
