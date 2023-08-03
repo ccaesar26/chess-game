@@ -357,13 +357,7 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 
 	std::string move;
 	if (m_turn == EColor::White)
-	{
 		move = std::to_string(m_turnCount + 1) + ". ";
-	}
-	else
-	{
-		move = " ";
-	}
 
 	char pieceLetter = std::toupper(m_board[initialPosition.row][initialPosition.col]->ToLetter());
 	if (pieceLetter == 'H')
@@ -580,13 +574,7 @@ void ChessGame::MakeMoveFromString(std::string& move)
 	move = "";
 
 	if (m_turn == EColor::White)
-	{
 		move = std::to_string(m_turnCount + 1) + ". ";
-	}
-	else
-	{
-		move = " ";
-	}
 
 	char pieceLetter = std::toupper(m_board[initialPosition.row][initialPosition.col]->ToLetter());
 	if (pieceLetter == 'H')

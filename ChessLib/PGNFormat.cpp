@@ -11,5 +11,5 @@ std::string PGNFormat::GetPGNFormat() const
 
 void PGNFormat::AddMove(const std::string& move)
 {
-	m_PGNString += move;
+	m_PGNString = m_PGNString + move + " ";
 }
