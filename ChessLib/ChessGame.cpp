@@ -1,9 +1,9 @@
 #include "ChessGame.h"
 #include "Piece.h"
 #include "ChessException.h"
+#include "PGNReader.h"
 
 #include <cctype>
-#include <regex>
 
 // --->		Local Static Functions				<--- //
 
@@ -199,12 +199,19 @@ void ChessGame::SaveConfiguration()
 
 // Virtual Implementations //
 
-void ChessGame::LoadGameFromPGNFormat(std::string& PGNString)
+void ChessGame::LoadGameFromPGNFormat(std::string& fileName)
 {
 	ResetBoard();
 	InitializeChessGame();
 
-	//PGNReader reader;
+	PGNReader reader;
+
+	auto moves = reader.GetMoves();
+	for (auto& move : moves)
+	{
+		MakeMoveFromString(move);
+	}
+
 	//if (!reader.LoadFromFile(file))
 	//	// ....
 	//auto moves = reader.GetMoves();
@@ -225,7 +232,6 @@ void ChessGame::LoadGameFromPGNFormat(std::string& PGNString)
 	//		move = "";
 	//	}
 	//}
-	return;
 }
 
 std::string ChessGame::GetPGNFormat() const
@@ -499,7 +505,7 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 
 	if (CheckThreeFoldRepetition())
 	{
-		move += "1/2-1/2";		// For PGN //
+		move += " 1/2-1/2";		// For PGN //
 
 		m_state = EGameState::Draw;
 		Notify(ENotification::GameOver);
@@ -709,7 +715,7 @@ void ChessGame::MakeMoveFromString(std::string& move)
 
 	if (CheckThreeFoldRepetition())
 	{
-		move += "1/2-1/2";		// For PGN //
+		move += " 1/2-1/2";		// For PGN //
 
 		m_state = EGameState::Draw;
 		//Notify(ENotification::GameOver);
@@ -1340,27 +1346,6 @@ bool IsNumerical(char c)
 bool IsLowerCaseLetter(char c)
 {
 	return c >= 'a' && c <= 'z';
-}
-
-void DeleteUnnecesaryCharactersFromMove(std::string& move)
-{
-	char specialCharacters[3] = { '+','#','x'};
-	int PosToDelete;
-	for (int i = 0; i < 3; i++)
-	{
-		PosToDelete = move.find(specialCharacters[i]);
-		if (PosToDelete != -1)
-			move.erase(PosToDelete, 1);
-	}
-
-	PosToDelete = move.find(' ');
-	for (int i = 0; i <= PosToDelete; i++) // Delete the number of the move, the "." and the space after the dot // 
-		move.erase(0, 1);
-
-	std::string specialString = "1/2-1/2";
-	PosToDelete = move.find(specialString);
-	if (PosToDelete != -1)
-		move.erase(PosToDelete, specialString.length());
 }
 
 void ChessGame::ConvertMoveToPositions(std::string& move, Position& initialPos, Position& finalPos)
