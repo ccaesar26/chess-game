@@ -23,7 +23,6 @@ public:
 	virtual PositionList GetPossibleMoves(Position currentPos) const = 0;
 	virtual IPieceList GetCapturedPieces(EColor color) const = 0;
 	virtual EColor GetCurrentPlayer() const = 0;
-	virtual MoveList GetMoveHistory() const = 0;
 	virtual CharBoard GetBoardAtIndex(int index) const = 0;
 
 	virtual void LoadGameFromPGNFormat(std::string& PGNString) = 0;

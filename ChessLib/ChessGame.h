@@ -66,12 +66,11 @@ public:
 	void ResetGame() override;
 	void RestoreGame(const CharBoard& inputConfig, EColor turn = EColor::White, CastleValues castle = { true, true, true, true }) override;
 
-	IPiecePtr		GetIPiecePtr(Position pos) const override;
-	PositionList	GetPossibleMoves(Position currentPos) const override;
-	IPieceList		GetCapturedPieces(EColor color) const override;
-	EColor			GetCurrentPlayer() const override;
-	MoveList		GetMoveHistory() const override;
-	CharBoard		GetBoardAtIndex(int index) const override;
+	IPiecePtr GetIPiecePtr(Position pos) const override;
+	PositionList GetPossibleMoves(Position currentPos) const override;
+	IPieceList GetCapturedPieces(EColor color) const override;
+	EColor GetCurrentPlayer() const override;
+	CharBoard GetBoardAtIndex(int index) const override;
 	// Setter for Castle Matrix // 
 
 	void SetCastleValues(const CastleValues& Castle);
@@ -124,7 +123,6 @@ private:
 	Position GetPiecePositionWithSameTypeThatCanMoveToFinalPosition(Position initialPos, Position finalPos, EType currentPieceType);
 	
 	void AddCastle(Position kingPosition, PositionList& kingPossibleMoves) const;
-	void AddMove(Position finalPosition, std::string& move);	// Ads the move in history 
 
 	void SaveConfiguration();
 
@@ -154,6 +152,7 @@ private:
 
 	ArrayBoard m_board;
 	EColor m_turn;
+	int m_turnCount;
 
 	PositionList m_kingPositions;
 
