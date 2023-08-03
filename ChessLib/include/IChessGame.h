@@ -26,8 +26,11 @@ public:
 	virtual CharBoard GetBoardAtIndex(int index) const = 0;
 	virtual int GetNumberOfMoves() const = 0;
 
+	virtual void LoadFromPgnFile(const std::string& file) const = 0;
 	virtual void LoadGameFromPGNFormat(std::string& PGNString) = 0;
 	virtual std::string GetPGNFormat() const = 0;
+
+	virtual std::string GetFEN() const = 0;
 
 	virtual void MakeMove(Position initialPos, Position finalPos) = 0; // Position p1, Position p2
 
@@ -40,6 +43,7 @@ public:
 	virtual bool IsGameOver() const = 0;
 	virtual bool IsDraw() const = 0;
 	virtual bool IsWaitingForDrawResponse() const = 0;
+
 	virtual bool IsWonByWhitePlayer() const = 0;
 	virtual bool IsWonByBlackPlayer() const = 0;
 	virtual bool IsWaitingForUpgrade() const = 0;

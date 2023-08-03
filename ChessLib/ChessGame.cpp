@@ -204,6 +204,13 @@ void ChessGame::LoadGameFromPGNFormat(std::string& PGNString)
 	ResetBoard();
 	InitializeChessGame();
 
+	PGNReader reader;
+	if (!reader.LoadFromFile(file))
+		// ....
+	auto moves = reader.GetMoves();
+	for (const auto& move : moves)
+		MakeMoveFromString(move);
+
 	PGNString = std::regex_replace(PGNString, std::regex("\\b\\d+\\. |[+#x*]"), "");
 
 	std::string move="";
@@ -506,7 +513,7 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 
 	if (CheckCheckMate())
 	{
-		move += "#";	// For PGN //
+		move[move.length()-1] = '#';	// For PGN //
 
 		m_state = m_turn == EColor::White ? EGameState::WonByBlackPlayer : EGameState::WonByWhitePlayer;
 		Notify(ENotification::GameOver);
@@ -717,7 +724,7 @@ void ChessGame::MakeMoveFromString(std::string& move)
 	if (CheckCheckMate())
 	{
 		// For PGN //
-		move += "#";
+		move[move.length() - 1] = '#';
 
 		m_state = m_turn == EColor::White ? EGameState::WonByBlackPlayer : EGameState::WonByWhitePlayer;
 		//Notify(ENotification::GameOver);
@@ -909,8 +916,6 @@ void ChessGame::Notify(ENotification notif)
 				break;
 			case ENotification::Reset:
 				sp->OnGameRestarted();
-			default:
-				break;
 			}
 		}
 	}
