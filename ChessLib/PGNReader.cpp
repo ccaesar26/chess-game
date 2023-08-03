@@ -17,19 +17,23 @@ bool PGNReader::LoadFromFile(std::string& fileName)
 		return false;
 
 	char c;
-	std::string move = "";
+	std::string move;
 
-	while (fileStream >> c)
+	while (fileStream.get(c))
 	{
 		m_PGNString += c;
 		if (c != ' ')
 			move += c;
 		else
 		{
-			move = std::regex_replace(move, std::regex("\\b\\d+\\. |[+#x*]|1/2-1/2|\\s*"), "");
-			m_moves.push_back(move);
+			move = std::regex_replace(move, std::regex("(\\b\\d+\\.\\s*)|\\s+|[+#x*]|1/2-1/2"), "");
+			if(!move.empty())
+				m_moves.push_back(move);
+			move.clear();
 		}
 	}
+	
+	fileStream.close();
 	return true;
 }
 

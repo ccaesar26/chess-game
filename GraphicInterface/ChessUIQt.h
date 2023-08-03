@@ -70,7 +70,7 @@ private:
     void LoadFENString(QString FENString);
     // TODO: pgn save/load methods
     QString PGNStringFromBoard() const;
-    void LoadPGNString(QString PGNString);
+    void LoadPGNString(QString& filePath);
 
     void AddMoveToHistory(const QString& moveText);
 

@@ -531,7 +531,7 @@ void ChessUIQt::OnLoadButtonClicked()
 		}
 		else if (fileExtension == "pgn")
 		{
-			LoadPGNString(fileContent);
+			LoadPGNString(fileName);
 		}
 		else
 		{
@@ -869,10 +869,11 @@ QString ChessUIQt::PGNStringFromBoard() const
 	return PGNString;
 }
 
-void ChessUIQt::LoadPGNString(QString PGNString)
+void ChessUIQt::LoadPGNString(QString& filePath)
 {
-	std::string PGNNormalString = PGNString.toStdString();
-	m_game->LoadGameFromPGNFormat(PGNNormalString);
+	//std::string PGNNormalString = PGNString.toStdString();
+	std::string StringFilePath = filePath.toStdString();
+	m_game->LoadGameFromPGNFormat(StringFilePath);
 	UpdateBoard();
 	UpdateCaptures();
 	switch (m_game->GetCurrentPlayer())

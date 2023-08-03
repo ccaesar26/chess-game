@@ -206,6 +206,11 @@ void ChessGame::LoadGameFromPGNFormat(std::string& fileName)
 
 	PGNReader reader;
 
+	if (!reader.LoadFromFile(fileName))
+	{
+		// throw exception  couldn t open file //
+	}
+
 	auto moves = reader.GetMoves();
 	for (auto& move : moves)
 	{
