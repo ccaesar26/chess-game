@@ -71,6 +71,7 @@ public:
 	EColor			GetCurrentPlayer() const override;
 	MoveList		GetMoveHistory() const override;
 	CharBoard		GetBoardAtIndex(int index) const override;
+	int				GetNumberOfMoves()  const override;
 
 	// Virtual Implementations //
 

@@ -35,6 +35,9 @@ TEST(OnMoveMadeIsCalled, LegalMove1)
 
 	game.AddListener(listener);
 
+	EXPECT_CALL(*listener, OnHistoryUpdate())
+		.Times(::testing::AnyNumber());
+
 	EXPECT_CALL(*listener, OnMoveMade(Position(6, 4), Position(4, 4)))
 		.Times(1);
 
@@ -162,6 +165,9 @@ TEST(ListenersFunction, GameSimulation_1)
 	ChessGame game;
 	auto listener = std::make_shared<MockListener>();
 	game.AddListener(listener);
+
+	EXPECT_CALL(*listener, OnHistoryUpdate())
+		.Times(::testing::AnyNumber());
 
 	try
 	{

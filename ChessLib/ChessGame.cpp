@@ -248,6 +248,11 @@ CharBoard ChessGame::GetBoardAtIndex(int index) const
 	return m_boardConfigurations.at(index);
 }
 
+int ChessGame::GetNumberOfMoves() const
+{
+	return m_boardConfigurations.size();
+}
+
 bool ChessGame::CheckStaleMate() const
 {
 	if (m_state != EGameState::MovingPiece)
@@ -1297,7 +1302,7 @@ Position ChessGame::GetPiecePositionWithSameTypeThatCanMoveToFinalPosition(Posit
 
 void ChessGame::AddMove(Position finalPosition, std::string& move)
 {
-	if (m_board[finalPosition.row][finalPosition.col]->GetColor() == EColor::Black)
+	if (m_board[finalPosition.row][finalPosition.col]->GetColor() == EColor::Black && !m_MoveHistory.empty())
 	{
 		m_MoveHistory[m_MoveHistory.size() - 1] += move;
 	}

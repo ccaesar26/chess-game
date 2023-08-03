@@ -620,7 +620,7 @@ void ChessUIQt::OnHistoryClicked(QListWidgetItem* selectedItem)
 	}
 
 	CharBoard board;
-	if (isLastHistoryItem)
+	if (isLastHistoryItem && m_game->GetNumberOfMoves() % 2 == 0)
 	{
 		board = m_game->GetBoardAtIndex((selectedIndex + 1) * 2 - 1);
 	}
