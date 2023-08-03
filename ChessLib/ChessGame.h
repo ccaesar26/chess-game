@@ -106,8 +106,6 @@ public:
 
 	void AddListener(IChessGameListenerPtr listener) override;
 	void RemoveListener(IChessGameListener* listener) override;
-
-	void SetCastleValues(const CastleValues& Castle);
 private:
 
 	// Game's Logic //
@@ -122,6 +120,7 @@ private:
 	Position GetMovingDirections(const Position& checkPiecePos) const;
 	PositionList GetToBlockPositions(const Position& checkPiecePos) const;
 	Position GetPiecePositionWithSameTypeThatCanMoveToFinalPosition(Position initialPos, Position finalPos, EType currentPieceType);
+	int GetNumberOfMoves() const override;
 	
 	void AddCastle(Position kingPosition, PositionList& kingPossibleMoves) const;
 

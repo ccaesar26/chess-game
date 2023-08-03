@@ -257,6 +257,8 @@ void ChessUIQt::InitializeHistory(QGridLayout* mainGridLayout)
 	m_MovesTable->horizontalHeader()->setVisible(false);
 	m_MovesTable->verticalHeader()->setVisible(false);
 
+	m_MovesTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
 	QString cellStyle = "QTableWidget {"
 		"    border: 2px solid #343434;"
 		"    border-radius: 8px;"
@@ -269,7 +271,7 @@ void ChessUIQt::InitializeHistory(QGridLayout* mainGridLayout)
 		"}"
 		"QTableWidget::item:selected {"
 		"    background-color: #5A5A5A;"
-		"    color: #765827;"
+		"    color: white;"
 		"    border: 2px solid #5A5A5A;"
 		"    border-radius: 4px;"
 		"    outline: none;"
@@ -304,7 +306,7 @@ void ChessUIQt::AddMoveToHistory(const QString& moveText)
 	}
 	else
 	{
-		m_MovesTable->setItem(rowCount, 1, moveItem);
+		m_MovesTable->setItem(rowCount - 1, 1, moveItem);
 	}
 }
 
@@ -541,104 +543,105 @@ void ChessUIQt::OnLoadButtonClicked()
 void ChessUIQt::OnRestartButtonClicked()
 {
 	QMessageBox::StandardButton reply;
-	reply = QMessageBox::question(this, "Restart", "All progress will be lost. Are you sure?", QMessageBox::Yes | QMessageBox::No);
+reply = QMessageBox::question(this, "Restart", "All progress will be lost. Are you sure?", QMessageBox::Yes | QMessageBox::No);
 
-	if (reply == QMessageBox::Yes)
-	{
-        m_game->ResetGame();
-	}
+if (reply == QMessageBox::Yes)
+{
+	m_game->ResetGame();
+}
 }
 
 void ChessUIQt::OnDrawButtonClicked()
 {
-    //TODO MODIFY ME
-    m_game->RequestDraw();
+	//TODO MODIFY ME
+	m_game->RequestDraw();
 
-    QMessageBox::StandardButton reply;
-    reply = QMessageBox::question(this, "Draw proposal", "Do you accept a draw?", QMessageBox::Yes | QMessageBox::No);
+	QMessageBox::StandardButton reply;
+	reply = QMessageBox::question(this, "Draw proposal", "Do you accept a draw?", QMessageBox::Yes | QMessageBox::No);
 
-    if (reply == QMessageBox::Yes) 
-    {
+	if (reply == QMessageBox::Yes)
+	{
 		m_game->AcceptDrawProposal();
 		m_MessageLabel->setText("Game over!\nDraw.");
 		QMessageBox::StandardButton reply;
-        reply = QMessageBox::question(this, "Game Over", "Draw.\nDo you want to play again?", QMessageBox::Yes | QMessageBox::Close);
-		
+		reply = QMessageBox::question(this, "Game Over", "Draw.\nDo you want to play again?", QMessageBox::Yes | QMessageBox::Close);
+
 		if (reply == QMessageBox::Yes)
 		{
-            m_game->ResetGame();
+			m_game->ResetGame();
 		}
 		else
 		{
 			Exit();
 		}
-    }
-    else
-    {
-        m_game->DeclineDrawProposal();
-    }
+	}
+	else
+	{
+		m_game->DeclineDrawProposal();
+	}
 }
 
 void ChessUIQt::OnSaveInClipboardButtonClicked()
 {
-    QString textToCopy;
+	QString textToCopy;
 
-    for (int i = 0; i < 8; i++)
-    {
-        for (int j = 0; j < 8; j++)
-        {
-            PieceType type = m_grid[i][j]->GetType();
-            PieceColor color = m_grid[i][j]->GetColor();
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			PieceType type = m_grid[i][j]->GetType();
+			PieceColor color = m_grid[i][j]->GetColor();
 
-            char piece;
+			char piece;
 
 			switch (type) {
 			case PieceType::none:
-                piece = ' ';
+				piece = ' ';
 				break;
 			case PieceType::king:
-                piece = 'k';
+				piece = 'k';
 				break;
 			case PieceType::rook:
-                piece = 'r';
+				piece = 'r';
 				break;
 			case PieceType::bishop:
-                piece = 'b';
+				piece = 'b';
 				break;
 			case PieceType::queen:
-                piece = 'q';
+				piece = 'q';
 				break;
 			case PieceType::knight:
-                piece = 'h';
+				piece = 'h';
 				break;
 			case PieceType::pawn:
-                piece = 'p';
+				piece = 'p';
 				break;
 			default:
-                piece = '*';
+				piece = '*';
 				break;
 			}
 
-            if (color == PieceColor::black)
-                piece = std::toupper(piece);   // include to upper if it doesn t work //
+			if (color == PieceColor::black)
+				piece = std::toupper(piece);   // include to upper if it doesn t work //
 
-            textToCopy.append("\'");
-            textToCopy.append(piece);
-            textToCopy.append("\', ");
-        }
-        textToCopy.append("\n");
-    }
-    textToCopy.chop(3);
-    
-    QClipboard* clipboard = QGuiApplication::clipboard();
-    clipboard->setText(textToCopy);
+			textToCopy.append("\'");
+			textToCopy.append(piece);
+			textToCopy.append("\', ");
+		}
+		textToCopy.append("\n");
+	}
+	textToCopy.chop(3);
+
+	QClipboard* clipboard = QGuiApplication::clipboard();
+	clipboard->setText(textToCopy);
 }
 
 void ChessUIQt::OnHistoryClicked(QTableWidgetItem* item)
 {
-    int selectedIndex = m_MovesTable->currentRow();
+	int selectedRow = m_MovesTable->currentRow();
+	int selectedCol = m_MovesTable->currentColumn();
 
-	bool isLastHistoryItem = (selectedIndex == m_MovesTable->rowCount() - 1);
+	bool isLastHistoryItem = (m_game->GetNumberOfMoves() - 1 == 1 + 2 * selectedRow + selectedCol);
 
 	for (int i = 0; i < 8; i++) 
 	{
@@ -653,19 +656,12 @@ void ChessUIQt::OnHistoryClicked(QTableWidgetItem* item)
 			{
 				// Reconnect Clicked signal to m_grid if the last history item is selected
 				connect(m_grid[i][j], &GridButton::Clicked, this, &ChessUIQt::OnButtonClicked);
+				item->setSelected(false);
 			}
 		}
 	}
 
-	CharBoard board;
-	if (isLastHistoryItem && m_game->GetNumberOfMoves() % 2 == 0)
-	{
-		board = m_game->GetBoardAtIndex((selectedIndex + 1) * 2 - 1);
-	}
-	else
-	{
-		board = m_game->GetBoardAtIndex((selectedIndex + 1) * 2);
-	}
+	CharBoard board = m_game->GetBoardAtIndex(1 + 2 * selectedRow + selectedCol);
 
 	for (int i = 0; i < 8; i++)
 	{
@@ -900,16 +896,9 @@ void ChessUIQt::LoadPGNString(QString PGNString)
 	}
 }
 
-void ChessUIQt::UpdateHistory()
+void ChessUIQt::UpdateHistory(const std::string& move)
 {
-	m_MovesTable->clear();
-
-	MoveList history = m_game->GetMoveHistory();
-
-	for (auto it : history)
-	{
-		AddMoveToHistory(QString::fromStdString(it));
-	}
+	AddMoveToHistory(QString::fromStdString(move));
 }
 
 void ChessUIQt::UpdateBoard()
@@ -1313,6 +1302,6 @@ void ChessUIQt::OnGameRestarted()
 
 void ChessUIQt::OnHistoryUpdate(std::string move)
 {
-	UpdateHistory();
+	UpdateHistory(move);
 }
 

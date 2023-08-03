@@ -248,11 +248,6 @@ CharBoard ChessGame::GetBoardAtIndex(int index) const
 	return m_boardConfigurations.at(index);
 }
 
-int ChessGame::GetNumberOfMoves() const
-{
-	return m_boardConfigurations.size();
-}
-
 bool ChessGame::CheckStaleMate() const
 {
 	if (m_state != EGameState::MovingPiece)
@@ -531,8 +526,11 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 	}
 
 	m_PGNFormat.AddMove(move);
-
-	Notify(ENotification::HistoryUpdate);
+	if (m_turn == EColor::Black)
+	{
+		m_turnCount++;
+	}
+	Notify(ENotification::HistoryUpdate, move);
 }
 
 void ChessGame::MakeMoveFromString(std::string& move)
@@ -745,8 +743,11 @@ void ChessGame::MakeMoveFromString(std::string& move)
 	}
 
 	m_PGNFormat.AddMove(move);
-
-	Notify(ENotification::HistoryUpdate);
+	if (m_turn == EColor::Black)
+	{
+		m_turnCount++;
+	}
+	Notify(ENotification::HistoryUpdate, move);
 }
 
 void ChessGame::UpgradePawn(EType upgradeType)
@@ -1299,6 +1300,11 @@ Position ChessGame::GetPiecePositionWithSameTypeThatCanMoveToFinalPosition(Posit
 
 	if (!sameRow && sameCol)
 		return Position(1, -1);
+}
+
+int ChessGame::GetNumberOfMoves() const
+{
+	return m_boardConfigurations.size();
 }
 
 bool ChessGame::CheckThreeFoldRepetition()
