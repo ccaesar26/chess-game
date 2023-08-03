@@ -51,9 +51,6 @@
     <ClInclude Include="include\IChessGameListener.h">
       <Filter>Header Files\API</Filter>
     </ClInclude>
-    <ClInclude Include="include\IFormatListener.h">
-      <Filter>Header Files\API</Filter>
-    </ClInclude>
     <ClInclude Include="PGNFormat.h">
       <Filter>Header Files</Filter>
     </ClInclude>
