@@ -16,6 +16,8 @@
 #include <QFileInfo>
 #include <QApplication>
 
+#include <QHeaderView>
+
 
 static EType ToETypeFromQString(const QString& s)
 {
@@ -120,7 +122,7 @@ ChessUIQt::ChessUIQt(QWidget *parent)
 	QApplication::setFont(customFont);
 
 	QPalette palette = this->palette();
-    palette.setColor(QPalette::Window, QColor("#F2D8D8"));
+    palette.setColor(QPalette::Window, QColor("#1A1A1A"));
 	this->setPalette(palette);
 
 }
@@ -141,7 +143,11 @@ void ChessUIQt::InitializeMessage(QGridLayout * mainGridLayout)
     m_MessageLabel = new QLabel();
     m_MessageLabel->setText("Waiting for white player\n");
     m_MessageLabel->setAlignment(Qt::AlignCenter);
-    m_MessageLabel->setStyleSheet("font-size: 20px; font-weight: bold;");
+    m_MessageLabel->setStyleSheet(
+	"	font-size: 20px;"
+	"	font-weight: bold;"
+	"   color: #D3D3D3;"
+	);
 
     mainGridLayout->addWidget(m_MessageLabel, 0, 1, 1, 3);
 }
@@ -170,18 +176,17 @@ void ChessUIQt::InitializeButtons(QGridLayout* mainGridLayout)
     connect(saveClipboardButton, &QPushButton::pressed, this, &ChessUIQt::OnSaveInClipboardButtonClicked);
 
 	QString buttonStyle = "QPushButton {"
-		"    background-color: #65451F;"      // Background color
+		"    background-color: #7B7B7B;"      // Background color
 		"    color: white;"                   // Text color
-		"    border: 2px solid #765827;"      // Border style
+		"    border: 2px solid #343434;"      // Border style
 		"    border-radius: 8px;"             // Border radius (rounded corners)
 		"    padding: 4px 8px;"             // Padding
 		"}"
 		"QPushButton:hover {"
-		"    background-color: #C8AE7D;"     // Color when hovered
-		"	 color: #65451F;"	
+		"    background-color: #555555;"     // Color when hovered
 		"}"
 		"QPushButton:pressed {"
-		"    background-color: #765827;"     // Color when pressed
+		"    background-color: #3F3F3F;"     // Color when pressed
 		"    color: white;"
 		"}";
 
@@ -242,30 +247,69 @@ void ChessUIQt::InitializeTimers(QGridLayout* mainGridLayout)
 
 void ChessUIQt::InitializeHistory(QGridLayout* mainGridLayout)
 {
-	m_MovesList = new QListWidget();
-	m_MovesList->setMinimumWidth(240);
-	m_MovesList->setMaximumWidth(360);
-	m_MovesList->setFocusPolicy(Qt::NoFocus);
+	m_MovesTable = new QTableWidget(); // Use QTableWidget instead of QListWidget
+	m_MovesTable->setRowCount(0);      // Set initial row count
+	m_MovesTable->setColumnCount(2);   // Set the number of columns
+	m_MovesTable->setMinimumWidth(240);
+	m_MovesTable->setMaximumWidth(360);
+	m_MovesTable->setFocusPolicy(Qt::NoFocus);
 
-	QString buttonStyle = "QListWidget {"
-		"    border: 2px solid #765827;"       // Border style
-		"    border-radius: 8px;"              // Border radius (rounded corners)
-		"    padding: 4px 8px;"                // Padding
+	m_MovesTable->horizontalHeader()->setVisible(false);
+	m_MovesTable->verticalHeader()->setVisible(false);
+
+	m_MovesTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
+	QString cellStyle = "QTableWidget {"
+		"    border: 2px solid #343434;"
+		"    border-radius: 8px;"
 		"    margin: 8px;"
+		"    background-color: white;"
 		"}"
-		"QListWidget::item:selected {"
-		"    background-color: #EAC696;"       // Green background color for selected item
-		"    color: #765827;"                    // White text color for selected item
-		"    border: 2px solid #EAC696;"
+		"QTableWidget::item {"
+		"    padding: 2px;"
+		"    margin: 2px;"
+		"}"
+		"QTableWidget::item:selected {"
+		"    background-color: #5A5A5A;"
+		"    color: white;"
+		"    border: 2px solid #5A5A5A;"
 		"    border-radius: 4px;"
 		"    outline: none;"
 		"}";
 
-	m_MovesList->setStyleSheet(buttonStyle);
+	m_MovesTable->setStyleSheet(cellStyle);
 
-	connect(m_MovesList, &QListWidget::itemActivated, this, &ChessUIQt::OnHistoryClicked);
-	mainGridLayout->addWidget(m_MovesList, 1, 0, 1, 1);
+	connect(m_MovesTable, &QTableWidget::itemActivated, this, &ChessUIQt::OnHistoryClicked);
+	mainGridLayout->addWidget(m_MovesTable, 1, 0, 1, 1);
 }
+
+// Function to add a move to the history
+void ChessUIQt::AddMoveToHistory(const QString& moveText)
+{
+	int rowCount = m_MovesTable->rowCount();
+	QTableWidgetItem* moveItem = new QTableWidgetItem(moveText);
+
+	bool isFirstCol = false;
+	for (auto it : moveText)
+	{
+		if (it == '.')
+		{
+			isFirstCol = true;
+			break;
+		}
+	}
+
+	if (isFirstCol)
+	{
+		m_MovesTable->insertRow(rowCount);
+		m_MovesTable->setItem(rowCount, 0, moveItem);
+	}
+	else
+	{
+		m_MovesTable->setItem(rowCount - 1, 1, moveItem);
+	}
+}
+
 
 void ChessUIQt::InitializeBoard(QGridLayout* mainGridLayout)
 {
@@ -284,7 +328,7 @@ void ChessUIQt::InitializeBoard(QGridLayout* mainGridLayout)
 		rowLabel->setFont(rowFont);
 
 		QPalette rowPalette = rowLabel->palette();
-		rowPalette.setColor(QPalette::WindowText, QColor("#84A7A1"));
+		rowPalette.setColor(QPalette::WindowText, QColor("#FFD89C"));
 		rowLabel->setPalette(rowPalette);
 
 		for (int j = 0; j < 8; j++)
@@ -307,7 +351,7 @@ void ChessUIQt::InitializeBoard(QGridLayout* mainGridLayout)
         colLabel->setFont(colFont);
 
 		QPalette colPalette = colLabel->palette();
-		colPalette.setColor(QPalette::WindowText, QColor("#84A7A1"));
+		colPalette.setColor(QPalette::WindowText, QColor("#FFD89C"));
 		colLabel->setPalette(colPalette);
 	}
 
@@ -326,7 +370,7 @@ void ChessUIQt::InitializeCapturedBoxes(QGridLayout* mainGridLayout)
 		for (int j = 0; j < 8; j++)
 		{
 			m_capturedGrid[i][j] = new GridButton({ j,i }, PieceType::none, PieceColor::none);
-			m_capturedGrid[i][j]->setStyleSheet("background-color: #d6c4b8; border: none;");
+			m_capturedGrid[i][j]->setStyleSheet("background-color: #343434; border: none;");
 			capturedGrid1->addWidget(m_capturedGrid[i][j], j, i);
 			capturedGrid1->setSpacing(0);
 		}
@@ -344,7 +388,7 @@ void ChessUIQt::InitializeCapturedBoxes(QGridLayout* mainGridLayout)
 		for (int j = 0; j < 8; j++)
 		{
 			m_capturedGrid[i][j] = new GridButton({ j,i }, PieceType::none, PieceColor::none);
-			m_capturedGrid[i][j]->setStyleSheet("background-color: #d6c4b8; border: none;");
+			m_capturedGrid[i][j]->setStyleSheet("background-color: #343434; border: none;");
 			capturedGrid2->addWidget(m_capturedGrid[i][j], j, i);
 			capturedGrid2->setSpacing(0);
 		}
@@ -499,104 +543,105 @@ void ChessUIQt::OnLoadButtonClicked()
 void ChessUIQt::OnRestartButtonClicked()
 {
 	QMessageBox::StandardButton reply;
-	reply = QMessageBox::question(this, "Restart", "All progress will be lost. Are you sure?", QMessageBox::Yes | QMessageBox::No);
+reply = QMessageBox::question(this, "Restart", "All progress will be lost. Are you sure?", QMessageBox::Yes | QMessageBox::No);
 
-	if (reply == QMessageBox::Yes)
-	{
-        m_game->ResetGame();
-	}
+if (reply == QMessageBox::Yes)
+{
+	m_game->ResetGame();
+}
 }
 
 void ChessUIQt::OnDrawButtonClicked()
 {
-    //TODO MODIFY ME
-    m_game->RequestDraw();
+	//TODO MODIFY ME
+	m_game->RequestDraw();
 
-    QMessageBox::StandardButton reply;
-    reply = QMessageBox::question(this, "Draw proposal", "Do you accept a draw?", QMessageBox::Yes | QMessageBox::No);
+	QMessageBox::StandardButton reply;
+	reply = QMessageBox::question(this, "Draw proposal", "Do you accept a draw?", QMessageBox::Yes | QMessageBox::No);
 
-    if (reply == QMessageBox::Yes) 
-    {
+	if (reply == QMessageBox::Yes)
+	{
 		m_game->AcceptDrawProposal();
 		m_MessageLabel->setText("Game over!\nDraw.");
 		QMessageBox::StandardButton reply;
-        reply = QMessageBox::question(this, "Game Over", "Draw.\nDo you want to play again?", QMessageBox::Yes | QMessageBox::Close);
-		
+		reply = QMessageBox::question(this, "Game Over", "Draw.\nDo you want to play again?", QMessageBox::Yes | QMessageBox::Close);
+
 		if (reply == QMessageBox::Yes)
 		{
-            m_game->ResetGame();
+			m_game->ResetGame();
 		}
 		else
 		{
 			Exit();
 		}
-    }
-    else
-    {
-        m_game->DeclineDrawProposal();
-    }
+	}
+	else
+	{
+		m_game->DeclineDrawProposal();
+	}
 }
 
 void ChessUIQt::OnSaveInClipboardButtonClicked()
 {
-    QString textToCopy;
+	QString textToCopy;
 
-    for (int i = 0; i < 8; i++)
-    {
-        for (int j = 0; j < 8; j++)
-        {
-            PieceType type = m_grid[i][j]->GetType();
-            PieceColor color = m_grid[i][j]->GetColor();
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			PieceType type = m_grid[i][j]->GetType();
+			PieceColor color = m_grid[i][j]->GetColor();
 
-            char piece;
+			char piece;
 
 			switch (type) {
 			case PieceType::none:
-                piece = ' ';
+				piece = ' ';
 				break;
 			case PieceType::king:
-                piece = 'k';
+				piece = 'k';
 				break;
 			case PieceType::rook:
-                piece = 'r';
+				piece = 'r';
 				break;
 			case PieceType::bishop:
-                piece = 'b';
+				piece = 'b';
 				break;
 			case PieceType::queen:
-                piece = 'q';
+				piece = 'q';
 				break;
 			case PieceType::knight:
-                piece = 'h';
+				piece = 'h';
 				break;
 			case PieceType::pawn:
-                piece = 'p';
+				piece = 'p';
 				break;
 			default:
-                piece = '*';
+				piece = '*';
 				break;
 			}
 
-            if (color == PieceColor::black)
-                piece = std::toupper(piece);   // include to upper if it doesn t work //
+			if (color == PieceColor::black)
+				piece = std::toupper(piece);   // include to upper if it doesn t work //
 
-            textToCopy.append("\'");
-            textToCopy.append(piece);
-            textToCopy.append("\', ");
-        }
-        textToCopy.append("\n");
-    }
-    textToCopy.chop(3);
-    
-    QClipboard* clipboard = QGuiApplication::clipboard();
-    clipboard->setText(textToCopy);
+			textToCopy.append("\'");
+			textToCopy.append(piece);
+			textToCopy.append("\', ");
+		}
+		textToCopy.append("\n");
+	}
+	textToCopy.chop(3);
+
+	QClipboard* clipboard = QGuiApplication::clipboard();
+	clipboard->setText(textToCopy);
 }
 
-void ChessUIQt::OnHistoryClicked(QListWidgetItem* selectedItem)
+void ChessUIQt::OnHistoryClicked(QTableWidgetItem* item)
 {
-    int selectedIndex = m_MovesList->currentRow();
+	int selectedRow = m_MovesTable->currentRow();
+	int selectedCol = m_MovesTable->currentColumn();
 
-	bool isLastHistoryItem = (selectedIndex == m_MovesList->count() - 1);
+	bool isLastHistoryItem = (m_game->GetNumberOfMoves() - 1 == 1 + 2 * selectedRow + selectedCol);
 
 	for (int i = 0; i < 8; i++) 
 	{
@@ -611,19 +656,12 @@ void ChessUIQt::OnHistoryClicked(QListWidgetItem* selectedItem)
 			{
 				// Reconnect Clicked signal to m_grid if the last history item is selected
 				connect(m_grid[i][j], &GridButton::Clicked, this, &ChessUIQt::OnButtonClicked);
+				item->setSelected(false);
 			}
 		}
 	}
 
-	CharBoard board;
-	if (isLastHistoryItem)
-	{
-		board = m_game->GetBoardAtIndex((selectedIndex + 1) * 2 - 1);
-	}
-	else
-	{
-		board = m_game->GetBoardAtIndex((selectedIndex + 1) * 2);
-	}
+	CharBoard board = m_game->GetBoardAtIndex(1 + 2 * selectedRow + selectedCol);
 
 	for (int i = 0; i < 8; i++)
 	{
@@ -858,16 +896,9 @@ void ChessUIQt::LoadPGNString(QString PGNString)
 	}
 }
 
-void ChessUIQt::UpdateHistory()
+void ChessUIQt::UpdateHistory(const std::string& move)
 {
-	m_MovesList->clear();
-
-	MoveList history = m_game->GetMoveHistory();
-
-	for (auto it : history)
-	{
-		m_MovesList->addItem(QString::fromStdString(it));
-	}
+	AddMoveToHistory(QString::fromStdString(move));
 }
 
 void ChessUIQt::UpdateBoard()
@@ -989,7 +1020,7 @@ void ChessUIQt::UpdateCaptures()
 			m_capturedGrid[i][j]->setPiece(newPiece);
 			m_capturedGrid[i][j]->setSelected(false);
 			m_capturedGrid[i][j]->setHighlighted(false);
-			m_capturedGrid[i][j]->setStyleSheet("background-color: #d6c4b8; border: none;");
+			m_capturedGrid[i][j]->setStyleSheet("background-color: #343434; border: none;");
 
 			it++;
 		}
@@ -1044,7 +1075,7 @@ void ChessUIQt::UpdateCaptures()
 			m_capturedGrid[i][j]->setPiece(newPiece);
 			m_capturedGrid[i][j]->setSelected(false);
 			m_capturedGrid[i][j]->setHighlighted(false);
-			m_capturedGrid[i][j]->setStyleSheet("background-color: #d6c4b8; border: none;");
+			m_capturedGrid[i][j]->setStyleSheet("background-color: #343434; border: none;");
 
 			it++;
 		}
@@ -1269,8 +1300,8 @@ void ChessUIQt::OnGameRestarted()
 	}
 }
 
-void ChessUIQt::OnHistoryUpdate()
+void ChessUIQt::OnHistoryUpdate(std::string move)
 {
-	UpdateHistory();
+	UpdateHistory(move);
 }
 

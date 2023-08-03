@@ -106,7 +106,6 @@ public:
 
 	void AddListener(IChessGameListenerPtr listener) override;
 	void RemoveListener(IChessGameListener* listener) override;
-
 private:
 
 	// Game's Logic //
@@ -121,6 +120,7 @@ private:
 	Position GetMovingDirections(const Position& checkPiecePos) const;
 	PositionList GetToBlockPositions(const Position& checkPiecePos) const;
 	Position GetPiecePositionWithSameTypeThatCanMoveToFinalPosition(Position initialPos, Position finalPos, EType currentPieceType);
+	int GetNumberOfMoves() const override;
 	
 	void AddCastle(Position kingPosition, PositionList& kingPossibleMoves) const;
 
@@ -139,6 +139,7 @@ private:
 
 	void Notify(ENotification notif, Position init, Position fin);
 	void Notify(ENotification notif, Position pos);
+	void Notify(ENotification notif, std::string move);
 	void Notify(ENotification notif);
 
 	// Static Methods //

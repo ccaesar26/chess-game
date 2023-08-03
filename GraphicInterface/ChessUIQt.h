@@ -5,6 +5,7 @@
 #include <QPushButton>
 #include <QLabel>
 #include <QListWidget>
+#include <QTableWidget>
 #include <QFileDialog>
 #include <QFile>
 
@@ -29,7 +30,7 @@ public:
     void InitializeBoard(QGridLayout* mainGridLayout);
     void InitializeCapturedBoxes(QGridLayout* mainGridLayout);
 
-    void UpdateHistory();
+    void UpdateHistory(const std::string& move);
     void UpdateBoard();
     void UpdateCaptures();
 
@@ -48,7 +49,7 @@ public:
     void OnPawnUpgrade(Position pos) override;
     void OnCheck() override;
     void OnGameRestarted() override;
-    void OnHistoryUpdate() override;
+    void OnHistoryUpdate(std::string move) override;
 
 public slots:
     void OnButtonClicked(const Position& position);
@@ -58,7 +59,7 @@ public slots:
     void OnRestartButtonClicked();
     void OnDrawButtonClicked();
     void OnSaveInClipboardButtonClicked();
-    void OnHistoryClicked(QListWidgetItem* item);
+    void OnHistoryClicked(QTableWidgetItem* item);
 
 signals:
     void Exit();
@@ -71,13 +72,15 @@ private:
     QString PGNStringFromBoard() const;
     void LoadPGNString(QString PGNString);
 
+    void AddMoveToHistory(const QString& moveText);
+
 private:
     std::array<std::array<GridButton*, 8>, 8> m_grid;
     std::array<std::array<GridButton*, 8>, 4> m_capturedGrid;
 
     std::optional<Position> m_selectedCell;
     QLabel* m_MessageLabel;
-    QListWidget* m_MovesList;
+    QTableWidget* m_MovesTable;
     QLabel* m_BlackTimer, *m_WhiteTimer;
 
     IChessGame* m_game;

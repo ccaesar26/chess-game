@@ -526,8 +526,11 @@ void ChessGame::MakeMove(Position initialPosition, Position finalPosition)
 	}
 
 	m_PGNFormat.AddMove(move);
-
-	Notify(ENotification::HistoryUpdate);
+	if (m_turn == EColor::Black)
+	{
+		m_turnCount++;
+	}
+	Notify(ENotification::HistoryUpdate, move);
 }
 
 void ChessGame::MakeMoveFromString(std::string& move)
@@ -740,8 +743,11 @@ void ChessGame::MakeMoveFromString(std::string& move)
 	}
 
 	m_PGNFormat.AddMove(move);
-
-	Notify(ENotification::HistoryUpdate);
+	if (m_turn == EColor::Black)
+	{
+		m_turnCount++;
+	}
+	Notify(ENotification::HistoryUpdate, move);
 }
 
 void ChessGame::UpgradePawn(EType upgradeType)
@@ -877,6 +883,21 @@ void ChessGame::Notify(ENotification notif, Position pos)
 	}
 }
 
+void ChessGame::Notify(ENotification notif, std::string move)
+{
+	if (notif != ENotification::HistoryUpdate)
+	{
+		return;
+	}
+	for (auto it = m_listeners.begin(); it != m_listeners.end(); it++)
+	{
+		if (auto sp = it->lock())
+		{
+			sp->OnHistoryUpdate(move);
+		}
+	}
+}
+
 void ChessGame::Notify(ENotification notif)
 {
 	for (auto it = m_listeners.begin(); it != m_listeners.end(); it++)
@@ -900,9 +921,6 @@ void ChessGame::Notify(ENotification notif)
 				break;
 			case ENotification::Reset:
 				sp->OnGameRestarted();
-			case ENotification::HistoryUpdate:
-				sp->OnHistoryUpdate();
-				break;
 			default:
 				break;
 			}
@@ -1282,6 +1300,11 @@ Position ChessGame::GetPiecePositionWithSameTypeThatCanMoveToFinalPosition(Posit
 
 	if (!sameRow && sameCol)
 		return Position(1, -1);
+}
+
+int ChessGame::GetNumberOfMoves() const
+{
+	return m_boardConfigurations.size();
 }
 
 bool ChessGame::CheckThreeFoldRepetition()

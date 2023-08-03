@@ -24,6 +24,7 @@ public:
 	virtual IPieceList GetCapturedPieces(EColor color) const = 0;
 	virtual EColor GetCurrentPlayer() const = 0;
 	virtual CharBoard GetBoardAtIndex(int index) const = 0;
+	virtual int GetNumberOfMoves() const = 0;
 
 	virtual void LoadGameFromPGNFormat(std::string& PGNString) = 0;
 	virtual std::string GetPGNFormat() const = 0;

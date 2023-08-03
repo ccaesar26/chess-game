@@ -91,7 +91,7 @@ char Piece::ToLetter() const
 	case EType::Pawn:
 		return GetColor() == EColor::White ? 'p' : 'P';
 	}
-	return 'p';
+	return ' ';
 }
 
 PositionList Piece::GetFinalPositionsFromMovementArray(const std::array<Position, 8>& possibleMovements, 
