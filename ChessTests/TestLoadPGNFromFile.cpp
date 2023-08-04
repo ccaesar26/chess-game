@@ -25,3 +25,25 @@ TEST(TestLoadPGNFromFile, LoadPass_1)
 
 	EXPECT_EQ(CompareCharBoardWithNormalBoard(expectedBoard, game), true);
 }
+
+TEST(TestLoadPGNFromFile, LoadPass_2)
+{
+	ChessGame game;
+
+	bool isLoaded = game.LoadPGNFromFile(".\\TestsForLoadingPGN\\Test2Pass.pgn");
+	EXPECT_EQ(isLoaded, true);
+
+	std::array<std::array<char, 8>, 8> expectedBoard =
+	{
+		'q', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
+		' ', ' ', ' ', ' ', ' ', 'r', ' ', 'K',
+		' ', ' ', ' ', 'p', ' ', 'q', ' ', ' ',
+		' ', ' ', ' ', ' ', 'P', ' ', ' ', ' ',
+		' ', ' ', ' ', 'p', ' ', ' ', ' ', ' ',
+		' ', ' ', ' ', ' ', 'b', 'h', ' ', ' ',
+		' ', ' ', ' ', ' ', 'p', 'p', ' ', ' ',
+		' ', 'B', ' ', ' ', 'k', 'b', ' ', ' '
+	};
+
+	EXPECT_EQ(CompareCharBoardWithNormalBoard(expectedBoard, game), true);
+}
