@@ -871,9 +871,20 @@ QString ChessUIQt::PGNStringFromBoard() const
 
 void ChessUIQt::LoadPGNString(QString& filePath)
 {
-	//std::string PGNNormalString = PGNString.toStdString();
+	// Copie la joc //
+
+	IChessGamePtr LoadedGame = IChessGame::CreateGame();
+
 	std::string StringFilePath = filePath.toStdString();
-	m_game->LoadGameFromPGNFormat(StringFilePath);
+	if (!LoadedGame->LoadPGNFromFile(StringFilePath))
+	{
+		// Display message and restore the game //
+		return;
+	}
+	
+	m_game->ResetGame();
+	m_game->LoadPGNFromFile(StringFilePath);
+
 	UpdateBoard();
 	UpdateCaptures();
 	switch (m_game->GetCurrentPlayer())

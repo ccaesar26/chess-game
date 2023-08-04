@@ -201,9 +201,6 @@ void ChessGame::SaveConfiguration()
 
 bool ChessGame::LoadPGNFromFile(const std::string& fileName)
 {
-	ResetBoard();
-	InitializeChessGame();
-
 	PGNReader reader;
 
 	if (!reader.LoadFromFile(fileName))
