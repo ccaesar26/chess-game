@@ -94,7 +94,7 @@ char Piece::ToLetter() const
 	return ' ';
 }
 
-PositionList Piece::GetFinalPositionsFromMovementArray(const std::array<Position, 8>& possibleMovements, 
+PositionList Piece::GetFinalPositionsFromMovementArray(const std::array<Position, 8>& possibleMovements,
 	std::function<PiecePtr(Position)> GetPieceFromBoard) const
 {
 	PositionList finalPositions;

@@ -161,6 +161,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MakeMoveTests.cpp" />
     <ClCompile Include="TestIListener.cpp" />
+    <ClCompile Include="TestLoadPGNFromFile.cpp" />
     <ClCompile Include="TestPGNBuilder.cpp" />
     <ClCompile Include="TestPGNReader.cpp" />
     <ClCompile Include="TestVerifyCheckMate.cpp" />

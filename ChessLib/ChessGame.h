@@ -66,6 +66,7 @@ public:
 	void ResetGame() override;
 	void RestoreGame(const CharBoard& inputConfig, EColor turn = EColor::White, CastleValues castle = { true, true, true, true }) override;
 
+	PiecePtr GetPieceFromBoard(Position pos) const;
 	IPiecePtr GetIPiecePtr(Position pos) const override;
 	PositionList GetPossibleMoves(Position currentPos) const override;
 	IPieceList GetCapturedPieces(EColor color) const override;

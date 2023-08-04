@@ -240,6 +240,11 @@ std::string ChessGame::GetPGNFormat() const
 	return m_PGNFormat.GetPGNFormat();
 }
 
+PiecePtr ChessGame::GetPieceFromBoard(Position pos) const
+{
+	return m_board[pos.row][pos.col];
+}
+
 IPiecePtr ChessGame::GetIPiecePtr(Position pos) const
 {
 	if(IsInMatrix(pos))
