@@ -81,12 +81,26 @@ TEST(TestLoadFromFile, TestFromFile_4)
 
 	bool canLoad = reader.LoadFromFile(".\\TestsForLoadingPGN\\Test4Pass.pgn");
 
-
 	EXPECT_EQ(canLoad, true);
 
 	StringMoveList moveList = reader.GetMoves();
 
 	StringMoveList expectedMoveList = { "f4" , "e6" , "g4" , "Qh4" };
+
+	EXPECT_EQ(CompareStringMoveLists(moveList, expectedMoveList), true);
+}
+
+TEST(TestLoadFromFile, TestFromFile_5)
+{
+	PGNReader reader;
+
+	bool canLoad = reader.LoadFromFile(".\\TestsForLoadingPGN\\Test5Pass.pgn");
+
+	EXPECT_EQ(canLoad, true);
+
+	StringMoveList moveList = reader.GetMoves();
+
+	StringMoveList expectedMoveList = { "e4" , "f5" , "Qf3" , "g5" , "Qh5" };
 
 	EXPECT_EQ(CompareStringMoveLists(moveList, expectedMoveList), true);
 }
