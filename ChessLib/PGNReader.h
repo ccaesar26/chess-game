@@ -12,10 +12,10 @@ public:
 
 	PGNReader();
 
-	bool LoadFromFile(std::string& fileName);
+	bool LoadFromFile(const std::string& fileName);
 	bool LoadFromString(const std::string& str);
 
-	const StringMoveList& GetMoves();
+	const StringMoveList& GetMoves() const;
 
 private:
 

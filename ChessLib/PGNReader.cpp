@@ -7,7 +7,7 @@
 PGNReader::PGNReader()
 {}
 
-bool PGNReader::LoadFromFile(std::string& fileName)
+bool PGNReader::LoadFromFile(const std::string& fileName)
 {
 	std::ifstream fileStream(fileName);
 
@@ -41,7 +41,7 @@ bool PGNReader::LoadFromString(const std::string& str)
 	return true;
 }
 
-const StringMoveList& PGNReader::GetMoves()
+const StringMoveList& PGNReader::GetMoves() const
 {
 	return m_moves;
 }

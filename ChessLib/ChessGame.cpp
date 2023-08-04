@@ -199,7 +199,7 @@ void ChessGame::SaveConfiguration()
 
 // Virtual Implementations //
 
-void ChessGame::LoadGameFromPGNFormat(std::string& fileName)
+bool ChessGame::LoadPGNFromFile(const std::string& fileName)
 {
 	ResetBoard();
 	InitializeChessGame();
@@ -207,9 +207,7 @@ void ChessGame::LoadGameFromPGNFormat(std::string& fileName)
 	PGNReader reader;
 
 	if (!reader.LoadFromFile(fileName))
-	{
-		// throw exception  couldn t open file //
-	}
+		return false;
 
 	auto moves = reader.GetMoves();
 	for (auto& move : moves)
@@ -228,29 +226,16 @@ void ChessGame::LoadGameFromPGNFormat(std::string& fileName)
 
 		ConvertMoveToPositions(move, initialPosition, finalPosition);
 
-		MakeMove(initialPosition,finalPosition,false,upgradeType);
+		try
+		{
+			MakeMove(initialPosition, finalPosition, false, upgradeType);
+		}
+		catch (const std::exception& e)
+		{
+			return false;
+		}
 	}
-
-	//if (!reader.LoadFromFile(file))
-	//	// ....
-	//auto moves = reader.GetMoves();
-	//for (const auto& move : moves)
-	//	MakeMoveFromString(move);
-
-	//PGNString = std::regex_replace(PGNString, std::regex("\\b\\d+\\. |[+#x*]"), "");
-
-	//std::string move="";
-
-	//for (int i = 0; i < PGNString.size(); i++)
-	//{
-	//	if (PGNString[i] != ' ')
-	//		move += PGNString[i];
-	//	else
-	//	{
-	//		MakeMoveFromString(move);
-	//		move = "";
-	//	}
-	//}
+	return true;
 }
 
 std::string ChessGame::GetPGNFormat() const

@@ -77,7 +77,7 @@ public:
 
 	// Virtual Implementations //
 
-	void LoadGameFromPGNFormat(std::string& PGNString) override;
+	bool LoadPGNFromFile(const std::string& fileName) override;
 	std::string GetPGNFormat() const override;
 
 	bool CheckCheckMate() const ;
