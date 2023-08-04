@@ -21,7 +21,7 @@ TEST(TestLoadFromFile, TestFromFile_1)
 {
 	PGNReader reader;
 
-	bool canLoad = reader.LoadFromFile(".\\TestsForLoadingPGN\\FourBishopTest.pgn");
+	bool canLoad = reader.LoadFromFile(".\\TestsForLoadingPGN\\Test1Pass.pgn");
 
 
 	EXPECT_EQ(canLoad, true);
@@ -42,7 +42,7 @@ TEST(TestLoadFromFile, TestFromFile_2)
 {
 	PGNReader reader;
 
-	bool canLoad = reader.LoadFromFile(".\\TestsForLoadingPGN\\CezarGame.pgn");
+	bool canLoad = reader.LoadFromFile(".\\TestsForLoadingPGN\\Test2Pass.pgn");
 
 
 	EXPECT_EQ(canLoad, true);
