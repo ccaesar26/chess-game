@@ -26,11 +26,8 @@ public:
 	virtual CharBoard GetBoardAtIndex(int index) const = 0;
 	virtual int GetNumberOfMoves() const = 0;
 
-	//virtual void LoadFromPgnFile(const std::string& file) const = 0;
 	virtual bool LoadPGNFromFile(const std::string& fileName) = 0;
 	virtual std::string GetPGNFormat() const = 0;
-
-	//virtual std::string GetFEN() const = 0;
 
 	virtual void MakeMove(Position initialPos, Position finalPos, bool EnableNotification = true, EType upgradeType = EType::Pawn) = 0;
 
