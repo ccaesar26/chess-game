@@ -3,6 +3,9 @@
 #include "PGNReader.h"
 #include "Utility.h"
 
+#include <iostream>
+#include <regex>
+
 
 bool CompareStringMoveLists(const StringMoveList List1, const StringMoveList List2)
 {
@@ -17,7 +20,29 @@ bool CompareStringMoveLists(const StringMoveList List1, const StringMoveList Lis
 	return true;
 }
 
-TEST(TestLoadFromFile, TestFromFile_1)
+// This function is used to generate the string moves in a specific format but is not used in the program//
+
+std::string GetMoveStringForTests(const std::string& str)
+{
+	std::string move;
+	std::string new_string;
+
+	for (char c : str)
+	{
+		if (c != ' ')
+			move += c;
+		else
+		{
+			move = std::regex_replace(move, std::regex("(\\b\\d+\\.\\s*)|\\s+|[+#x*]|1/2-1/2"), "");
+			if (!move.empty())
+				new_string = new_string + "\"" + move + "\"" + " , ";
+			move.clear();
+		}
+	}
+	return new_string;
+}
+
+TEST(TestLoadFromFile, TestFromFilePass_1)
 {
 	PGNReader reader;
 
@@ -37,7 +62,7 @@ TEST(TestLoadFromFile, TestFromFile_1)
 	EXPECT_EQ(CompareStringMoveLists(moveList,expectedMoveList),true);
 }
 
-TEST(TestLoadFromFile, TestFromFile_2)
+TEST(TestLoadFromFile, TestFromFilePass_2)
 {
 	PGNReader reader;
 
@@ -59,7 +84,7 @@ TEST(TestLoadFromFile, TestFromFile_2)
 	EXPECT_EQ(CompareStringMoveLists(moveList, expectedMoveList), true);
 }
 
-TEST(TestLoadFromFile, TestFromFile_3)
+TEST(TestLoadFromFile, TestFromFilePass_3)
 {
 	PGNReader reader;
 
@@ -75,7 +100,7 @@ TEST(TestLoadFromFile, TestFromFile_3)
 	EXPECT_EQ(CompareStringMoveLists(moveList, expectedMoveList), true);
 }
 
-TEST(TestLoadFromFile, TestFromFile_4)
+TEST(TestLoadFromFile, TestFromFilePass_4)
 {
 	PGNReader reader;
 
@@ -90,7 +115,7 @@ TEST(TestLoadFromFile, TestFromFile_4)
 	EXPECT_EQ(CompareStringMoveLists(moveList, expectedMoveList), true);
 }
 
-TEST(TestLoadFromFile, TestFromFile_5)
+TEST(TestLoadFromFile, TestFromFilePass_5)
 {
 	PGNReader reader;
 
