@@ -113,3 +113,11 @@ TEST(TestLoadPGNFromFile, LoadPass_5)
 
 	EXPECT_EQ(CompareCharBoardWithNormalBoard(expectedBoard, game), true);
 }
+
+TEST(TestLoadPGNFromFile, LoadFail_1)
+{
+	ChessGame game;
+
+	bool isLoaded = game.LoadPGNFromFile(".\\TestsForLoadingPGN\\Test11Fail.pgn");
+	EXPECT_EQ(isLoaded, false);
+}
