@@ -1,11 +1,8 @@
 #include "gtest/gtest.h"
 
 #include "PGNReader.h"
-#include "Utility.h"
 
-#include <iostream>
 #include <regex>
-
 
 bool CompareStringMoveLists(const StringMoveList List1, const StringMoveList List2)
 {
