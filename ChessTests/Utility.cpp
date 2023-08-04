@@ -19,8 +19,12 @@ bool CompareCharBoardWithNormalBoard(const CharBoard& charBoard, const ChessGame
 		for (int j = 0; j < 8; j++)
 		{
 			Position pos(i, j);
-			if(!chessGame.GetPieceFromBoard(pos) && charBoard[i][j] != ' ')
-			if (chessGame.GetPieceFromBoard(pos)->ToLetter() != charBoard[i][j])
+			if (!chessGame.GetPieceFromBoard(pos))
+			{
+				if (charBoard[i][j] != ' ')
+					return false;
+			}
+			else if (chessGame.GetPieceFromBoard(pos)->ToLetter() != charBoard[i][j])
 				return false;
 		}
 	}	
