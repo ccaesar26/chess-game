@@ -18,6 +18,10 @@
 
 #include <QHeaderView>
 
+#include <QRegularExpression>
+#include <QString>
+#include <QStringList>
+
 
 static EType ToETypeFromQString(const QString& s)
 {
@@ -399,6 +403,17 @@ void ChessUIQt::InitializeCapturedBoxes(QGridLayout* mainGridLayout)
 }
 
 
+void ChessUIQt::LoadHistory()
+{
+	QStringList moveList = QString::fromStdString(m_game->GetPGNFormat()).split(QRegularExpression(R"(\d+\.\s|\s|\*)"));
+
+	for (const QString& move : moveList) {
+		if (!move.trimmed().isEmpty()) {
+			UpdateHistory(move.trimmed().toStdString());
+		}
+	}
+}
+
 void ChessUIQt::OnButtonClicked(const Position& position)
 {
 	//At second click
@@ -554,14 +569,14 @@ if (reply == QMessageBox::Yes)
 void ChessUIQt::OnDrawButtonClicked()
 {
 	//TODO MODIFY ME
-	m_game->RequestDraw();
+	m_game->DrawOperation(EDrawOperation::Request);
 
 	QMessageBox::StandardButton reply;
 	reply = QMessageBox::question(this, "Draw proposal", "Do you accept a draw?", QMessageBox::Yes | QMessageBox::No);
 
 	if (reply == QMessageBox::Yes)
 	{
-		m_game->AcceptDrawProposal();
+		m_game->DrawOperation(EDrawOperation::Accept);
 		m_MessageLabel->setText("Game over!\nDraw.");
 		QMessageBox::StandardButton reply;
 		reply = QMessageBox::question(this, "Game Over", "Draw.\nDo you want to play again?", QMessageBox::Yes | QMessageBox::Close);
@@ -577,7 +592,7 @@ void ChessUIQt::OnDrawButtonClicked()
 	}
 	else
 	{
-		m_game->DeclineDrawProposal();
+		m_game->DrawOperation(EDrawOperation::Decline);
 	}
 }
 
@@ -742,22 +757,22 @@ QString ChessUIQt::FENStringFromBoard() const
 	}
 
 	bool castleFlag = false;
-	if (m_game->IsWhiteKingsideCastlingAvailable())
+	if (m_game->IsCastlingAvailable(EColor::White, ESide::Kingside))
 	{
 		config.append('K');
 		castleFlag = true;
 	}
-	if (m_game->IsWhiteQueensideCastlingAvailable())
+	if (m_game->IsCastlingAvailable(EColor::White, ESide::Queenside))
 	{
 		config.append('Q');
 		castleFlag = true;
 	}
-	if (m_game->IsBlackKingsideCastlingAvailable())
+	if (m_game->IsCastlingAvailable(EColor::Black, ESide::Kingside))
 	{
 		config.append('k');
 		castleFlag = true;
 	}
-	if (m_game->IsBlackQueensideCastlingAvailable())
+	if (m_game->IsCastlingAvailable(EColor::Black, ESide::Queenside))
 	{
 		config.append('q');
 		castleFlag = true;
@@ -1221,12 +1236,12 @@ void ChessUIQt::OnGameOver(EGameResult result)
     //m_MessageLabel->setText("Game over!\nBlack player won");
 	QMessageBox::StandardButton reply;
 
-	if (m_game->IsWonByBlackPlayer())
+	if (m_game->IsWon(EColor::Black))
 	{
         m_MessageLabel->setText("Game over!\nBlack player won");
 		reply = QMessageBox::question(this, "Game Over", "Black player won.\nDo you want to play again?", QMessageBox::Yes | QMessageBox::Close);
 	}
-	if (m_game->IsWonByWhitePlayer())
+	if (m_game->IsWon(EColor::White))
 	{
         m_MessageLabel->setText("Game over!\nWhite player won");
 		reply = QMessageBox::question(this, "Game Over", "White player won.\nDo you want to play again?", QMessageBox::Yes | QMessageBox::Close);

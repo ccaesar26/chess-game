@@ -7,6 +7,20 @@
 
 // --->		Local Static Functions				<--- //
 
+static const CharBoard DEFAULT_CHAR_BOARD = {
+	'R', 'H', 'B', 'Q', 'K', 'B', 'H', 'R',
+	'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P',
+	' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
+	' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
+	' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
+	' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
+	'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p',
+	'r', 'h', 'b', 'q', 'k', 'b', 'h', 'r'
+};
+
+static const std::string TABLE_COLUMNS("abcdefgh");
+static const std::string TABLE_ROWS("87654321");
+
 static EType GetType(char c)
 {
 	// white pieces: p r h b q k
@@ -61,7 +75,7 @@ void ChessGame::InitializeChessGame()
 
 	m_turn = EColor::White;
 	m_kingPositions = { Position(7 ,4), Position(0, 4) };
-	m_state = EGameState::MovingPiece;
+	UpdateState(EGameState::MovingPiece);
 
 	for (int i = 0; i < 2; i++)
 		for (int j = 0; j < 2; j++)
@@ -81,33 +95,15 @@ void ChessGame::InitializeChessGame()
 		m_board[7][i] = Piece::Produce(TYPES[i], EColor::White);
 	}
 
-	m_boardConfigFrequency[CharBoard({
-			'R', 'H', 'B', 'Q', 'K', 'B', 'H', 'R',
-			'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P',
-			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
-			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
-			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
-			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
-			'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p',
-			'r', 'h', 'b', 'q', 'k', 'b', 'h', 'r'
-		})] = 1;
+	m_boardConfigFrequency[DEFAULT_CHAR_BOARD] = 1;
 
-	m_boardConfigurations.push_back(CharBoard({
-			'R', 'H', 'B', 'Q', 'K', 'B', 'H', 'R',
-			'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P',
-			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
-			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
-			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
-			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
-			'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p',
-			'r', 'h', 'b', 'q', 'k', 'b', 'h', 'r'
-		}));
+	m_boardConfigurations.push_back(DEFAULT_CHAR_BOARD);
 }
 
 void ChessGame::InitializeChessGame(const CharBoard& inputConfig, EColor turn, CastleValues castle)
 {
 	m_turn = turn;
-	m_state = EGameState::MovingPiece;
+	UpdateState(EGameState::MovingPiece);
 	m_boardConfigurations.clear();
 	m_boardConfigFrequency.clear();
 
@@ -138,7 +134,7 @@ void ChessGame::InitializeChessGame(const CharBoard& inputConfig, EColor turn, C
 	}
 	if (CanBeCaptured(m_board, m_kingPositions[(int)turn]))
 	{
-		m_state = EGameState::CheckState;
+		UpdateState(EGameState::CheckState);
 	}
 
 	m_boardConfigFrequency[inputConfig] = 1;
@@ -376,7 +372,7 @@ void ChessGame::MakeMove(Position initialPos, Position finalPos, bool EnableNoti
 		throw NotInPossibleMovesException("Your move is not possible");
 	}
 
-	m_state = EGameState::MovingPiece;
+	UpdateState(EGameState::MovingPiece);
 
 	// For PGN Begin // 
 
@@ -401,8 +397,7 @@ void ChessGame::MakeMove(Position initialPos, Position finalPos, bool EnableNoti
 
 	if (pos.col != -1 && pieceLetter != 'P')
 	{
-		std::string cols = "abcdefgh";
-		move += cols[initialPos.col];
+		move += TABLE_COLUMNS[initialPos.col];
 	}
 	if (pos.row != -1 && pieceLetter != 'P')
 	{
@@ -415,8 +410,7 @@ void ChessGame::MakeMove(Position initialPos, Position finalPos, bool EnableNoti
 	{
 		if (pieceLetter == 'P')
 		{
-			std::string cols = "abcdefgh";
-			move += cols[initialPos.col];
+			move += TABLE_COLUMNS[initialPos.col];
 		}
 		move += "x";	// For PGN // 
 		if (m_turn == EColor::White)
@@ -450,7 +444,7 @@ void ChessGame::MakeMove(Position initialPos, Position finalPos, bool EnableNoti
 			m_board[finalPos.row][finalPos.col + 1] = m_board[finalPos.row][0];
 			m_board[finalPos.row][0].reset();
 			if(EnableNotification)
-				Notify(ENotification::MoveMade, Position(finalPos.row, 0), Position(finalPos.row, finalPos.col + 1));
+				NotifyMoveMade(Position(finalPos.row, 0), Position(finalPos.row, finalPos.col + 1));
 		}
 		else if (initialPos.col - finalPos.col == -2)
 		{
@@ -459,7 +453,7 @@ void ChessGame::MakeMove(Position initialPos, Position finalPos, bool EnableNoti
 			m_board[finalPos.row][finalPos.col - 1] = m_board[finalPos.row][7];
 			m_board[finalPos.row][7].reset();
 			if (EnableNotification)
-				Notify(ENotification::MoveMade, Position(finalPos.row, 7), Position(finalPos.row, finalPos.col - 1));
+				NotifyMoveMade(Position(finalPos.row, 7), Position(finalPos.row, finalPos.col - 1));
 		}
 	}
 
@@ -477,7 +471,7 @@ void ChessGame::MakeMove(Position initialPos, Position finalPos, bool EnableNoti
 	SwitchTurn();
 
 	if(EnableNotification) 
-		Notify(ENotification::MoveMade, initialPos, finalPos);
+		NotifyMoveMade(initialPos, finalPos);
 
 	if (m_board[finalPos.row][finalPos.col]->GetType() == EType::Pawn)
 	{
@@ -485,8 +479,8 @@ void ChessGame::MakeMove(Position initialPos, Position finalPos, bool EnableNoti
 		{
 			if (EnableNotification)
 			{
-				m_state = EGameState::UpgradePawn;
-				Notify(ENotification::PawnUpgrade, finalPos);
+				UpdateState(EGameState::UpgradePawn);
+				NotifyPawnUpgrade(finalPos);
 			}
 			else
 				UpgradePawn(upgradeType);		
@@ -505,8 +499,8 @@ void ChessGame::MakeMove(Position initialPos, Position finalPos, bool EnableNoti
 		{
 			if (EnableNotification)
 			{
-				m_state = EGameState::UpgradePawn;
-				Notify(ENotification::PawnUpgrade, finalPos);
+				UpdateState(EGameState::UpgradePawn);
+				NotifyPawnUpgrade(finalPos);
 			}
 			else
 				UpgradePawn(upgradeType);
@@ -524,36 +518,36 @@ void ChessGame::MakeMove(Position initialPos, Position finalPos, bool EnableNoti
 
 	SaveConfiguration();
 
-	m_state = EGameState::MovingPiece;
+	UpdateState(EGameState::MovingPiece);
 
 	if (CheckThreeFoldRepetition())
 	{
 		move += " 1/2-1/2";		// For PGN //
-
-		m_state = EGameState::Draw;
-			Notify(ENotification::GameOver);
+		
+		UpdateState(EGameState::Draw);
+		Notify(ENotification::GameOver);
 	}
 
 	if (CanBeCaptured(m_board, m_kingPositions[(int)m_turn]) == true)
 	{
 		move += "+";		// For PGN //
-
-		m_state = EGameState::CheckState;
-			Notify(ENotification::Check);
+		
+		UpdateState(EGameState::CheckState);
+		Notify(ENotification::Check);
 	}
 
 	if (CheckCheckMate())
 	{
 		move[move.length()-1] = '#';	// For PGN //
 
-		m_state = m_turn == EColor::White ? EGameState::WonByBlackPlayer : EGameState::WonByWhitePlayer;
-			Notify(ENotification::GameOver);
+		UpdateState(m_turn == EColor::White ? EGameState::WonByBlackPlayer : EGameState::WonByWhitePlayer);
+		Notify(ENotification::GameOver);
 	}
 	else if (CheckStaleMate())
 	{
 		move += "1/2-1/2";	// For PGN // 
 
-		m_state = EGameState::Draw;
+		UpdateState(EGameState::Draw);
 		Notify(ENotification::GameOver);
 	}
 
@@ -562,7 +556,7 @@ void ChessGame::MakeMove(Position initialPos, Position finalPos, bool EnableNoti
 	{
 		m_turnCount++;
 	}
-	Notify(ENotification::HistoryUpdate, move);
+	NotifyHistoryUpdate(move);
 }
 
 void ChessGame::MakeMoveFromString(std::string& move)
@@ -603,7 +597,7 @@ void ChessGame::MakeMoveFromString(std::string& move)
 		throw NotInPossibleMovesException("Your move is not possible");
 	}
 
-	m_state = EGameState::MovingPiece;
+	UpdateState(EGameState::MovingPiece);
 
 	// For PGN Begin // 
 	
@@ -628,8 +622,7 @@ void ChessGame::MakeMoveFromString(std::string& move)
 
 	if (pos.col != -1 && pieceLetter != 'P')
 	{
-		std::string cols = "abcdefgh";
-		move += cols[initialPosition.col];
+		move += TABLE_COLUMNS[initialPosition.col];
 	}
 	if (pos.row != -1 && pieceLetter != 'P')
 	{
@@ -642,8 +635,7 @@ void ChessGame::MakeMoveFromString(std::string& move)
 	{
 		if (pieceLetter == 'P')
 		{
-			std::string cols = "abcdefgh";
-			move += cols[initialPosition.col];
+			move += TABLE_COLUMNS[initialPosition.col];
 		}
 		move += "x";	// For PGN // 
 		if (m_turn == EColor::White)
@@ -676,7 +668,7 @@ void ChessGame::MakeMoveFromString(std::string& move)
 			move += "0-0-0";  // For PGN // 
 			m_board[finalPosition.row][finalPosition.col + 1] = m_board[finalPosition.row][0];
 			m_board[finalPosition.row][0].reset();
-			Notify(ENotification::MoveMade, Position(finalPosition.row, 0), Position(finalPosition.row, finalPosition.col + 1));
+			NotifyMoveMade(Position(finalPosition.row, 0), Position(finalPosition.row, finalPosition.col + 1));
 		}
 		else if (initialPosition.col - finalPosition.col == -2)
 		{
@@ -738,16 +730,14 @@ void ChessGame::MakeMoveFromString(std::string& move)
 	{
 		move += " 1/2-1/2";		// For PGN //
 
-		m_state = EGameState::Draw;
-		//Notify(ENotification::GameOver);
+		UpdateState(EGameState::Draw);
 	}
 
 	if (CanBeCaptured(m_board, m_kingPositions[(int)m_turn]) == true)
 	{
 		move += "+";		// For PGN //
 
-		m_state = EGameState::CheckState;
-		//Notify(ENotification::Check);
+		UpdateState(EGameState::CheckState);
 	}
 
 	if (CheckCheckMate())
@@ -755,15 +745,13 @@ void ChessGame::MakeMoveFromString(std::string& move)
 		// For PGN //
 		move[move.length() - 1] = '#';
 
-		m_state = m_turn == EColor::White ? EGameState::WonByBlackPlayer : EGameState::WonByWhitePlayer;
-		//Notify(ENotification::GameOver);
+		UpdateState(m_turn == EColor::White ? EGameState::WonByBlackPlayer : EGameState::WonByWhitePlayer);
 	}
 	else if (CheckStaleMate())
 	{
 		move += "1/2-1/2";	// For PGN // 
 
-		m_state = EGameState::Draw;
-		//Notify(ENotification::GameOver);
+		UpdateState(EGameState::Draw);
 	}
 
 	m_PGNFormat.AddMove(move);
@@ -771,7 +759,7 @@ void ChessGame::MakeMoveFromString(std::string& move)
 	{
 		m_turnCount++;
 	}
-	Notify(ENotification::HistoryUpdate, move);
+	NotifyHistoryUpdate(move);
 }
 
 void ChessGame::UpgradePawn(EType upgradeType)
@@ -794,19 +782,22 @@ void ChessGame::UpgradePawn(EType upgradeType)
 	}
 }
 
-void ChessGame::RequestDraw()
+void ChessGame::DrawOperation(EDrawOperation op)
 {
-	m_state = EGameState::WaitingForDrawResponse;
-}
-
-void ChessGame::AcceptDrawProposal()
-{
-	m_state = EGameState::Draw;
-}
-
-void ChessGame::DeclineDrawProposal()
-{
-	m_state = EGameState::MovingPiece;
+	switch (op)
+	{
+	case EDrawOperation::Request:
+		m_state = EGameState::WaitingForDrawResponse;
+		break;
+	case EDrawOperation::Accept:
+		m_state = EGameState::Draw;
+		break;
+	case EDrawOperation::Decline:
+		m_state = EGameState::MovingPiece;
+		break;
+	default:
+		break;
+	}
 }
 
 bool ChessGame::IsDraw() const
@@ -814,14 +805,15 @@ bool ChessGame::IsDraw() const
 	return m_state == EGameState::Draw;
 }
 
-bool ChessGame::IsWonByWhitePlayer() const
+bool ChessGame::IsWon(EColor player) const
 {
-	return m_state == EGameState::WonByWhitePlayer;
-}
-
-bool ChessGame::IsWonByBlackPlayer() const
-{
-	return m_state == EGameState::WonByBlackPlayer;
+	switch (player)
+	{
+	case EColor::White:
+		return m_state == EGameState::WonByWhitePlayer;
+	case EColor::Black:
+		return m_state == EGameState::WonByBlackPlayer;
+	}
 }
 
 bool ChessGame::IsWaitingForUpgrade() const
@@ -837,6 +829,11 @@ bool ChessGame::IsWaitingForDrawResponse() const
 bool ChessGame::IsCheckState() const
 {
 	return m_state == EGameState::CheckState;
+}
+
+bool ChessGame::IsCastlingAvailable(EColor color, ESide side) const
+{
+	return m_castle[(int)color][(int)side];
 }
 
 // Observers //
@@ -877,12 +874,8 @@ void ChessGame::RemoveListener(IChessGameListener* listener)
 	m_listeners.erase(std::remove_if(m_listeners.begin(), m_listeners.end(), f));
 }
 
-void ChessGame::Notify(ENotification notif, Position init, Position fin)
+void ChessGame::NotifyMoveMade(Position init, Position fin)
 {
-	if (notif != ENotification::MoveMade)
-	{
-		return;
-	}
 	for (auto it = m_listeners.begin(); it != m_listeners.end(); it++)
 	{
 		if (auto sp = it->lock())
@@ -892,12 +885,8 @@ void ChessGame::Notify(ENotification notif, Position init, Position fin)
 	}
 }
 
-void ChessGame::Notify(ENotification notif, Position pos)
+void ChessGame::NotifyPawnUpgrade(Position pos)
 {
-	if (notif != ENotification::PawnUpgrade)
-	{
-		return;
-	}
 	for (auto it = m_listeners.begin(); it != m_listeners.end(); it++)
 	{
 		if (auto sp = it->lock())
@@ -907,12 +896,8 @@ void ChessGame::Notify(ENotification notif, Position pos)
 	}
 }
 
-void ChessGame::Notify(ENotification notif, std::string move)
+void ChessGame::NotifyHistoryUpdate(std::string move)
 {
-	if (notif != ENotification::HistoryUpdate)
-	{
-		return;
-	}
 	for (auto it = m_listeners.begin(); it != m_listeners.end(); it++)
 	{
 		if (auto sp = it->lock())
@@ -933,9 +918,9 @@ void ChessGame::Notify(ENotification notif)
 			case ENotification::GameOver:
 			{
 				auto result = EGameResult::Draw;
-				if (IsWonByWhitePlayer())
+				if (IsWon(EColor::White))
 					result = EGameResult::WhitePlayerWon;
-				if (IsWonByBlackPlayer())
+				if (IsWon(EColor::Black))
 					result = EGameResult::BlackPlayerWon;
 				sp->OnGameOver(result);
 				break;
@@ -1032,26 +1017,6 @@ void ChessGame::AddCastle(Position kingPosition, PositionList& kingPossibleMoves
 			}
 		}
 	}
-}
-
-bool ChessGame::IsWhiteKingsideCastlingAvailable() const
-{
-	return m_castle[0][1];
-}
-
-bool ChessGame::IsWhiteQueensideCastlingAvailable() const
-{
-	return m_castle[0][0];
-}
-
-bool ChessGame::IsBlackKingsideCastlingAvailable() const
-{
-	return m_castle[1][1];
-}
-
-bool ChessGame::IsBlackQueensideCastlingAvailable() const
-{
-	return m_castle[1][0];
 }
 
 PositionList ChessGame::GetPossibleMoves(Position currentPos) const
@@ -1251,6 +1216,36 @@ void ChessGame::SwitchTurn()
 	m_turn = m_turn == EColor::White ? EColor::Black : EColor::White;
 }
 
+void ChessGame::UpdateState(EGameState state)
+{
+	switch (state)
+	{
+	case EGameState::MovingPiece:
+		m_state = EGameState::MovingPiece;
+		break;
+	case EGameState::Draw:
+		m_state = EGameState::Draw;
+		break;
+	case EGameState::WonByWhitePlayer:
+		m_state = EGameState::WonByWhitePlayer;
+		break;
+	case EGameState::WonByBlackPlayer:
+		m_state = EGameState::WonByBlackPlayer;
+		break;
+	case EGameState::UpgradePawn:
+		m_state = EGameState::UpgradePawn;
+		break;
+	case EGameState::CheckState:
+		m_state = EGameState::CheckState;
+		break;
+	case EGameState::WaitingForDrawResponse:
+		m_state = EGameState::WaitingForDrawResponse;
+		break;
+	default:
+		break;
+	}
+}
+
 bool ChessGame::CanBeCaptured(const ArrayBoard& board, Position toCapturePos) const
 {
 	EColor pieceColor = board[toCapturePos.row][toCapturePos.col]->GetColor();
@@ -1352,10 +1347,8 @@ bool ChessGame::IsInMatrix(Position pos)
 BoardPosition ChessGame::ConvertToBoardPosition(Position pos)
 {
 	BoardPosition boardPos;
-	std::string possibleRows = "87654321";
-	std::string possibleCols = "abcdefgh";
-	boardPos.first = possibleRows[pos.row];;
-	boardPos.second = possibleCols[pos.col];
+	boardPos.first = TABLE_ROWS[pos.row];;
+	boardPos.second = TABLE_COLUMNS[pos.col];
 	return boardPos;
 }
 
@@ -1394,8 +1387,7 @@ void ChessGame::ConvertMoveToPositions(std::string& move, Position& initialPos, 
 	char finalCol = move[pos - 2];
 
 	finalPos.row = 8 - (finalRow - '0');
-	std::string cols = "abcdefgh";
-	finalPos.col = cols.find(finalCol);
+	finalPos.col = TABLE_COLUMNS.find(finalCol);
 
 	char pieceLetter = move[0];
 	EType pieceType = Piece::GetTypeFromLetter(pieceLetter);
@@ -1406,7 +1398,7 @@ void ChessGame::ConvertMoveToPositions(std::string& move, Position& initialPos, 
 
 	if (move.length() == 5)
 	{
-		initialPos.col = cols.find(move[1]);
+		initialPos.col = TABLE_COLUMNS.find(move[1]);
 		initialPos.row = 8 - (move[2] - '0');
 		return;
 	}
@@ -1418,7 +1410,7 @@ void ChessGame::ConvertMoveToPositions(std::string& move, Position& initialPos, 
 		}
 		else  // If is col // 
 		{
-			initialPos.col = cols.find(move[1]);
+			initialPos.col = TABLE_COLUMNS.find(move[1]);
 		}
 	}
 	else if (move.length() == 3)
@@ -1431,7 +1423,7 @@ void ChessGame::ConvertMoveToPositions(std::string& move, Position& initialPos, 
 			}
 			else  // If is col // 
 			{
-				initialPos.col = cols.find(move[0]);
+				initialPos.col = TABLE_COLUMNS.find(move[0]);
 			}
 		}
 	}

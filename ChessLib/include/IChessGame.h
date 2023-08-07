@@ -11,6 +11,19 @@ using MoveList = std::vector<std::string>;
 using CharBoard = std::array<std::array<char, 8>, 8>;
 using CastleValues = std::array<std::array<bool, 2>, 2>;
 
+enum class EDrawOperation
+{
+	Request,
+	Accept,
+	Decline
+};
+
+enum class ESide
+{
+	Queenside,
+	Kingside
+};
+
 class IChessGame
 {
 public:
@@ -36,23 +49,17 @@ public:
 
 	virtual void UpgradePawn(EType upgradeType) = 0;
 	
-	virtual void RequestDraw() = 0;
-	virtual void AcceptDrawProposal() = 0;
-	virtual void DeclineDrawProposal() = 0;
+	virtual void DrawOperation(EDrawOperation op) = 0;
 
 	virtual bool IsGameOver() const = 0;
 	virtual bool IsDraw() const = 0;
 	virtual bool IsWaitingForDrawResponse() const = 0;
 
-	virtual bool IsWonByWhitePlayer() const = 0;
-	virtual bool IsWonByBlackPlayer() const = 0;
+	virtual bool IsWon(EColor player) const = 0;
 	virtual bool IsWaitingForUpgrade() const = 0;
 	virtual bool IsCheckState() const = 0;
 
-	virtual bool IsWhiteKingsideCastlingAvailable() const = 0;
-	virtual bool IsWhiteQueensideCastlingAvailable() const = 0;
-	virtual bool IsBlackKingsideCastlingAvailable() const = 0;
-	virtual bool IsBlackQueensideCastlingAvailable() const = 0;
+	virtual bool IsCastlingAvailable(EColor color, ESide side) const = 0;
 
 	virtual void AddListener(IChessGameListenerPtr listener) = 0;
 	virtual void RemoveListener(IChessGameListener* listener) = 0;

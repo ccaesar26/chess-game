@@ -27,13 +27,9 @@ enum class EGameState
 
 enum class ENotification
 {
-	MoveMade,
-	PawnUpgrade,
 	GameOver,
-	DrawProposal,
 	Check,
-	Reset,
-	HistoryUpdate
+	Reset
 };
 
 struct HashFunctor {
@@ -89,25 +85,22 @@ public:
 
 	void UpgradePawn(EType upgradeType) override;
 
-	void RequestDraw() override;
-	void AcceptDrawProposal() override;
-	void DeclineDrawProposal() override;
+	void DrawOperation(EDrawOperation op) override;
 
 	bool IsGameOver() const override;
 	bool IsDraw() const override;
 	bool IsWaitingForDrawResponse() const override;
-	bool IsWonByWhitePlayer() const override;
-	bool IsWonByBlackPlayer() const override;
+
+	bool IsWon(EColor player) const override;
 	bool IsWaitingForUpgrade() const override;
 	bool IsCheckState() const override;
 
-	bool IsWhiteKingsideCastlingAvailable() const override;
-	bool IsWhiteQueensideCastlingAvailable() const override;
-	bool IsBlackKingsideCastlingAvailable() const override;
-	bool IsBlackQueensideCastlingAvailable() const override;
+	bool IsCastlingAvailable(EColor color, ESide side) const override;
 
 	void AddListener(IChessGameListenerPtr listener) override;
 	void RemoveListener(IChessGameListener* listener) override;
+
+
 private:
 
 	// Game's Logic //
@@ -136,12 +129,13 @@ private:
 	bool KingsWayCanBeBlocked(const PositionList& toBlockPositions) const;
 
 	void SwitchTurn();
+	void UpdateState(EGameState);
 
 	// Observable //
 
-	void Notify(ENotification notif, Position init, Position fin);
-	void Notify(ENotification notif, Position pos);
-	void Notify(ENotification notif, std::string move);
+	void NotifyMoveMade(Position init, Position fin);
+	void NotifyPawnUpgrade(Position pos);
+	void NotifyHistoryUpdate(std::string move);
 	void Notify(ENotification notif);
 
 	// Static Methods //
