@@ -237,6 +237,14 @@ void ChessUIQt::InitializeTimers(QGridLayout* mainGridLayout)
     m_WhiteTimer = new QLabel("00:00:00");
 	m_WhiteTimer->setAlignment(Qt::AlignRight);
 
+	QString labelStyle = "QLabel {"
+		"	 color: white;"
+		"}";
+	m_BlackTimer->setStyleSheet(labelStyle);
+	m_WhiteTimer->setStyleSheet(labelStyle);
+	blackTimerLbl->setStyleSheet(labelStyle);
+	whiteTimerLbl->setStyleSheet(labelStyle);
+
     timerContainer->setFixedWidth(680);
 
     timerGrid->addWidget(blackTimerLbl, 0, 0);
