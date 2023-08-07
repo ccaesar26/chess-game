@@ -226,8 +226,9 @@ bool ChessGame::LoadPGNFromFile(const std::string& fileName)
 		{
 			MakeMove(initialPosition, finalPosition, false, upgradeType);
 		}
-		catch (const std::exception& e)
+		catch (const ChessException& e)
 		{
+			//ResetGame();
 			SetData(gameData);
 			return false;
 		}
@@ -302,6 +303,8 @@ ChessData ChessGame::GetData() const
 
 void ChessGame::SetData(const ChessData& data)
 {
+	ResetBoard();
+
 	m_board = data.board;
 	m_turn = data.turn;
 	m_turnCount = data.turnCount;
@@ -351,6 +354,7 @@ bool ChessGame::IsGameOver() const
 {
 	if (m_state == EGameState::Draw || m_state == EGameState::WonByWhitePlayer || m_state == EGameState::WonByBlackPlayer)
 		return true;
+	return false;
 }
 
 bool ChessGame::CheckCheckMate() const

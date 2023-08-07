@@ -405,11 +405,21 @@ void ChessUIQt::InitializeCapturedBoxes(QGridLayout* mainGridLayout)
 
 void ChessUIQt::LoadHistory()
 {
-	QStringList moveList = QString::fromStdString(m_game->GetPGNFormat()).split(QRegularExpression(R"(\d+\.\s|\s|\*)"));
+	QStringList moveList = QString::fromStdString(m_game->GetPGNFormat()).split(" ");
 
-	for (const QString& move : moveList) {
-		if (!move.trimmed().isEmpty()) {
-			UpdateHistory(move.trimmed().toStdString());
+	QString indexString;
+	for (const QString& move : moveList) 
+	{
+		if (!move.trimmed().isEmpty()) 
+		{
+			if (move.trimmed().contains('.'))
+			{
+				indexString = move.trimmed() + ' ';
+				continue;
+			}
+			std::string validMoveString = indexString.toStdString() + move.trimmed().toStdString();
+			indexString = "";
+			UpdateHistory(validMoveString);
 		}
 	}
 }
@@ -886,18 +896,23 @@ QString ChessUIQt::PGNStringFromBoard() const
 
 void ChessUIQt::LoadPGNString(QString& filePath)
 {
-
 	std::string StringFilePath = filePath.toStdString();
+
 	if (!m_game->LoadPGNFromFile(StringFilePath))
 	{
-		// Display message and restore the game //
-		UpdateBoard();
-		UpdateCaptures();
-		return;
+		m_MovesTable->clearContents();
+		m_MovesTable->setRowCount(0);
+		LoadHistory();
 	}
 
 	UpdateBoard();
 	UpdateCaptures();
+
+	if (m_game->IsGameOver())
+	{
+		return;
+	} 
+
 	switch (m_game->GetCurrentPlayer())
 	{
 	case EColor::Black:
@@ -917,18 +932,6 @@ void ChessUIQt::LoadPGNString(QString& filePath)
 		s.append("Solve check\n");
 		m_MessageLabel->setText(s);
 	}
-
-	EGameResult result;
-
-	if (m_game->IsWon(EColor::White))
-		result = EGameResult::WhitePlayerWon;
-	else if (m_game->IsWon(EColor::Black))
-		result = EGameResult::BlackPlayerWon;
-	else if (m_game->IsDraw())
-		result = EGameResult::Draw;
-
-	if (m_game->IsGameOver())
-		OnGameOver(result);
 }
 
 void ChessUIQt::UpdateHistory(const std::string& move)
