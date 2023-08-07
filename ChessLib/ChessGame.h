@@ -27,13 +27,9 @@ enum class EGameState
 
 enum class ENotification
 {
-	MoveMade,
-	PawnUpgrade,
 	GameOver,
-	DrawProposal,
 	Check,
-	Reset,
-	HistoryUpdate
+	Reset
 };
 
 struct HashFunctor {
@@ -137,9 +133,9 @@ private:
 
 	// Observable //
 
-	void Notify(ENotification notif, Position init, Position fin);
-	void Notify(ENotification notif, Position pos);
-	void Notify(ENotification notif, std::string move);
+	void NotifyMoveMade(Position init, Position fin);
+	void NotifyPawnUpgrade(Position pos);
+	void NotifyHistoryUpdate(std::string move);
 	void Notify(ENotification notif);
 
 	// Static Methods //

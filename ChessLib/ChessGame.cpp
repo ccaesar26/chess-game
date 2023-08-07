@@ -450,7 +450,7 @@ void ChessGame::MakeMove(Position initialPos, Position finalPos, bool EnableNoti
 			m_board[finalPos.row][finalPos.col + 1] = m_board[finalPos.row][0];
 			m_board[finalPos.row][0].reset();
 			if(EnableNotification)
-				Notify(ENotification::MoveMade, Position(finalPos.row, 0), Position(finalPos.row, finalPos.col + 1));
+				NotifyMoveMade(Position(finalPos.row, 0), Position(finalPos.row, finalPos.col + 1));
 		}
 		else if (initialPos.col - finalPos.col == -2)
 		{
@@ -459,7 +459,7 @@ void ChessGame::MakeMove(Position initialPos, Position finalPos, bool EnableNoti
 			m_board[finalPos.row][finalPos.col - 1] = m_board[finalPos.row][7];
 			m_board[finalPos.row][7].reset();
 			if (EnableNotification)
-				Notify(ENotification::MoveMade, Position(finalPos.row, 7), Position(finalPos.row, finalPos.col - 1));
+				NotifyMoveMade(Position(finalPos.row, 7), Position(finalPos.row, finalPos.col - 1));
 		}
 	}
 
@@ -477,7 +477,7 @@ void ChessGame::MakeMove(Position initialPos, Position finalPos, bool EnableNoti
 	SwitchTurn();
 
 	if(EnableNotification) 
-		Notify(ENotification::MoveMade, initialPos, finalPos);
+		NotifyMoveMade(initialPos, finalPos);
 
 	if (m_board[finalPos.row][finalPos.col]->GetType() == EType::Pawn)
 	{
@@ -486,7 +486,7 @@ void ChessGame::MakeMove(Position initialPos, Position finalPos, bool EnableNoti
 			if (EnableNotification)
 			{
 				UpdateState(EGameState::UpgradePawn);
-				Notify(ENotification::PawnUpgrade, finalPos);
+				NotifyPawnUpgrade(finalPos);
 			}
 			else
 				UpgradePawn(upgradeType);		
@@ -506,7 +506,7 @@ void ChessGame::MakeMove(Position initialPos, Position finalPos, bool EnableNoti
 			if (EnableNotification)
 			{
 				UpdateState(EGameState::UpgradePawn);
-				Notify(ENotification::PawnUpgrade, finalPos);
+				NotifyPawnUpgrade(finalPos);
 			}
 			else
 				UpgradePawn(upgradeType);
@@ -562,7 +562,7 @@ void ChessGame::MakeMove(Position initialPos, Position finalPos, bool EnableNoti
 	{
 		m_turnCount++;
 	}
-	Notify(ENotification::HistoryUpdate, move);
+	NotifyHistoryUpdate(move);
 }
 
 void ChessGame::MakeMoveFromString(std::string& move)
@@ -676,7 +676,7 @@ void ChessGame::MakeMoveFromString(std::string& move)
 			move += "0-0-0";  // For PGN // 
 			m_board[finalPosition.row][finalPosition.col + 1] = m_board[finalPosition.row][0];
 			m_board[finalPosition.row][0].reset();
-			Notify(ENotification::MoveMade, Position(finalPosition.row, 0), Position(finalPosition.row, finalPosition.col + 1));
+			NotifyMoveMade(Position(finalPosition.row, 0), Position(finalPosition.row, finalPosition.col + 1));
 		}
 		else if (initialPosition.col - finalPosition.col == -2)
 		{
@@ -767,7 +767,7 @@ void ChessGame::MakeMoveFromString(std::string& move)
 	{
 		m_turnCount++;
 	}
-	Notify(ENotification::HistoryUpdate, move);
+	NotifyHistoryUpdate(move);
 }
 
 void ChessGame::UpgradePawn(EType upgradeType)
@@ -882,12 +882,8 @@ void ChessGame::RemoveListener(IChessGameListener* listener)
 	m_listeners.erase(std::remove_if(m_listeners.begin(), m_listeners.end(), f));
 }
 
-void ChessGame::Notify(ENotification notif, Position init, Position fin)
+void ChessGame::NotifyMoveMade(Position init, Position fin)
 {
-	if (notif != ENotification::MoveMade)
-	{
-		return;
-	}
 	for (auto it = m_listeners.begin(); it != m_listeners.end(); it++)
 	{
 		if (auto sp = it->lock())
@@ -897,12 +893,8 @@ void ChessGame::Notify(ENotification notif, Position init, Position fin)
 	}
 }
 
-void ChessGame::Notify(ENotification notif, Position pos)
+void ChessGame::NotifyPawnUpgrade(Position pos)
 {
-	if (notif != ENotification::PawnUpgrade)
-	{
-		return;
-	}
 	for (auto it = m_listeners.begin(); it != m_listeners.end(); it++)
 	{
 		if (auto sp = it->lock())
@@ -912,12 +904,8 @@ void ChessGame::Notify(ENotification notif, Position pos)
 	}
 }
 
-void ChessGame::Notify(ENotification notif, std::string move)
+void ChessGame::NotifyHistoryUpdate(std::string move)
 {
-	if (notif != ENotification::HistoryUpdate)
-	{
-		return;
-	}
 	for (auto it = m_listeners.begin(); it != m_listeners.end(); it++)
 	{
 		if (auto sp = it->lock())
