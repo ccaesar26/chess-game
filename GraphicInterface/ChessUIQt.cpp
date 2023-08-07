@@ -881,9 +881,14 @@ void ChessUIQt::LoadPGNString(QString& filePath)
 		// Display message and restore the game //
 		return;
 	}
+	else
+	{
+		m_game->ResetGame();
+		m_game->CopyGame(*LoadedGame);
+	}
 	
-	m_game->ResetGame();
-	m_game->LoadPGNFromFile(StringFilePath);
+	//m_game->ResetGame();
+	//m_game->LoadPGNFromFile(StringFilePath);
 
 	UpdateBoard();
 	UpdateCaptures();

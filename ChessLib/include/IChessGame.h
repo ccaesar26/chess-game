@@ -19,7 +19,7 @@ public:
 	virtual void ResetGame() = 0;
 	virtual void RestoreGame(const CharBoard& inputConfig, EColor turn = EColor::White, CastleValues castle = { true, true, true, true }) = 0;
 
-	//virtual void CopyGame(const ChessGame& game) = 0;
+	virtual void CopyGame(const IChessGame& game) = 0;
 
 	virtual IPiecePtr GetIPiecePtr(Position pos) const = 0;
 	virtual PositionList GetPossibleMoves(Position currentPos) const = 0;
