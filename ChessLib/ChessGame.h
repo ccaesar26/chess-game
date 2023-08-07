@@ -7,6 +7,8 @@
 #include <array>
 #include <unordered_map>
 #include <string>
+#include <chrono>
+#include <thread>
 
 using ArrayBoard = std::array<std::array<PiecePtr, 8>, 8>;
 using ChessMap = std::unordered_map<std::array<std::array<char, 8>, 8>, int, struct HashFunctor>;
@@ -29,7 +31,8 @@ enum class ENotification
 {
 	GameOver,
 	Check,
-	Reset
+	Reset,
+	ClockUpdate
 };
 
 struct HashFunctor {
@@ -125,6 +128,10 @@ public:
 	void RemoveListener(IChessGameListener* listener) override;
 
 
+
+
+	int GetRemainingTime(EColor color) override;
+
 private:
 
 	// Game's Logic //
@@ -172,6 +179,13 @@ private:
 
 	void ConvertMoveToPositions(std::string& move, Position& initialPos, Position& finalPos);
 
+	// Timer Methods //
+
+	void StartPlayerTimer();
+
+	void StopPlayerTimer();
+
+
 private:
 
 	ArrayBoard m_board;
@@ -195,4 +209,12 @@ private:
 	// Observable //
 
 	std::vector<IChessGameListenerWeakPtr> m_listeners;
+
+	// Timer //
+
+	std::chrono::steady_clock::time_point m_whiteTimerStart;
+	std::chrono::steady_clock::time_point m_blackTimerStart;
+	std::chrono::milliseconds m_timerDuration; // Set the timer duration
+	std::chrono::milliseconds m_remainingWhite;
+	std::chrono::milliseconds m_remainingBlack;
 };

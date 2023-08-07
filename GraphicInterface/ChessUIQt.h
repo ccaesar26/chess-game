@@ -53,6 +53,9 @@ public:
     void OnGameRestarted() override;
     void OnHistoryUpdate(std::string move) override;
 
+
+    void OnClockUpdate() override;
+
 public slots:
     void OnButtonClicked(const Position& position);
 

@@ -71,7 +71,10 @@ void ChessGame::InitializeChessGame()
 	m_boardConfigFrequency.clear();
 	m_whitePiecesCaptured.clear();
 	m_blackPiecesCaptured.clear();
-	m_turnCount = 0;
+	m_turnCount = 0; 
+	m_timerDuration = std::chrono::milliseconds(300000);
+	m_remainingWhite = m_timerDuration;
+	m_remainingBlack = m_timerDuration;
 
 	m_turn = EColor::White;
 	m_kingPositions = { Position(7 ,4), Position(0, 4) };
@@ -98,6 +101,8 @@ void ChessGame::InitializeChessGame()
 	m_boardConfigFrequency[DEFAULT_CHAR_BOARD] = 1;
 
 	m_boardConfigurations.push_back(DEFAULT_CHAR_BOARD);
+
+	StartPlayerTimer();
 }
 
 void ChessGame::InitializeChessGame(const CharBoard& inputConfig, EColor turn, CastleValues castle)
@@ -526,7 +531,9 @@ void ChessGame::MakeMove(Position initialPos, Position finalPos, bool EnableNoti
 
 	// For PGN  End // 
 
-	SwitchTurn();
+	StopPlayerTimer(); // Stop the timer for the current player
+	SwitchTurn();      // Switch to the next player's turn
+	StartPlayerTimer(); // Start the timer for the next player
 
 	if(EnableNotification) 
 		NotifyMoveMade(initialPos, finalPos);
@@ -932,6 +939,17 @@ void ChessGame::RemoveListener(IChessGameListener* listener)
 	m_listeners.erase(std::remove_if(m_listeners.begin(), m_listeners.end(), f));
 }
 
+int ChessGame::GetRemainingTime(EColor color)
+{
+	switch (color)
+	{
+	case EColor::White:
+		return m_remainingWhite.count() / 1000;
+	case EColor::Black:
+		return m_remainingBlack.count() / 1000;
+	}
+}
+
 void ChessGame::NotifyMoveMade(Position init, Position fin)
 {
 	for (auto it = m_listeners.begin(); it != m_listeners.end(); it++)
@@ -988,6 +1006,9 @@ void ChessGame::Notify(ENotification notif)
 				break;
 			case ENotification::Reset:
 				sp->OnGameRestarted();
+				break;
+			case ENotification::ClockUpdate:
+				sp->OnClockUpdate();
 			}
 		}
 	}
@@ -1508,5 +1529,50 @@ void ChessGame::ConvertMoveToPositions(std::string& move, Position& initialPos, 
 				}
 			}
 		}
+	}
+}
+
+void ChessGame::StartPlayerTimer()
+{
+	if (m_turn == EColor::White)
+	{
+		m_whiteTimerStart = std::chrono::steady_clock::now();
+	}
+	else
+	{
+		m_blackTimerStart = std::chrono::steady_clock::now();
+	}
+	Notify(ENotification::ClockUpdate);
+}
+
+void ChessGame::StopPlayerTimer()
+{
+	if (m_turn == EColor::White)
+	{
+		auto currentTime = std::chrono::steady_clock::now();
+		auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - m_whiteTimerStart);
+		// Calculate remaining time based on elapsed time
+		m_remainingWhite = m_remainingWhite - elapsed;
+		// Handle remaining time (e.g., notify listeners, check for timeout)
+		if (m_remainingWhite.count() <= 0)
+		{
+			UpdateState(EGameState::WonByBlackPlayer);
+			Notify(ENotification::GameOver);
+		}
+		Notify(ENotification::ClockUpdate);
+	}
+	else
+	{
+		auto currentTime = std::chrono::steady_clock::now();
+		auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - m_blackTimerStart);
+		// Calculate remaining time based on elapsed time
+		m_remainingBlack = m_remainingBlack - elapsed;
+		// Handle remaining time (e.g., notify listeners, check for timeout)
+		if (m_remainingBlack.count() <= 0)
+		{
+			UpdateState(EGameState::WonByWhitePlayer);
+			Notify(ENotification::GameOver);
+		}
+		Notify(ENotification::ClockUpdate);
 	}
 }

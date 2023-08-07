@@ -64,5 +64,7 @@ public:
 	virtual void AddListener(IChessGameListenerPtr listener) = 0;
 	virtual void RemoveListener(IChessGameListener* listener) = 0;
 
+	virtual int GetRemainingTime(EColor color) = 0;
+
 	virtual ~IChessGame() = default;
 };

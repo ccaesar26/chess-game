@@ -26,6 +26,8 @@ public:
 
 	virtual void OnHistoryUpdate(std::string move) = 0;
 
+	virtual void OnClockUpdate() = 0;
+
 	virtual ~IChessGameListener() = default;
 };
 

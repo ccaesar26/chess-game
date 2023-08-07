@@ -17,6 +17,7 @@
 #include <QApplication>
 
 #include <QHeaderView>
+#include <QTime>
 
 #include <QRegularExpression>
 #include <QString>
@@ -102,6 +103,16 @@ static std::pair<PieceType, PieceColor> ToPieceFromQChar(const QChar& c)
 		break;
 	}
 	return std::make_pair(type, color);
+}
+
+static QString FormatTime(int totalSeconds) 
+{
+	int hours = totalSeconds / 3600;          // 3600 seconds in an hour
+	int minutes = (totalSeconds % 3600) / 60; // 60 seconds in a minute
+	int seconds = totalSeconds % 60;          // Remaining seconds
+
+	QTime time(hours, minutes, seconds);
+	return time.toString("hh:mm:ss");
 }
 
 ChessUIQt::ChessUIQt(QWidget *parent)
@@ -1151,6 +1162,8 @@ void ChessUIQt::StartGame()
 {
     //TODO MODIFY ME OR DELETE ME
     UpdateBoard();
+	m_WhiteTimer->setText(FormatTime(m_game->GetRemainingTime(EColor::White)));
+	m_BlackTimer->setText(FormatTime(m_game->GetRemainingTime(EColor::Black)));
 }
 
 QString ChessUIQt::ShowPromoteOptions()
@@ -1349,5 +1362,18 @@ void ChessUIQt::OnGameRestarted()
 void ChessUIQt::OnHistoryUpdate(std::string move)
 {
 	UpdateHistory(move);
+}
+
+void ChessUIQt::OnClockUpdate()
+{
+	switch (m_game->GetCurrentPlayer())
+	{
+	case EColor::White:
+		m_WhiteTimer->setText(FormatTime(m_game->GetRemainingTime(EColor::White)));
+		break;
+	case EColor::Black:
+		m_BlackTimer->setText(FormatTime(m_game->GetRemainingTime(EColor::Black)));
+		break;
+	}
 }
 
