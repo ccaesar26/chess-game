@@ -48,6 +48,29 @@ struct HashFunctor {
 	}
 };
 
+struct ChessData
+{
+	ArrayBoard board;
+	EColor turn;
+	int turnCount;
+
+	PositionList kingPositions;
+
+	IPieceList whitePiecesCaptured;
+	IPieceList blackPiecesCaptured;
+
+	EGameState state;
+
+	CastleValues castle;
+
+	ChessMap boardConfigFrequency;
+	ChessVector boardConfigurations;
+
+	PGNBuilder PGNFormat;
+
+	std::vector<IChessGameListenerWeakPtr> listeners;
+};
+
 class ChessGame : public IChessGame
 {
 public:
@@ -68,6 +91,7 @@ public:
 	IPieceList GetCapturedPieces(EColor color) const override;
 	EColor GetCurrentPlayer() const override;
 	CharBoard GetBoardAtIndex(int index) const override;
+
 	// Setter for Castle Matrix // 
 
 	void SetCastleValues(const CastleValues& Castle);
@@ -109,6 +133,9 @@ private:
 	void InitializeChessGame(const CharBoard& inputConfig, EColor turn = EColor::White, CastleValues castle = {true, true, true, true});
 
 	void ResetBoard();
+
+	ChessData GetData() const;
+	void SetData(const ChessData& data);
 
 	PiecePtr GetPiece(Position pos, const ArrayBoard& board) const;
 	PieceList GetCheckPieces(Position& checkPos) const;
