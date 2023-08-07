@@ -152,7 +152,6 @@ void ChessGame::ResetGame()
 	m_whitePiecesCaptured.clear();
 	m_blackPiecesCaptured.clear();
 	m_boardConfigFrequency.clear();
-	m_PGNFormat.Reset();
 
 	InitializeChessGame();
 
@@ -170,28 +169,6 @@ void ChessGame::RestoreGame(const CharBoard& inputConfig, EColor turn /*= EColor
 	InitializeChessGame(inputConfig, turn, castle);
 
 	Notify(ENotification::Reset);
-}
-
-void ChessGame::CopyGame(const IChessGame& game)
-{
-	const ChessGame& derivedGame = dynamic_cast<const ChessGame&>(game);
-	this->m_board = derivedGame.m_board;
-	this->m_turn = derivedGame.m_turn;
-	this->m_turnCount = derivedGame.m_turnCount;
-
-	this->m_kingPositions = derivedGame.m_kingPositions;
-
-	this->m_whitePiecesCaptured = derivedGame.m_whitePiecesCaptured;
-	this->m_blackPiecesCaptured = derivedGame.m_blackPiecesCaptured;
-
-	this->m_state = derivedGame.m_state;
-
-	this->m_castle = derivedGame.m_castle;
-
-	this->m_boardConfigFrequency = derivedGame.m_boardConfigFrequency;
-	this->m_boardConfigurations = derivedGame.m_boardConfigurations;
-
-	this->m_PGNFormat = derivedGame.m_PGNFormat;
 }
 
 void ChessGame::SetCastleValues(const CastleValues& Castle)
@@ -578,6 +555,215 @@ void ChessGame::MakeMove(Position initialPos, Position finalPos, bool EnableNoti
 
 		m_state = EGameState::Draw;
 		Notify(ENotification::GameOver);
+	}
+
+	m_PGNFormat.AddMove(move);
+	if (m_turn == EColor::Black)
+	{
+		m_turnCount++;
+	}
+	Notify(ENotification::HistoryUpdate, move);
+}
+
+void ChessGame::MakeMoveFromString(std::string& move)
+{
+	EType upgradeType;
+
+	int evolvePos = move.find('=');
+	if (evolvePos != -1)
+	{
+		upgradeType = Piece::GetTypeFromLetter(move[evolvePos + 1]);
+		move.erase(evolvePos, 2);
+	}
+
+	Position initialPosition;
+	Position finalPosition;
+
+	ConvertMoveToPositions(move, initialPosition, finalPosition);
+
+	// Make the actual move //
+
+	if (!IsInMatrix(initialPosition))
+	{
+		throw OutOfBoundsException("Initial position is not a valid position");
+	}
+	if (!IsInMatrix(finalPosition))
+	{
+		throw OutOfBoundsException("Final position is not a valid position");
+	}
+
+	if (m_board[finalPosition.row][finalPosition.col] && m_board[finalPosition.row][finalPosition.col]->GetColor() == m_turn)
+	{
+		throw OccupiedByOwnPieceException("The final square is occupied by own piece");
+	}
+
+	PositionList possibleMoves = GetPossibleMoves(initialPosition);
+	if (std::find(possibleMoves.begin(), possibleMoves.end(), finalPosition) == possibleMoves.end())
+	{
+		throw NotInPossibleMovesException("Your move is not possible");
+	}
+
+	m_state = EGameState::MovingPiece;
+
+	// For PGN Begin // 
+	
+	move = "";
+
+	if (m_turn == EColor::White)
+		move = std::to_string(m_turnCount + 1) + ". ";
+
+	char pieceLetter = std::toupper(m_board[initialPosition.row][initialPosition.col]->ToLetter());
+	if (pieceLetter == 'H')
+	{
+		pieceLetter = 'N';
+	}
+
+	if (pieceLetter != 'P')
+	{
+		move += pieceLetter;
+	}
+
+	Position pos = GetPiecePositionWithSameTypeThatCanMoveToFinalPosition(initialPosition, finalPosition,
+		m_board[initialPosition.row][initialPosition.col]->GetType());
+
+	if (pos.col != -1 && pieceLetter != 'P')
+	{
+		std::string cols = "abcdefgh";
+		move += cols[initialPosition.col];
+	}
+	if (pos.row != -1 && pieceLetter != 'P')
+	{
+		move = move + std::to_string(8 - initialPosition.row);
+	}
+
+	// For PGN End // 
+
+	if (m_board[finalPosition.row][finalPosition.col])
+	{
+		if (pieceLetter == 'P')
+		{
+			std::string cols = "abcdefgh";
+			move += cols[initialPosition.col];
+		}
+		move += "x";	// For PGN // 
+		if (m_turn == EColor::White)
+		{
+			m_blackPiecesCaptured.push_back(m_board[finalPosition.row][finalPosition.col]);
+		}
+		else
+		{
+			m_whitePiecesCaptured.push_back(m_board[finalPosition.row][finalPosition.col]);
+		}
+	}
+
+	m_board[finalPosition.row][finalPosition.col] = m_board[initialPosition.row][initialPosition.col];
+	m_board[initialPosition.row][initialPosition.col].reset();
+
+	if (m_board[finalPosition.row][finalPosition.col]->GetType() == EType::Rook)
+	{
+		// Make Castle Inaccessible if Rook moved
+		m_castle[(int)m_turn][initialPosition.col % 2] = false;
+	}
+	else if (m_board[finalPosition.row][finalPosition.col]->GetType() == EType::King)
+	{
+		m_kingPositions[(int)m_turn] = finalPosition;
+		// Make Castle Inaccessible if King moved
+		m_castle[(int)m_turn][0] = false;
+		m_castle[(int)m_turn][1] = false;
+		if (initialPosition.col - finalPosition.col == 2)
+		{
+			move.resize(move.length() - 1);
+			move += "0-0-0";  // For PGN // 
+			m_board[finalPosition.row][finalPosition.col + 1] = m_board[finalPosition.row][0];
+			m_board[finalPosition.row][0].reset();
+			Notify(ENotification::MoveMade, Position(finalPosition.row, 0), Position(finalPosition.row, finalPosition.col + 1));
+		}
+		else if (initialPosition.col - finalPosition.col == -2)
+		{
+			move.resize(move.length() - 1);
+			move += "0-0";	// For PGN // 
+			m_board[finalPosition.row][finalPosition.col - 1] = m_board[finalPosition.row][7];
+			m_board[finalPosition.row][7].reset();
+			//Notify(ENotification::MoveMade, Position(finalPosition.row, 7), Position(finalPosition.row, finalPosition.col - 1));
+		}
+		//
+	}
+
+	// For PGN  Begin // 
+
+	if (move.length() == 0 || move[move.length() - 1] != '0')// If the move is not Castle //
+	{
+		BoardPosition boardPos = ConvertToBoardPosition(finalPosition);
+		move += boardPos.second;
+		move += boardPos.first;
+	}
+
+	// For PGN  End // 
+
+	SwitchTurn();
+
+	if (m_board[finalPosition.row][finalPosition.col]->GetType() == EType::Pawn)
+	{
+		if (m_board[finalPosition.row][finalPosition.col]->GetColor() == EColor::White && finalPosition.row == 0)
+		{
+			UpgradePawn(upgradeType);
+
+			// For PGN // 
+			pieceLetter = std::toupper(m_board[finalPosition.row][finalPosition.col]->ToLetter());
+			if (pieceLetter == 'H')
+			{
+				pieceLetter = 'N';
+			}
+			move += "=";
+			move += pieceLetter;
+		}
+		if (m_board[finalPosition.row][finalPosition.col]->GetColor() == EColor::Black && finalPosition.row == 7)
+		{
+			UpgradePawn(upgradeType);
+
+			// For PGN //
+			pieceLetter = std::toupper(m_board[finalPosition.row][finalPosition.col]->ToLetter());
+			if (pieceLetter == 'H')
+			{
+				pieceLetter = 'N';
+			}
+			move += "=";
+			move += pieceLetter;
+		}
+	}
+
+	SaveConfiguration();
+
+	if (CheckThreeFoldRepetition())
+	{
+		move += " 1/2-1/2";		// For PGN //
+
+		m_state = EGameState::Draw;
+		//Notify(ENotification::GameOver);
+	}
+
+	if (CanBeCaptured(m_board, m_kingPositions[(int)m_turn]) == true)
+	{
+		move += "+";		// For PGN //
+
+		m_state = EGameState::CheckState;
+		//Notify(ENotification::Check);
+	}
+
+	if (CheckCheckMate())
+	{
+		// For PGN //
+		move[move.length() - 1] = '#';
+
+		m_state = m_turn == EColor::White ? EGameState::WonByBlackPlayer : EGameState::WonByWhitePlayer;
+		//Notify(ENotification::GameOver);
+	}
+	else if (CheckStaleMate())
+	{
+		move += "1/2-1/2";	// For PGN // 
+
+		m_state = EGameState::Draw;
+		//Notify(ENotification::GameOver);
 	}
 
 	m_PGNFormat.AddMove(move);

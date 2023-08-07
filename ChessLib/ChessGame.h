@@ -66,8 +66,6 @@ public:
 	void ResetGame() override;
 	void RestoreGame(const CharBoard& inputConfig, EColor turn = EColor::White, CastleValues castle = { true, true, true, true }) override;
 
-	void CopyGame(const IChessGame& game) override;
-
 	PiecePtr GetPieceFromBoard(Position pos) const;
 	IPiecePtr GetIPiecePtr(Position pos) const override;
 	PositionList GetPossibleMoves(Position currentPos) const override;

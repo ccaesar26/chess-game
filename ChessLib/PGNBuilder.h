@@ -9,8 +9,6 @@ public:
 
 	PGNBuilder();
 
-	void Reset();
-
 	std::string GetPGNFormat() const;
 
 	void AddMove(const std::string& move);

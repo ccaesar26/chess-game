@@ -6,11 +6,6 @@ PGNBuilder::PGNBuilder()
 	:m_PGNString("")
 {}
 
-void PGNBuilder::Reset()
-{
-	m_PGNString.clear();
-}
-
 std::string PGNBuilder::GetPGNFormat() const
 {
 	return m_PGNString;
