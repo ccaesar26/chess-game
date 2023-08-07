@@ -18,6 +18,9 @@ static const CharBoard DEFAULT_CHAR_BOARD = {
 	'r', 'h', 'b', 'q', 'k', 'b', 'h', 'r'
 };
 
+static const std::string TABLE_COLUMNS("abcdefgh");
+static const std::string TABLE_ROWS("87654321");
+
 static EType GetType(char c)
 {
 	// white pieces: p r h b q k
@@ -394,8 +397,7 @@ void ChessGame::MakeMove(Position initialPos, Position finalPos, bool EnableNoti
 
 	if (pos.col != -1 && pieceLetter != 'P')
 	{
-		std::string cols = "abcdefgh";
-		move += cols[initialPos.col];
+		move += TABLE_COLUMNS[initialPos.col];
 	}
 	if (pos.row != -1 && pieceLetter != 'P')
 	{
@@ -408,8 +410,7 @@ void ChessGame::MakeMove(Position initialPos, Position finalPos, bool EnableNoti
 	{
 		if (pieceLetter == 'P')
 		{
-			std::string cols = "abcdefgh";
-			move += cols[initialPos.col];
+			move += TABLE_COLUMNS[initialPos.col];
 		}
 		move += "x";	// For PGN // 
 		if (m_turn == EColor::White)
@@ -621,8 +622,7 @@ void ChessGame::MakeMoveFromString(std::string& move)
 
 	if (pos.col != -1 && pieceLetter != 'P')
 	{
-		std::string cols = "abcdefgh";
-		move += cols[initialPosition.col];
+		move += TABLE_COLUMNS[initialPosition.col];
 	}
 	if (pos.row != -1 && pieceLetter != 'P')
 	{
@@ -635,8 +635,7 @@ void ChessGame::MakeMoveFromString(std::string& move)
 	{
 		if (pieceLetter == 'P')
 		{
-			std::string cols = "abcdefgh";
-			move += cols[initialPosition.col];
+			move += TABLE_COLUMNS[initialPosition.col];
 		}
 		move += "x";	// For PGN // 
 		if (m_turn == EColor::White)
@@ -1348,10 +1347,8 @@ bool ChessGame::IsInMatrix(Position pos)
 BoardPosition ChessGame::ConvertToBoardPosition(Position pos)
 {
 	BoardPosition boardPos;
-	std::string possibleRows = "87654321";
-	std::string possibleCols = "abcdefgh";
-	boardPos.first = possibleRows[pos.row];;
-	boardPos.second = possibleCols[pos.col];
+	boardPos.first = TABLE_ROWS[pos.row];;
+	boardPos.second = TABLE_COLUMNS[pos.col];
 	return boardPos;
 }
 
@@ -1390,8 +1387,7 @@ void ChessGame::ConvertMoveToPositions(std::string& move, Position& initialPos, 
 	char finalCol = move[pos - 2];
 
 	finalPos.row = 8 - (finalRow - '0');
-	std::string cols = "abcdefgh";
-	finalPos.col = cols.find(finalCol);
+	finalPos.col = TABLE_COLUMNS.find(finalCol);
 
 	char pieceLetter = move[0];
 	EType pieceType = Piece::GetTypeFromLetter(pieceLetter);
@@ -1402,7 +1398,7 @@ void ChessGame::ConvertMoveToPositions(std::string& move, Position& initialPos, 
 
 	if (move.length() == 5)
 	{
-		initialPos.col = cols.find(move[1]);
+		initialPos.col = TABLE_COLUMNS.find(move[1]);
 		initialPos.row = 8 - (move[2] - '0');
 		return;
 	}
@@ -1414,7 +1410,7 @@ void ChessGame::ConvertMoveToPositions(std::string& move, Position& initialPos, 
 		}
 		else  // If is col // 
 		{
-			initialPos.col = cols.find(move[1]);
+			initialPos.col = TABLE_COLUMNS.find(move[1]);
 		}
 	}
 	else if (move.length() == 3)
@@ -1427,7 +1423,7 @@ void ChessGame::ConvertMoveToPositions(std::string& move, Position& initialPos, 
 			}
 			else  // If is col // 
 			{
-				initialPos.col = cols.find(move[0]);
+				initialPos.col = TABLE_COLUMNS.find(move[0]);
 			}
 		}
 	}
