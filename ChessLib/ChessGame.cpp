@@ -794,19 +794,22 @@ void ChessGame::UpgradePawn(EType upgradeType)
 	}
 }
 
-void ChessGame::RequestDraw()
+void ChessGame::DrawOperation(EDrawOperation op)
 {
-	m_state = EGameState::WaitingForDrawResponse;
-}
-
-void ChessGame::AcceptDrawProposal()
-{
-	m_state = EGameState::Draw;
-}
-
-void ChessGame::DeclineDrawProposal()
-{
-	m_state = EGameState::MovingPiece;
+	switch (op)
+	{
+	case EDrawOperation::Request:
+		m_state = EGameState::WaitingForDrawResponse;
+		break;
+	case EDrawOperation::Accept:
+		m_state = EGameState::Draw;
+		break;
+	case EDrawOperation::Decline:
+		m_state = EGameState::MovingPiece;
+		break;
+	default:
+		break;
+	}
 }
 
 bool ChessGame::IsDraw() const

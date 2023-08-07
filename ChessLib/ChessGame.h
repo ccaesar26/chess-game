@@ -89,9 +89,7 @@ public:
 
 	void UpgradePawn(EType upgradeType) override;
 
-	void RequestDraw() override;
-	void AcceptDrawProposal() override;
-	void DeclineDrawProposal() override;
+	void DrawOperation(EDrawOperation op) override;
 
 	bool IsGameOver() const override;
 	bool IsDraw() const override;
@@ -108,6 +106,8 @@ public:
 
 	void AddListener(IChessGameListenerPtr listener) override;
 	void RemoveListener(IChessGameListener* listener) override;
+
+
 private:
 
 	// Game's Logic //

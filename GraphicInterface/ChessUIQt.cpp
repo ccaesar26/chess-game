@@ -554,14 +554,14 @@ if (reply == QMessageBox::Yes)
 void ChessUIQt::OnDrawButtonClicked()
 {
 	//TODO MODIFY ME
-	m_game->RequestDraw();
+	m_game->DrawOperation(EDrawOperation::Request);
 
 	QMessageBox::StandardButton reply;
 	reply = QMessageBox::question(this, "Draw proposal", "Do you accept a draw?", QMessageBox::Yes | QMessageBox::No);
 
 	if (reply == QMessageBox::Yes)
 	{
-		m_game->AcceptDrawProposal();
+		m_game->DrawOperation(EDrawOperation::Accept);
 		m_MessageLabel->setText("Game over!\nDraw.");
 		QMessageBox::StandardButton reply;
 		reply = QMessageBox::question(this, "Game Over", "Draw.\nDo you want to play again?", QMessageBox::Yes | QMessageBox::Close);
@@ -577,7 +577,7 @@ void ChessUIQt::OnDrawButtonClicked()
 	}
 	else
 	{
-		m_game->DeclineDrawProposal();
+		m_game->DrawOperation(EDrawOperation::Decline);
 	}
 }
 
