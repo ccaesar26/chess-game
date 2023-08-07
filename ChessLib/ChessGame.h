@@ -133,6 +133,7 @@ private:
 	bool KingsWayCanBeBlocked(const PositionList& toBlockPositions) const;
 
 	void SwitchTurn();
+	void UpdateState(EGameState);
 
 	// Observable //
 

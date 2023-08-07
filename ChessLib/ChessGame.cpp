@@ -61,7 +61,7 @@ void ChessGame::InitializeChessGame()
 
 	m_turn = EColor::White;
 	m_kingPositions = { Position(7 ,4), Position(0, 4) };
-	m_state = EGameState::MovingPiece;
+	UpdateState(EGameState::MovingPiece);
 
 	for (int i = 0; i < 2; i++)
 		for (int j = 0; j < 2; j++)
@@ -107,7 +107,7 @@ void ChessGame::InitializeChessGame()
 void ChessGame::InitializeChessGame(const CharBoard& inputConfig, EColor turn, CastleValues castle)
 {
 	m_turn = turn;
-	m_state = EGameState::MovingPiece;
+	UpdateState(EGameState::MovingPiece);
 	m_boardConfigurations.clear();
 	m_boardConfigFrequency.clear();
 
@@ -138,7 +138,7 @@ void ChessGame::InitializeChessGame(const CharBoard& inputConfig, EColor turn, C
 	}
 	if (CanBeCaptured(m_board, m_kingPositions[(int)turn]))
 	{
-		m_state = EGameState::CheckState;
+		UpdateState(EGameState::CheckState);
 	}
 
 	m_boardConfigFrequency[inputConfig] = 1;
@@ -376,7 +376,7 @@ void ChessGame::MakeMove(Position initialPos, Position finalPos, bool EnableNoti
 		throw NotInPossibleMovesException("Your move is not possible");
 	}
 
-	m_state = EGameState::MovingPiece;
+	UpdateState(EGameState::MovingPiece);
 
 	// For PGN Begin // 
 
@@ -485,7 +485,7 @@ void ChessGame::MakeMove(Position initialPos, Position finalPos, bool EnableNoti
 		{
 			if (EnableNotification)
 			{
-				m_state = EGameState::UpgradePawn;
+				UpdateState(EGameState::UpgradePawn);
 				Notify(ENotification::PawnUpgrade, finalPos);
 			}
 			else
@@ -505,7 +505,7 @@ void ChessGame::MakeMove(Position initialPos, Position finalPos, bool EnableNoti
 		{
 			if (EnableNotification)
 			{
-				m_state = EGameState::UpgradePawn;
+				UpdateState(EGameState::UpgradePawn);
 				Notify(ENotification::PawnUpgrade, finalPos);
 			}
 			else
@@ -524,36 +524,36 @@ void ChessGame::MakeMove(Position initialPos, Position finalPos, bool EnableNoti
 
 	SaveConfiguration();
 
-	m_state = EGameState::MovingPiece;
+	UpdateState(EGameState::MovingPiece);
 
 	if (CheckThreeFoldRepetition())
 	{
 		move += " 1/2-1/2";		// For PGN //
-
-		m_state = EGameState::Draw;
-			Notify(ENotification::GameOver);
+		
+		UpdateState(EGameState::Draw);
+		Notify(ENotification::GameOver);
 	}
 
 	if (CanBeCaptured(m_board, m_kingPositions[(int)m_turn]) == true)
 	{
 		move += "+";		// For PGN //
-
-		m_state = EGameState::CheckState;
-			Notify(ENotification::Check);
+		
+		UpdateState(EGameState::CheckState);
+		Notify(ENotification::Check);
 	}
 
 	if (CheckCheckMate())
 	{
 		move[move.length()-1] = '#';	// For PGN //
 
-		m_state = m_turn == EColor::White ? EGameState::WonByBlackPlayer : EGameState::WonByWhitePlayer;
-			Notify(ENotification::GameOver);
+		UpdateState(m_turn == EColor::White ? EGameState::WonByBlackPlayer : EGameState::WonByWhitePlayer);
+		Notify(ENotification::GameOver);
 	}
 	else if (CheckStaleMate())
 	{
 		move += "1/2-1/2";	// For PGN // 
 
-		m_state = EGameState::Draw;
+		UpdateState(EGameState::Draw);
 		Notify(ENotification::GameOver);
 	}
 
@@ -603,7 +603,7 @@ void ChessGame::MakeMoveFromString(std::string& move)
 		throw NotInPossibleMovesException("Your move is not possible");
 	}
 
-	m_state = EGameState::MovingPiece;
+	UpdateState(EGameState::MovingPiece);
 
 	// For PGN Begin // 
 	
@@ -738,16 +738,14 @@ void ChessGame::MakeMoveFromString(std::string& move)
 	{
 		move += " 1/2-1/2";		// For PGN //
 
-		m_state = EGameState::Draw;
-		//Notify(ENotification::GameOver);
+		UpdateState(EGameState::Draw);
 	}
 
 	if (CanBeCaptured(m_board, m_kingPositions[(int)m_turn]) == true)
 	{
 		move += "+";		// For PGN //
 
-		m_state = EGameState::CheckState;
-		//Notify(ENotification::Check);
+		UpdateState(EGameState::CheckState);
 	}
 
 	if (CheckCheckMate())
@@ -755,15 +753,13 @@ void ChessGame::MakeMoveFromString(std::string& move)
 		// For PGN //
 		move[move.length() - 1] = '#';
 
-		m_state = m_turn == EColor::White ? EGameState::WonByBlackPlayer : EGameState::WonByWhitePlayer;
-		//Notify(ENotification::GameOver);
+		UpdateState(m_turn == EColor::White ? EGameState::WonByBlackPlayer : EGameState::WonByWhitePlayer);
 	}
 	else if (CheckStaleMate())
 	{
 		move += "1/2-1/2";	// For PGN // 
 
-		m_state = EGameState::Draw;
-		//Notify(ENotification::GameOver);
+		UpdateState(EGameState::Draw);
 	}
 
 	m_PGNFormat.AddMove(move);
@@ -1238,6 +1234,36 @@ bool ChessGame::KingsWayCanBeBlocked(const PositionList& toBlockPositions) const
 void ChessGame::SwitchTurn()
 {
 	m_turn = m_turn == EColor::White ? EColor::Black : EColor::White;
+}
+
+void ChessGame::UpdateState(EGameState state)
+{
+	switch (state)
+	{
+	case EGameState::MovingPiece:
+		m_state = EGameState::MovingPiece;
+		break;
+	case EGameState::Draw:
+		m_state = EGameState::Draw;
+		break;
+	case EGameState::WonByWhitePlayer:
+		m_state = EGameState::WonByWhitePlayer;
+		break;
+	case EGameState::WonByBlackPlayer:
+		m_state = EGameState::WonByBlackPlayer;
+		break;
+	case EGameState::UpgradePawn:
+		m_state = EGameState::UpgradePawn;
+		break;
+	case EGameState::CheckState:
+		m_state = EGameState::CheckState;
+		break;
+	case EGameState::WaitingForDrawResponse:
+		m_state = EGameState::WaitingForDrawResponse;
+		break;
+	default:
+		break;
+	}
 }
 
 bool ChessGame::CanBeCaptured(const ArrayBoard& board, Position toCapturePos) const
