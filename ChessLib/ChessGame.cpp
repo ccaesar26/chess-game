@@ -202,6 +202,9 @@ bool ChessGame::LoadPGNFromFile(const std::string& fileName)
 	if (!reader.LoadFromFile(fileName))
 		return false;
 
+	ChessData gameData = GetData();
+	ResetGame();
+
 	auto moves = reader.GetMoves();
 	for (auto& move : moves)
 	{
@@ -223,8 +226,10 @@ bool ChessGame::LoadPGNFromFile(const std::string& fileName)
 		{
 			MakeMove(initialPosition, finalPosition, false, upgradeType);
 		}
-		catch (const std::exception& e)
+		catch (const ChessException& e)
 		{
+			//ResetGame();
+			SetData(gameData);
 			return false;
 		}
 	}
@@ -269,6 +274,58 @@ CharBoard ChessGame::GetBoardAtIndex(int index) const
 	return m_boardConfigurations.at(index);
 }
 
+ChessData ChessGame::GetData() const
+{
+	ChessData data;
+
+	data.board = m_board;
+	data.turn = m_turn;
+	data.turnCount=m_turnCount;
+
+	data.kingPositions=m_kingPositions;
+
+	data.whitePiecesCaptured=m_whitePiecesCaptured;
+	data.blackPiecesCaptured=m_blackPiecesCaptured;
+
+	data.state=m_state;
+
+	data.castle=m_castle;
+
+	data.boardConfigFrequency=m_boardConfigFrequency;
+	data.boardConfigurations=m_boardConfigurations;
+
+	data.PGNFormat=m_PGNFormat;
+
+	data.listeners=m_listeners;
+
+	return data;
+}
+
+void ChessGame::SetData(const ChessData& data)
+{
+	ResetBoard();
+
+	m_board = data.board;
+	m_turn = data.turn;
+	m_turnCount = data.turnCount;
+
+	m_kingPositions = data.kingPositions;
+
+	m_whitePiecesCaptured = data.whitePiecesCaptured;
+	m_blackPiecesCaptured = data.blackPiecesCaptured;
+
+	m_state = data.state;
+
+	m_castle = data.castle;
+
+	m_boardConfigFrequency = data.boardConfigFrequency;
+	m_boardConfigurations = data.boardConfigurations;
+
+	m_PGNFormat = data.PGNFormat;
+
+	m_listeners = data.listeners;
+}
+
 bool ChessGame::CheckStaleMate() const
 {
 	if (m_state != EGameState::MovingPiece)
@@ -297,6 +354,7 @@ bool ChessGame::IsGameOver() const
 {
 	if (m_state == EGameState::Draw || m_state == EGameState::WonByWhitePlayer || m_state == EGameState::WonByBlackPlayer)
 		return true;
+	return false;
 }
 
 bool ChessGame::CheckCheckMate() const

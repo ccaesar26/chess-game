@@ -413,11 +413,21 @@ void ChessUIQt::InitializeCapturedBoxes(QGridLayout* mainGridLayout)
 
 void ChessUIQt::LoadHistory()
 {
-	QStringList moveList = QString::fromStdString(m_game->GetPGNFormat()).split(QRegularExpression(R"(\d+\.\s|\s|\*)"));
+	QStringList moveList = QString::fromStdString(m_game->GetPGNFormat()).split(" ");
 
-	for (const QString& move : moveList) {
-		if (!move.trimmed().isEmpty()) {
-			UpdateHistory(move.trimmed().toStdString());
+	QString indexString;
+	for (const QString& move : moveList) 
+	{
+		if (!move.trimmed().isEmpty()) 
+		{
+			if (move.trimmed().contains('.'))
+			{
+				indexString = move.trimmed() + ' ';
+				continue;
+			}
+			std::string validMoveString = indexString.toStdString() + move.trimmed().toStdString();
+			indexString = "";
+			UpdateHistory(validMoveString);
 		}
 	}
 }
@@ -894,22 +904,23 @@ QString ChessUIQt::PGNStringFromBoard() const
 
 void ChessUIQt::LoadPGNString(QString& filePath)
 {
-	// Copie la joc //
-
-	IChessGamePtr LoadedGame = IChessGame::CreateGame();
-
 	std::string StringFilePath = filePath.toStdString();
-	if (!LoadedGame->LoadPGNFromFile(StringFilePath))
+
+	if (!m_game->LoadPGNFromFile(StringFilePath))
 	{
-		// Display message and restore the game //
-		return;
+		m_MovesTable->clearContents();
+		m_MovesTable->setRowCount(0);
+		LoadHistory();
 	}
-	
-	m_game->ResetGame();
-	m_game->LoadPGNFromFile(StringFilePath);
 
 	UpdateBoard();
 	UpdateCaptures();
+
+	if (m_game->IsGameOver())
+	{
+		return;
+	} 
+
 	switch (m_game->GetCurrentPlayer())
 	{
 	case EColor::Black:
