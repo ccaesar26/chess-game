@@ -7,6 +7,17 @@
 
 // --->		Local Static Functions				<--- //
 
+static const CharBoard DEFAULT_CHAR_BOARD = {
+	'R', 'H', 'B', 'Q', 'K', 'B', 'H', 'R',
+	'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P',
+	' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
+	' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
+	' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
+	' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
+	'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p',
+	'r', 'h', 'b', 'q', 'k', 'b', 'h', 'r'
+};
+
 static EType GetType(char c)
 {
 	// white pieces: p r h b q k
@@ -81,27 +92,9 @@ void ChessGame::InitializeChessGame()
 		m_board[7][i] = Piece::Produce(TYPES[i], EColor::White);
 	}
 
-	m_boardConfigFrequency[CharBoard({
-			'R', 'H', 'B', 'Q', 'K', 'B', 'H', 'R',
-			'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P',
-			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
-			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
-			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
-			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
-			'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p',
-			'r', 'h', 'b', 'q', 'k', 'b', 'h', 'r'
-		})] = 1;
+	m_boardConfigFrequency[DEFAULT_CHAR_BOARD] = 1;
 
-	m_boardConfigurations.push_back(CharBoard({
-			'R', 'H', 'B', 'Q', 'K', 'B', 'H', 'R',
-			'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P',
-			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
-			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
-			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
-			' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
-			'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p',
-			'r', 'h', 'b', 'q', 'k', 'b', 'h', 'r'
-		}));
+	m_boardConfigurations.push_back(DEFAULT_CHAR_BOARD);
 }
 
 void ChessGame::InitializeChessGame(const CharBoard& inputConfig, EColor turn, CastleValues castle)
