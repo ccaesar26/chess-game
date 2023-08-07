@@ -94,8 +94,8 @@ public:
 	bool IsGameOver() const override;
 	bool IsDraw() const override;
 	bool IsWaitingForDrawResponse() const override;
-	bool IsWonByWhitePlayer() const override;
-	bool IsWonByBlackPlayer() const override;
+
+	bool IsWon(EColor player) const override;
 	bool IsWaitingForUpgrade() const override;
 	bool IsCheckState() const override;
 

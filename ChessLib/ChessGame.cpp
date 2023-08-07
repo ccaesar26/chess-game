@@ -817,14 +817,15 @@ bool ChessGame::IsDraw() const
 	return m_state == EGameState::Draw;
 }
 
-bool ChessGame::IsWonByWhitePlayer() const
+bool ChessGame::IsWon(EColor player) const
 {
-	return m_state == EGameState::WonByWhitePlayer;
-}
-
-bool ChessGame::IsWonByBlackPlayer() const
-{
-	return m_state == EGameState::WonByBlackPlayer;
+	switch (player)
+	{
+	case EColor::White:
+		return m_state == EGameState::WonByWhitePlayer;
+	case EColor::Black:
+		return m_state == EGameState::WonByBlackPlayer;
+	}
 }
 
 bool ChessGame::IsWaitingForUpgrade() const
@@ -936,9 +937,9 @@ void ChessGame::Notify(ENotification notif)
 			case ENotification::GameOver:
 			{
 				auto result = EGameResult::Draw;
-				if (IsWonByWhitePlayer())
+				if (IsWon(EColor::White))
 					result = EGameResult::WhitePlayerWon;
-				if (IsWonByBlackPlayer())
+				if (IsWon(EColor::Black))
 					result = EGameResult::BlackPlayerWon;
 				sp->OnGameOver(result);
 				break;

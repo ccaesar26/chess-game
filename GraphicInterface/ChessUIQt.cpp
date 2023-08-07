@@ -1221,12 +1221,12 @@ void ChessUIQt::OnGameOver(EGameResult result)
     //m_MessageLabel->setText("Game over!\nBlack player won");
 	QMessageBox::StandardButton reply;
 
-	if (m_game->IsWonByBlackPlayer())
+	if (m_game->IsWon(EColor::Black))
 	{
         m_MessageLabel->setText("Game over!\nBlack player won");
 		reply = QMessageBox::question(this, "Game Over", "Black player won.\nDo you want to play again?", QMessageBox::Yes | QMessageBox::Close);
 	}
-	if (m_game->IsWonByWhitePlayer())
+	if (m_game->IsWon(EColor::White))
 	{
         m_MessageLabel->setText("Game over!\nWhite player won");
 		reply = QMessageBox::question(this, "Game Over", "White player won.\nDo you want to play again?", QMessageBox::Yes | QMessageBox::Close);

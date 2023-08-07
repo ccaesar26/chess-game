@@ -55,8 +55,7 @@ public:
 	virtual bool IsDraw() const = 0;
 	virtual bool IsWaitingForDrawResponse() const = 0;
 
-	virtual bool IsWonByWhitePlayer() const = 0;
-	virtual bool IsWonByBlackPlayer() const = 0;
+	virtual bool IsWon(EColor player) const = 0;
 	virtual bool IsWaitingForUpgrade() const = 0;
 	virtual bool IsCheckState() const = 0;
 
