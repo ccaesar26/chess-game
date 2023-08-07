@@ -154,6 +154,9 @@ TEST(TestLoadPGNFromFile, LoadMoreGames)
 
 	// Load Third Game // 
 
+	isLoaded = game.LoadPGNFromFile(".\\TestsForLoadingPGN\\Test2Pass.pgn");
+	EXPECT_EQ(isLoaded, true);
+
 	expectedBoard =
 	{
 		'q', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
@@ -165,9 +168,6 @@ TEST(TestLoadPGNFromFile, LoadMoreGames)
 		' ', ' ', ' ', ' ', 'p', 'p', ' ', ' ',
 		' ', 'B', ' ', ' ', 'k', 'b', ' ', ' '
 	};
-
-	isLoaded = game.LoadPGNFromFile(".\\TestsForLoadingPGN\\Test2Pass.pgn");
-	EXPECT_EQ(isLoaded, true);
 
 	EXPECT_EQ(CompareCharBoardWithNormalBoard(expectedBoard, game), true);
 
