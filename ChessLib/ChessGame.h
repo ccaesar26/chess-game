@@ -99,10 +99,7 @@ public:
 	bool IsWaitingForUpgrade() const override;
 	bool IsCheckState() const override;
 
-	bool IsWhiteKingsideCastlingAvailable() const override;
-	bool IsWhiteQueensideCastlingAvailable() const override;
-	bool IsBlackKingsideCastlingAvailable() const override;
-	bool IsBlackQueensideCastlingAvailable() const override;
+	bool IsCastlingAvailable(EColor color, ESide side) const override;
 
 	void AddListener(IChessGameListenerPtr listener) override;
 	void RemoveListener(IChessGameListener* listener) override;

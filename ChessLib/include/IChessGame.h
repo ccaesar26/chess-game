@@ -20,8 +20,8 @@ enum class EDrawOperation
 
 enum class ESide
 {
-	Kingside,
-	Queenside
+	Queenside,
+	Kingside
 };
 
 class IChessGame
@@ -59,10 +59,7 @@ public:
 	virtual bool IsWaitingForUpgrade() const = 0;
 	virtual bool IsCheckState() const = 0;
 
-	virtual bool IsWhiteKingsideCastlingAvailable() const = 0;
-	virtual bool IsWhiteQueensideCastlingAvailable() const = 0;
-	virtual bool IsBlackKingsideCastlingAvailable() const = 0;
-	virtual bool IsBlackQueensideCastlingAvailable() const = 0;
+	virtual bool IsCastlingAvailable(EColor color, ESide side) const = 0;
 
 	virtual void AddListener(IChessGameListenerPtr listener) = 0;
 	virtual void RemoveListener(IChessGameListener* listener) = 0;

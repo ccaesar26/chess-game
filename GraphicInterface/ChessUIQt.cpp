@@ -742,22 +742,22 @@ QString ChessUIQt::FENStringFromBoard() const
 	}
 
 	bool castleFlag = false;
-	if (m_game->IsWhiteKingsideCastlingAvailable())
+	if (m_game->IsCastlingAvailable(EColor::White, ESide::Kingside))
 	{
 		config.append('K');
 		castleFlag = true;
 	}
-	if (m_game->IsWhiteQueensideCastlingAvailable())
+	if (m_game->IsCastlingAvailable(EColor::White, ESide::Queenside))
 	{
 		config.append('Q');
 		castleFlag = true;
 	}
-	if (m_game->IsBlackKingsideCastlingAvailable())
+	if (m_game->IsCastlingAvailable(EColor::Black, ESide::Kingside))
 	{
 		config.append('k');
 		castleFlag = true;
 	}
-	if (m_game->IsBlackQueensideCastlingAvailable())
+	if (m_game->IsCastlingAvailable(EColor::Black, ESide::Queenside))
 	{
 		config.append('q');
 		castleFlag = true;

@@ -843,6 +843,11 @@ bool ChessGame::IsCheckState() const
 	return m_state == EGameState::CheckState;
 }
 
+bool ChessGame::IsCastlingAvailable(EColor color, ESide side) const
+{
+	return m_castle[(int)color][(int)side];
+}
+
 // Observers //
 
 void ChessGame::AddListener(IChessGameListenerPtr listener)
@@ -1036,26 +1041,6 @@ void ChessGame::AddCastle(Position kingPosition, PositionList& kingPossibleMoves
 			}
 		}
 	}
-}
-
-bool ChessGame::IsWhiteKingsideCastlingAvailable() const
-{
-	return m_castle[0][1];
-}
-
-bool ChessGame::IsWhiteQueensideCastlingAvailable() const
-{
-	return m_castle[0][0];
-}
-
-bool ChessGame::IsBlackKingsideCastlingAvailable() const
-{
-	return m_castle[1][1];
-}
-
-bool ChessGame::IsBlackQueensideCastlingAvailable() const
-{
-	return m_castle[1][0];
 }
 
 PositionList ChessGame::GetPossibleMoves(Position currentPos) const
