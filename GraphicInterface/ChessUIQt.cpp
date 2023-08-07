@@ -18,6 +18,10 @@
 
 #include <QHeaderView>
 
+#include <QRegularExpression>
+#include <QString>
+#include <QStringList>
+
 
 static EType ToETypeFromQString(const QString& s)
 {
@@ -398,6 +402,17 @@ void ChessUIQt::InitializeCapturedBoxes(QGridLayout* mainGridLayout)
 	mainGridLayout->addWidget(captured2, 1, 3, 1, 1);
 }
 
+
+void ChessUIQt::LoadHistory()
+{
+	QStringList moveList = QString::fromStdString(m_game->GetPGNFormat()).split(QRegularExpression(R"(\d+\.\s|\s|\*)"));
+
+	for (const QString& move : moveList) {
+		if (!move.trimmed().isEmpty()) {
+			UpdateHistory(move.trimmed().toStdString());
+		}
+	}
+}
 
 void ChessUIQt::OnButtonClicked(const Position& position)
 {

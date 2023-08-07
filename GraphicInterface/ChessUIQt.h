@@ -30,6 +30,8 @@ public:
     void InitializeBoard(QGridLayout* mainGridLayout);
     void InitializeCapturedBoxes(QGridLayout* mainGridLayout);
 
+    void LoadHistory();
+
     void UpdateHistory(const std::string& move);
     void UpdateBoard();
     void UpdateCaptures();
