@@ -79,6 +79,7 @@ public:
 	// Virtual Implementations //
 
 	bool LoadPGNFromFile(const std::string& fileName) override;
+	bool SavePGNFormat(const std::string& fileName) const override;
 	std::string GetPGNFormat() const override;
 
 	bool CheckCheckMate() const ;

@@ -235,6 +235,11 @@ bool ChessGame::LoadPGNFromFile(const std::string& fileName)
 	return true;
 }
 
+bool ChessGame::SavePGNFormat(const std::string& fileName) const
+{
+	return m_PGNFormat.SaveFormat(fileName);
+}
+
 std::string ChessGame::GetPGNFormat() const
 {
 	return m_PGNFormat.GetPGNFormat();

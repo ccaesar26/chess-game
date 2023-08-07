@@ -27,6 +27,7 @@ public:
 	virtual int GetNumberOfMoves() const = 0;
 
 	virtual bool LoadPGNFromFile(const std::string& fileName) = 0;
+	virtual bool SavePGNFormat(const std::string& fileName) const = 0;
 	virtual std::string GetPGNFormat() const = 0;
 
 	virtual void MakeMove(Position initialPos, Position finalPos, bool EnableNotification = true, EType upgradeType = EType::Pawn) = 0;
