@@ -46,6 +46,7 @@ public:
 
     QString ShowPromoteOptions();
 
+
     void OnMoveMade(Position init, Position fin) override;
     void OnGameOver(EGameResult result) override;
     void OnPawnUpgrade(Position pos) override;
@@ -53,8 +54,8 @@ public:
     void OnGameRestarted() override;
     void OnHistoryUpdate(std::string move) override;
 
-
     void OnClockUpdate() override;
+    void OnTimesUp() override;
 
 public slots:
     void OnButtonClicked(const Position& position);
@@ -65,9 +66,13 @@ public slots:
     void OnDrawButtonClicked();
     void OnSaveInClipboardButtonClicked();
     void OnHistoryClicked(QTableWidgetItem* item);
+    void OnClockUpdate(const QString& time);
+    void OnTimesUp(const EGameResult& result);
 
 signals:
     void Exit();
+    void ClockUpdateSignal(QString time);
+    void ClockTimesUpSignal(EGameResult result);
 
 private:
     // TODO: fen save/load methods

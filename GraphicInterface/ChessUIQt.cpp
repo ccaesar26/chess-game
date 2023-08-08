@@ -140,6 +140,8 @@ ChessUIQt::ChessUIQt(QWidget *parent)
     palette.setColor(QPalette::Window, QColor("#1A1A1A"));
 	this->setPalette(palette);
 
+	connect(this, SIGNAL(ClockUpdateSignal(QString)), this, SLOT(OnClockUpdate(QString)));
+	connect(this, SIGNAL(ClockTimesUpSignal(EGameResult)) , this, SLOT(OnTimesUp(EGameResult)));
 }
 
 ChessUIQt::~ChessUIQt()
@@ -1252,7 +1254,7 @@ void ChessUIQt::OnMoveMade(Position init, Position fin)
 
 void ChessUIQt::OnGameOver(EGameResult result)
 {
-	if (m_game->IsDraw())
+	if (result == EGameResult::Draw)
 	{
 		m_MessageLabel->setText("Game over!\nDraw.");
 		QMessageBox::StandardButton reply;
@@ -1268,12 +1270,12 @@ void ChessUIQt::OnGameOver(EGameResult result)
     //m_MessageLabel->setText("Game over!\nBlack player won");
 	QMessageBox::StandardButton reply;
 
-	if (m_game->IsWon(EColor::Black))
+	if (result == EGameResult::BlackPlayerWon)
 	{
         m_MessageLabel->setText("Game over!\nBlack player won");
 		reply = QMessageBox::question(this, "Game Over", "Black player won.\nDo you want to play again?", QMessageBox::Yes | QMessageBox::Close);
 	}
-	if (m_game->IsWon(EColor::White))
+	else
 	{
         m_MessageLabel->setText("Game over!\nWhite player won");
 		reply = QMessageBox::question(this, "Game Over", "White player won.\nDo you want to play again?", QMessageBox::Yes | QMessageBox::Close);
@@ -1281,7 +1283,7 @@ void ChessUIQt::OnGameOver(EGameResult result)
 
 	if (reply == QMessageBox::Yes)
 	{
-        m_game->ResetGame();
+		m_game->ResetGame();
 	}
 }
 
@@ -1364,16 +1366,57 @@ void ChessUIQt::OnHistoryUpdate(std::string move)
 	UpdateHistory(move);
 }
 
-void ChessUIQt::OnClockUpdate()
+void ChessUIQt::OnClockUpdate(const QString& time)
 {
 	switch (m_game->GetCurrentPlayer())
 	{
 	case EColor::White:
-		m_WhiteTimer->setText(FormatTime(m_game->GetRemainingTime(EColor::White)));
+		m_WhiteTimer->setText(time);
 		break;
 	case EColor::Black:
-		m_BlackTimer->setText(FormatTime(m_game->GetRemainingTime(EColor::Black)));
+		m_BlackTimer->setText(time);
 		break;
 	}
+}
+
+void ChessUIQt::OnClockUpdate()
+{
+	if (!m_game)
+	{
+		return;
+	}
+	QString timeToDisplay;
+	switch (m_game->GetCurrentPlayer())
+	{
+	case EColor::White:
+		timeToDisplay = FormatTime(m_game->GetRemainingTime(EColor::White));
+		break;
+	case EColor::Black:
+		timeToDisplay = FormatTime(m_game->GetRemainingTime(EColor::Black));
+		break;
+	}
+
+	// Emit the ClockUpdateSignal with the formatted time
+	emit ClockUpdateSignal(timeToDisplay);
+}
+
+void ChessUIQt::OnTimesUp(const EGameResult& result)
+{
+	OnGameOver(result);
+}
+
+void ChessUIQt::OnTimesUp()
+{
+	EGameResult result;
+	if (m_game->IsWon(EColor::Black))
+	{
+		result = EGameResult::BlackPlayerWon;
+	}
+	else
+	{
+		result = EGameResult::WhitePlayerWon;
+	}
+
+	emit ClockTimesUpSignal(result);
 }
 

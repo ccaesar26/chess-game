@@ -28,6 +28,8 @@ public:
 
 	virtual void OnClockUpdate() = 0;
 
+	virtual void OnTimesUp() = 0;
+
 	virtual ~IChessGameListener() = default;
 };
 

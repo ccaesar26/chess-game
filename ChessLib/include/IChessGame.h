@@ -29,6 +29,8 @@ class IChessGame
 public:
 	static  IChessGamePtr CreateGame();
 
+	virtual void StartGame() = 0;
+
 	virtual void ResetGame() = 0;
 	virtual void RestoreGame(const CharBoard& inputConfig, EColor turn = EColor::White, CastleValues castle = { true, true, true, true }) = 0;
 
@@ -65,6 +67,7 @@ public:
 	virtual void RemoveListener(IChessGameListener* listener) = 0;
 
 	virtual int GetRemainingTime(EColor color) = 0;
+	//virtual void StopTimers() = 0;
 
 	virtual ~IChessGame() = default;
 };
