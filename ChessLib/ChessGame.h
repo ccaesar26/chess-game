@@ -8,10 +8,10 @@
 #include <array>
 #include <unordered_map>
 #include <string>
-#include <chrono>
 #include <thread>
-#include <atomic>
-#include <mutex>
+#include <chrono>
+#include <condition_variable>
+
 
 using ArrayBoard = std::array<std::array<PiecePtr, 8>, 8>;
 using ChessMap = std::unordered_map<std::array<std::array<char, 8>, 8>, int, struct HashFunctor>;
@@ -36,7 +36,9 @@ enum class ENotification
 	Check,
 	Reset,
 	ClockUpdate,
-	TimesUp
+	TimesUp,
+	Pause,
+	Resume
 };
 
 struct HashFunctor {
@@ -86,6 +88,11 @@ public:
 
 	ChessGame();
 	ChessGame(const CharBoard& inputConfig, EColor turn = EColor::White, CastleValues castle = { true, true, true, true });
+
+	virtual ~ChessGame()
+	{
+		StopTimers();
+	}
 
 	void StartGame(const int& timerSeconds = -1) override;
 	// Virtual Implementations //
@@ -179,12 +186,13 @@ private:
 
 	void ConvertMoveToPositions(std::string& move, Position& initialPos, Position& finalPos);
 
-	// Timer Methods //
-
-	void OnTimerTick();
+	void StartTimer();
+	void StopTimers();
 
 	int GetRemainingTime(EColor color);
 
+	void Pause();
+	void Resume();
 private:
 
 	ArrayBoard m_board;
@@ -209,11 +217,14 @@ private:
 
 	std::vector<IChessGameListenerWeakPtr> m_listeners;
 
-	// Timers //
 
-	ChessTimer m_whiteTimer;
-	ChessTimer m_blackTimer;
+	std::thread m_timerThread;
+	std::mutex m_timerMutex;
+	std::condition_variable m_timerCV;
+	bool m_isTimerRunning = false;
 
-	std::mutex m_whiteTimerMutex;
-	std::mutex m_blackTimerMutex;
+	std::atomic_int m_whiteRemainingTime;
+	std::atomic_int m_blackRemainingTime;
+
+	std::atomic_bool m_paused;
 };

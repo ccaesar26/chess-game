@@ -1164,8 +1164,8 @@ void ChessUIQt::StartGame()
 {
     //TODO MODIFY ME OR DELETE ME
     UpdateBoard();
-	m_WhiteTimer->setText(FormatTime(m_game->GetRemainingTime(EColor::White)));
-	m_BlackTimer->setText(FormatTime(m_game->GetRemainingTime(EColor::Black)));
+	//m_WhiteTimer->setText(FormatTime(m_game->GetRemainingTime(EColor::White)));
+	//m_BlackTimer->setText(FormatTime(m_game->GetRemainingTime(EColor::Black)));
 }
 
 QString ChessUIQt::ShowPromoteOptions()
