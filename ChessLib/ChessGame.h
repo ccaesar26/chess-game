@@ -139,6 +139,11 @@ public:
 	void AddListener(IChessGameListenerPtr listener) override;
 	void RemoveListener(IChessGameListener* listener) override;
 
+	void Pause();
+	void Resume();
+
+	bool IsPaused() const override;
+
 private:
 
 	// Game's Logic //
@@ -191,8 +196,6 @@ private:
 
 	int GetRemainingTime(EColor color);
 
-	void Pause();
-	void Resume();
 private:
 
 	ArrayBoard m_board;

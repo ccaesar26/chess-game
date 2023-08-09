@@ -1559,7 +1559,12 @@ void ChessGame::StartTimer()
 		Notify(ENotification::ClockUpdate);
 
 		std::unique_lock<std::mutex> lock(m_timerMutex);
-		m_timerCV.wait_for(lock, std::chrono::milliseconds(1000), [&]{ return !m_isTimerRunning; });
+		m_timerCV.wait_for(lock, std::chrono::milliseconds(1000), [&]{ return !m_isTimerRunning || m_paused; });
+
+		if (m_paused)
+		{
+			m_timerCV.wait(lock, [&] { return !m_paused; });
+		}
 
 		switch (m_turn)
 		{
@@ -1608,17 +1613,25 @@ int ChessGame::GetRemainingTime(EColor color)
 	}
 }
 
-void ChessGame::Pause() {
-	if (m_isTimerRunning && !m_paused) {
+void ChessGame::Pause() 
+{
+	if (m_isTimerRunning && !m_paused) 
+	{
 		m_paused = true;
-		Notify(ENotification::Pause);
+		m_timerCV.notify_all();
 	}
 }
 
-void ChessGame::Resume() {
-	if (m_isTimerRunning && m_paused) {
+void ChessGame::Resume() 
+{
+	if (m_isTimerRunning && m_paused) 
+	{
 		m_paused = false;
-		Notify(ENotification::Resume);
-		m_timerCV.notify_one();
+		m_timerCV.notify_all();
 	}
+}
+
+bool ChessGame::IsPaused() const
+{
+	return m_paused;
 }

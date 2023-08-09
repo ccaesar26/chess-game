@@ -66,8 +66,11 @@ public:
 	virtual void AddListener(IChessGameListenerPtr listener) = 0;
 	virtual void RemoveListener(IChessGameListener* listener) = 0;
 
+	virtual bool IsPaused() const = 0;
+
 	virtual int GetRemainingTime(EColor color) = 0;
-	//virtual void StopTimers() = 0;
+	virtual void Pause() = 0;
+	virtual void Resume() = 0;
 
 	virtual ~IChessGame() = default;
 };

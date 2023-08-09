@@ -214,7 +214,7 @@ void ChessUIQt::InitializeButtons(QGridLayout* mainGridLayout)
 	saveClipboardButton->setStyleSheet(buttonStyle);
 
     buttonContainer->setLayout(btnGrid);
-    mainGridLayout->addWidget(buttonContainer, 0, 0, 1, 1);
+	mainGridLayout->addWidget(buttonContainer, 0, 0, 1, 1);
 }
 
 void ChessUIQt::InitializeTimers(QGridLayout* mainGridLayout)
@@ -267,7 +267,9 @@ void ChessUIQt::InitializeTimers(QGridLayout* mainGridLayout)
     timerGrid->addWidget(m_WhiteTimer, 0, 4);
 
     timerContainer->setLayout(timerGrid);
-    mainGridLayout->addWidget(timerContainer, 2, 0, 1, 4, Qt::AlignCenter);
+	mainGridLayout->addWidget(timerContainer, 2, 0, 1, 4, Qt::AlignCenter);
+
+	connect(pauseTimerBtn, &QPushButton::pressed, this, &ChessUIQt::OnPauseButtonClicked);
 }
 
 void ChessUIQt::InitializeHistory(QGridLayout* mainGridLayout)
@@ -680,6 +682,18 @@ void ChessUIQt::OnSaveInClipboardButtonClicked()
 
 	QClipboard* clipboard = QGuiApplication::clipboard();
 	clipboard->setText(textToCopy);
+}
+
+void ChessUIQt::OnPauseButtonClicked()
+{
+	if (m_game->IsPaused())
+	{
+		m_game->Resume();
+	}
+	else
+	{
+		m_game->Pause();
+	}
 }
 
 void ChessUIQt::OnHistoryClicked(QTableWidgetItem* item)

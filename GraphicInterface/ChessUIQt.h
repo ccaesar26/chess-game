@@ -65,6 +65,7 @@ public slots:
     void OnRestartButtonClicked();
     void OnDrawButtonClicked();
     void OnSaveInClipboardButtonClicked();
+    void OnPauseButtonClicked();
     void OnHistoryClicked(QTableWidgetItem* item);
     void OnClockUpdate(const QString& time);
     void OnTimesUp(const EGameResult& result);
