@@ -57,8 +57,8 @@ ChessGame::ChessGame()
 void ChessGame::StartGame(const int& timerSeconds) 
 {
 	InitializeChessGame();
-	m_whiteRemainingTime = timerSeconds;
-	m_blackRemainingTime = timerSeconds;
+	m_whiteRemainingTime.store(std::chrono::seconds(timerSeconds));
+	m_blackRemainingTime.store(std::chrono::seconds(timerSeconds));
 	m_timerThread = std::thread(&ChessGame::StartTimer, this);
 	m_paused = false;
 }
@@ -1556,8 +1556,12 @@ void ChessGame::StartTimer()
 	{
 		Notify(ENotification::ClockUpdate);
 
+		auto initialTime = std::chrono::steady_clock::now();
+
 		std::unique_lock<std::mutex> lock(m_timerMutex);
 		m_timerCV.wait_for(lock, std::chrono::milliseconds(1000), [&]{ return !m_isTimerRunning || m_paused; });
+
+		auto finalTime = std::chrono::steady_clock::now();
 
 		if (m_paused)
 		{
@@ -1567,8 +1571,8 @@ void ChessGame::StartTimer()
 		switch (m_turn)
 		{
 		case EColor::White:
-			m_whiteRemainingTime--;
-			if (m_whiteRemainingTime <= 0)
+			m_whiteRemainingTime.store(m_whiteRemainingTime.load() - std::chrono::duration_cast<std::chrono::milliseconds>(finalTime - initialTime));
+			if (m_whiteRemainingTime.load().count() <= 0)
 			{
 				m_isTimerRunning = false;
 				Notify(ENotification::ClockUpdate);
@@ -1576,8 +1580,8 @@ void ChessGame::StartTimer()
 			}
 			break;
 		case EColor::Black:
-			m_blackRemainingTime--;
-			if (m_blackRemainingTime <= 0)
+			m_blackRemainingTime.store(m_blackRemainingTime.load() - std::chrono::duration_cast<std::chrono::milliseconds>(finalTime - initialTime));
+			if (m_blackRemainingTime.load().count() <= 0)
 			{
 				m_isTimerRunning = false;
 				Notify(ENotification::ClockUpdate);
@@ -1603,10 +1607,10 @@ int ChessGame::GetRemainingTime(EColor color)
 	switch (m_turn)
 	{
 	case EColor::White:
-		return m_whiteRemainingTime.load();
+		return m_whiteRemainingTime.load().count() / 1000;
 		break;
 	case EColor::Black:
-		return m_blackRemainingTime.load();
+		return m_blackRemainingTime.load().count() / 1000;
 		break;
 	}
 }

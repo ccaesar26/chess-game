@@ -25,6 +25,9 @@ public:
 
 	MOCK_METHOD(void, OnHistoryUpdate, (std::string move), (override));
 
+	MOCK_METHOD(void, OnClockUpdate, (), (override));
+
+	MOCK_METHOD(void, OnTimesUp, (), (override));
 };
 
 TEST(OnMoveMadeIsCalled, LegalMove1) 

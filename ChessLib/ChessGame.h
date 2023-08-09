@@ -226,8 +226,8 @@ private:
 	std::condition_variable m_timerCV;
 	bool m_isTimerRunning = false;
 
-	std::atomic_int m_whiteRemainingTime;
-	std::atomic_int m_blackRemainingTime;
+	std::atomic<std::chrono::milliseconds> m_whiteRemainingTime;
+	std::atomic<std::chrono::milliseconds> m_blackRemainingTime;
 
 	std::atomic_bool m_paused;
 };
