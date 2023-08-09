@@ -29,7 +29,7 @@ class IChessGame
 public:
 	static  IChessGamePtr CreateGame();
 
-	virtual void StartGame() = 0;
+	virtual void StartGame(const int& timerSeconds = -1) = 0;
 
 	virtual void ResetGame() = 0;
 	virtual void RestoreGame(const CharBoard& inputConfig, EColor turn = EColor::White, CastleValues castle = { true, true, true, true }) = 0;

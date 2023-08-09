@@ -3,6 +3,7 @@
 #include "IChessGame.h"
 #include "Piece.h"
 #include "PGNBuilder.h"
+#include "ChessTimer.h"
 
 #include <array>
 #include <unordered_map>
@@ -77,75 +78,6 @@ struct ChessData
 	std::vector<IChessGameListenerWeakPtr> listeners;
 };
 
-class ChessTimer 
-{
-public:
-	ChessTimer(std::chrono::seconds initialTime)
-		: m_remainingTime(initialTime)
-	{
-	}
-
-	~ChessTimer()
-	{
-		m_isRunning = false;
-		if (m_thread.joinable())
-		{
-			m_thread.join();
-		}
-	}
-
-	void Start() 
-	{
-		m_isRunning = true;
-		m_thread = std::thread(&ChessTimer::Run, this);
-	}
-
-	void Stop() 
-	{
-		m_isRunning = false;
-	}
-
-	void SetNotify(std::function<void()> notifyFunction)
-	{
-		m_notifyFunction = notifyFunction;
-	}
-
-	std::chrono::seconds GetRemainingTime() const 
-	{
-		return std::chrono::duration_cast<std::chrono::seconds>(m_remainingTime.load());
-	}
-
-private:
-	void Run() 
-	{
-		auto lastTickTime = std::chrono::system_clock::now();
-
-		while (m_isRunning) 
-		{
-			if (m_notifyFunction)
-			{
-				m_notifyFunction();
-			}
-
-			std::this_thread::sleep_for(std::chrono::milliseconds(100));
-
-			auto currentTime = std::chrono::system_clock::now();
-			auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - lastTickTime);
-
-			m_remainingTime.store(m_remainingTime.load() -= elapsed);
-			lastTickTime = currentTime;
-		}
-
-		lastTickTime = std::chrono::system_clock::now();
-	}
-
-	std::function<void()> m_notifyFunction;
-	std::atomic<bool> m_isRunning{ false };
-	std::atomic<std::chrono::milliseconds> m_remainingTime;
-	std::thread m_thread;
-};
-
-
 class ChessGame : public IChessGame
 {
 public:
@@ -155,7 +87,7 @@ public:
 	ChessGame();
 	ChessGame(const CharBoard& inputConfig, EColor turn = EColor::White, CastleValues castle = { true, true, true, true });
 
-	void StartGame() override;
+	void StartGame(const int& timerSeconds = -1) override;
 	// Virtual Implementations //
 
 	void ResetGame() override;
@@ -247,6 +179,12 @@ private:
 
 	void ConvertMoveToPositions(std::string& move, Position& initialPos, Position& finalPos);
 
+	// Timer Methods //
+
+	void OnTimerTick();
+
+	int GetRemainingTime(EColor color);
+
 private:
 
 	ArrayBoard m_board;
@@ -273,50 +211,9 @@ private:
 
 	// Timers //
 
-	ChessTimer m_whiteTimer{ std::chrono::seconds(10) };
-	ChessTimer m_blackTimer{ std::chrono::seconds(10) };
+	ChessTimer m_whiteTimer;
+	ChessTimer m_blackTimer;
 
 	std::mutex m_whiteTimerMutex;
 	std::mutex m_blackTimerMutex;
-
-	void OnTimerTick()
-	{
-		Notify(ENotification::ClockUpdate);
-
-		auto remainingTime = GetRemainingTime(m_turn);
-
-		if (remainingTime <= 0)
-		{
-			if (m_turn == EColor::White)
-			{
-				UpdateState(EGameState::WonByBlackPlayer);
-			}
-			else
-			{
-				UpdateState(EGameState::WonByWhitePlayer);
-			}
-
-			Notify(ENotification::TimesUp);
-
-			m_whiteTimer.Stop();
-			m_blackTimer.Stop();
-
-			return;
-		}
-	}
-
-	int GetRemainingTime(EColor color) 
-	{
-		int remainingTime;
-		if (color == EColor::White) 
-		{
-			remainingTime = m_whiteTimer.GetRemainingTime().count();
-		}
-		else 
-		{
-			remainingTime = m_blackTimer.GetRemainingTime().count();
-		}
-
-		return remainingTime;
-	}
 };

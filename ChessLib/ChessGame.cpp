@@ -51,16 +51,19 @@ IChessGamePtr IChessGame::CreateGame()
 
 ChessGame::ChessGame()
 {
-	StartGame();
+	StartGame(30);
 }
 
-void ChessGame::StartGame()
+void ChessGame::StartGame(const int& timerSeconds /*= -1*/)
 {
-	// Initialize game components and setup
-	InitializeChessGame(); // Or your preferred initialization method
+	InitializeChessGame(); 
 
-	m_whiteTimer.Start();
-	//blackTimer.Start();
+	if (timerSeconds != -1)
+	{
+		m_whiteTimer.SetTime(timerSeconds);
+		m_blackTimer.SetTime(timerSeconds);
+		m_whiteTimer.Start();
+	}
 }
 
 ChessGame::ChessGame(const CharBoard& inputConfig, EColor turn, CastleValues castle)
@@ -1562,6 +1565,47 @@ void ChessGame::ConvertMoveToPositions(std::string& move, Position& initialPos, 
 			}
 		}
 	}
+}
+
+void ChessGame::OnTimerTick()
+{
+	Notify(ENotification::ClockUpdate);
+
+	auto remainingTime = GetRemainingTime(m_turn);
+
+	if (remainingTime <= 0)
+	{
+		if (m_turn == EColor::White)
+		{
+			UpdateState(EGameState::WonByBlackPlayer);
+		}
+		else
+		{
+			UpdateState(EGameState::WonByWhitePlayer);
+		}
+
+		Notify(ENotification::TimesUp);
+
+		m_whiteTimer.Stop();
+		m_blackTimer.Stop();
+
+		return;
+	}
+}
+
+int ChessGame::GetRemainingTime(EColor color)
+{
+	int remainingTime;
+	if (color == EColor::White)
+	{
+		remainingTime = m_whiteTimer.GetRemainingTime().count();
+	}
+	else
+	{
+		remainingTime = m_blackTimer.GetRemainingTime().count();
+	}
+
+	return remainingTime;
 }
 
 //void ChessGame::StartPlayerTimer()

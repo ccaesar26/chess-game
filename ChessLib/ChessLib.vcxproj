@@ -145,6 +145,7 @@
   <ItemGroup>
     <ClInclude Include="Bishop.h" />
     <ClInclude Include="ChessGame.h" />
+    <ClInclude Include="ChessTimer.h" />
     <ClInclude Include="Horse.h" />
     <ClInclude Include="include\IChessGame.h" />
     <ClInclude Include="include\IChessGameListener.h" />
@@ -160,6 +161,7 @@
   <ItemGroup>
     <ClCompile Include="Bishop.cpp" />
     <ClCompile Include="ChessGame.cpp" />
+    <ClCompile Include="ChessTimer.cpp" />
     <ClCompile Include="Horse.cpp" />
     <ClCompile Include="King.cpp" />
     <ClCompile Include="Pawn.cpp" />
