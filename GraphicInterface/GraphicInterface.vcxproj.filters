@@ -46,12 +46,18 @@
     <ClCompile Include="GridButton.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GameModeDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="ChessUIQt.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="GridButton.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="GameModeDialog.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

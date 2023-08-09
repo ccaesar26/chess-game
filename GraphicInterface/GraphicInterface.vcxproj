@@ -106,6 +106,7 @@
     <QtUic Include="GraphicInterface.ui" />
     <QtMoc Include="GraphicInterface.h" />
     <ClCompile Include="ChessUIQt.cpp" />
+    <ClCompile Include="GameModeDialog.cpp" />
     <ClCompile Include="GraphicInterface.cpp" />
     <ClCompile Include="GridButton.cpp" />
     <ClCompile Include="main.cpp" />
@@ -115,6 +116,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Enums.h" />
+    <QtMoc Include="GameModeDialog.h" />
     <QtMoc Include="GridButton.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

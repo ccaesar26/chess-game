@@ -10,6 +10,7 @@
 #include <QFile>
 
 #include "GridButton.h"
+#include "GameModeDialog.h"
 #include "IChessGame.h"
 #include "IChessGameListener.h"
 

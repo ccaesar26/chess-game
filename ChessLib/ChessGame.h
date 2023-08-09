@@ -8,9 +8,6 @@
 #include <array>
 #include <unordered_map>
 #include <string>
-#include <thread>
-#include <chrono>
-#include <condition_variable>
 
 
 using ArrayBoard = std::array<std::array<PiecePtr, 8>, 8>;
@@ -89,12 +86,6 @@ public:
 	ChessGame();
 	ChessGame(const CharBoard& inputConfig, EColor turn = EColor::White, CastleValues castle = { true, true, true, true });
 
-	virtual ~ChessGame()
-	{
-		StopTimers();
-	}
-
-	void StartGame(const int& timerSeconds = -1) override;
 	// Virtual Implementations //
 
 	void ResetGame() override;
@@ -139,10 +130,12 @@ public:
 	void AddListener(IChessGameListenerPtr listener) override;
 	void RemoveListener(IChessGameListener* listener) override;
 
-	void Pause();
-	void Resume();
+	void Pause() override;
+	void Resume() override;
 
 	bool IsPaused() const override;
+
+	void EnableTimedMode(int seconds) override;
 
 private:
 
@@ -191,10 +184,7 @@ private:
 
 	void ConvertMoveToPositions(std::string& move, Position& initialPos, Position& finalPos);
 
-	void StartTimer();
-	void StopTimers();
-
-	int GetRemainingTime(EColor color);
+	int GetRemainingTime(EColor color) const;
 
 private:
 
@@ -220,14 +210,5 @@ private:
 
 	std::vector<IChessGameListenerWeakPtr> m_listeners;
 
-
-	std::thread m_timerThread;
-	std::mutex m_timerMutex;
-	std::condition_variable m_timerCV;
-	bool m_isTimerRunning = false;
-
-	std::atomic<std::chrono::milliseconds> m_whiteRemainingTime;
-	std::atomic<std::chrono::milliseconds> m_blackRemainingTime;
-
-	std::atomic_bool m_paused;
+	ChessTimer m_timer;
 };

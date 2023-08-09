@@ -1176,10 +1176,18 @@ void ChessUIQt::UnhighlightPossibleMoves(const PositionList& possibleMoves)
 
 void ChessUIQt::StartGame()
 {
-    //TODO MODIFY ME OR DELETE ME
-    UpdateBoard();
-	//m_WhiteTimer->setText(FormatTime(m_game->GetRemainingTime(EColor::White)));
-	//m_BlackTimer->setText(FormatTime(m_game->GetRemainingTime(EColor::Black)));
+	GameModeDialog dialog(this);
+	if (dialog.exec() == QDialog::Accepted)
+	{
+		int gameTimeInSeconds = dialog.getSelectedTimeInSeconds();
+		if (gameTimeInSeconds != -1)
+		{
+			m_game->EnableTimedMode(gameTimeInSeconds);
+			m_WhiteTimer->setText(FormatTime(m_game->GetRemainingTime(EColor::White)));
+			m_BlackTimer->setText(FormatTime(m_game->GetRemainingTime(EColor::Black)));
+		}
+	}
+	UpdateBoard();
 }
 
 QString ChessUIQt::ShowPromoteOptions()

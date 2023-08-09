@@ -51,16 +51,7 @@ IChessGamePtr IChessGame::CreateGame()
 
 ChessGame::ChessGame()
 {
-	StartGame(30);
-}
-
-void ChessGame::StartGame(const int& timerSeconds) 
-{
 	InitializeChessGame();
-	m_whiteRemainingTime.store(std::chrono::seconds(timerSeconds));
-	m_blackRemainingTime.store(std::chrono::seconds(timerSeconds));
-	m_timerThread = std::thread(&ChessGame::StartTimer, this);
-	m_paused = false;
 }
 
 ChessGame::ChessGame(const CharBoard& inputConfig, EColor turn, CastleValues castle)
@@ -911,8 +902,8 @@ void ChessGame::AddListener(IChessGameListenerPtr listener)
 {
 	m_listeners.push_back(listener);
 
-	//m_whiteTimer.SetNotify(std::bind(&ChessGame::OnTimerTick, this));
-	//m_blackTimer.SetNotify(std::bind(&ChessGame::OnTimerTick, this));
+	m_timer.SetNotify(std::bind(&ChessGame::Notify, this, ENotification::ClockUpdate)
+		, std::bind(&ChessGame::Notify, this, ENotification::TimesUp));
 }
 
 void ChessGame::RemoveListener(IChessGameListener* listener)
@@ -946,16 +937,29 @@ void ChessGame::RemoveListener(IChessGameListener* listener)
 	m_listeners.erase(std::remove_if(m_listeners.begin(), m_listeners.end(), f));
 }
 
-//int ChessGame::GetRemainingTime(EColor color)
-//{
-//	switch (color)
-//	{
-//	case EColor::White:
-//		return m_remainingWhite.count() / 1000;
-//	case EColor::Black:
-//		return m_remainingBlack.count() / 1000;
-//	}
-//}
+void ChessGame::Pause()
+{
+	m_timer.Pause();
+}
+
+void ChessGame::Resume()
+{
+	m_timer.Resume();
+}
+
+bool ChessGame::IsPaused() const
+{
+	return m_timer.IsPaused();
+}
+
+void ChessGame::EnableTimedMode(int seconds)
+{
+	m_timer.SetTime(std::chrono::seconds(seconds));
+	if (seconds > 0)
+	{
+		m_timer.Start();
+	}
+}
 
 void ChessGame::NotifyMoveMade(Position init, Position fin)
 {
@@ -1005,23 +1009,24 @@ void ChessGame::Notify(ENotification notif)
 					result = EGameResult::WhitePlayerWon;
 				if (IsWon(EColor::Black))
 					result = EGameResult::BlackPlayerWon;
-					sp->OnGameOver(result);
+				m_timer.Stop();
+				sp->OnGameOver(result);
 				break;
 			}
 			case ENotification::Check:
 				sp->OnCheck();
 				break;
 			case ENotification::Reset:
+				m_timer.Stop();
 				sp->OnGameRestarted();
 				break;
 			case ENotification::ClockUpdate:
 				{
-					//std::lock_guard<std::mutex> whiteLock(m_whiteTimerMutex);
-					//std::lock_guard<std::mutex> blackLock(m_blackTimerMutex);
 					sp->OnClockUpdate();
 				}
 				break;
 			case ENotification::TimesUp:
+				m_timer.Stop();
 				sp->OnTimesUp();
 				break;
 			}
@@ -1307,8 +1312,8 @@ bool ChessGame::KingsWayCanBeBlocked(const PositionList& toBlockPositions) const
 
 void ChessGame::SwitchTurn() 
 {
-	std::unique_lock<std::mutex> lock(m_timerMutex);
 	m_turn = (m_turn == EColor::White) ? EColor::Black : EColor::White;
+	m_timer.SwitchTurn();
 }
 
 void ChessGame::UpdateState(EGameState state)
@@ -1549,91 +1554,8 @@ void ChessGame::ConvertMoveToPositions(std::string& move, Position& initialPos, 
 }
 
 
-void ChessGame::StartTimer()
+int ChessGame::GetRemainingTime(EColor color) const
 {
-	m_isTimerRunning = true;
-	while (m_isTimerRunning)
-	{
-		Notify(ENotification::ClockUpdate);
-
-		auto initialTime = std::chrono::steady_clock::now();
-
-		std::unique_lock<std::mutex> lock(m_timerMutex);
-		m_timerCV.wait_for(lock, std::chrono::milliseconds(1000), [&]{ return !m_isTimerRunning || m_paused; });
-
-		auto finalTime = std::chrono::steady_clock::now();
-
-		if (m_paused)
-		{
-			m_timerCV.wait(lock, [&] { return !m_paused; });
-		}
-
-		switch (m_turn)
-		{
-		case EColor::White:
-			m_whiteRemainingTime.store(m_whiteRemainingTime.load() - std::chrono::duration_cast<std::chrono::milliseconds>(finalTime - initialTime));
-			if (m_whiteRemainingTime.load().count() <= 0)
-			{
-				m_isTimerRunning = false;
-				Notify(ENotification::ClockUpdate);
-				Notify(ENotification::TimesUp);
-			}
-			break;
-		case EColor::Black:
-			m_blackRemainingTime.store(m_blackRemainingTime.load() - std::chrono::duration_cast<std::chrono::milliseconds>(finalTime - initialTime));
-			if (m_blackRemainingTime.load().count() <= 0)
-			{
-				m_isTimerRunning = false;
-				Notify(ENotification::ClockUpdate);
-				Notify(ENotification::TimesUp);
-			}
-			break;
-		}
-	}
+	return m_timer.GetRemainingTime(color);
 }
 
-void ChessGame::StopTimers()
-{
-	m_isTimerRunning = false;
-	m_timerCV.notify_all();
-	if (m_timerThread.joinable())
-	{
-		m_timerThread.join();
-	}
-}
-
-int ChessGame::GetRemainingTime(EColor color)
-{
-	switch (m_turn)
-	{
-	case EColor::White:
-		return m_whiteRemainingTime.load().count() / 1000;
-		break;
-	case EColor::Black:
-		return m_blackRemainingTime.load().count() / 1000;
-		break;
-	}
-}
-
-void ChessGame::Pause() 
-{
-	if (m_isTimerRunning && !m_paused) 
-	{
-		m_paused = true;
-		m_timerCV.notify_all();
-	}
-}
-
-void ChessGame::Resume() 
-{
-	if (m_isTimerRunning && m_paused) 
-	{
-		m_paused = false;
-		m_timerCV.notify_all();
-	}
-}
-
-bool ChessGame::IsPaused() const
-{
-	return m_paused;
-}
