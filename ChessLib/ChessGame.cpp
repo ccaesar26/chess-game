@@ -1307,10 +1307,8 @@ bool ChessGame::KingsWayCanBeBlocked(const PositionList& toBlockPositions) const
 
 void ChessGame::SwitchTurn() 
 {
-
-	StopTimers();  // Stop the current timer	
+	std::unique_lock<std::mutex> lock(m_timerMutex);
 	m_turn = (m_turn == EColor::White) ? EColor::Black : EColor::White;
-	m_timerThread = std::thread(&ChessGame::StartTimer, this);  // Start the new timer
 }
 
 void ChessGame::UpdateState(EGameState state)
