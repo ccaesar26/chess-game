@@ -129,6 +129,8 @@ public:
 	void Pause() override;
 	void Resume() override;
 
+	void SetRefreshRate(int milliseconds) override;
+
 	int GetRemainingTime(EColor color) const;
 
 	bool IsPaused() const override;

@@ -18,6 +18,7 @@ public:
 	void Stop();
 
 	void SetTime(std::chrono::seconds time);
+	void SetRefreshRate(std::chrono::milliseconds rate);
 	void SetNotify(std::function<void()> notifyUpdate, std::function<void()> notifyTimesUp);
 
 	int GetRemainingTime(EColor color) const;
@@ -42,6 +43,7 @@ private:
 
 	std::atomic<std::chrono::milliseconds> m_whiteRemainingTime;
 	std::atomic<std::chrono::milliseconds> m_blackRemainingTime;
+	std::atomic<std::chrono::milliseconds> m_refreshRate;
 
 	std::atomic<EColor> m_turn;
 	std::function<void()> NotifyUpdateTimer;

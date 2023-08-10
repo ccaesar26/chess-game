@@ -576,6 +576,11 @@ void ChessGame::Resume()
 	m_timer.Resume();
 }
 
+void ChessGame::SetRefreshRate(int milliseconds)
+{
+	throw std::logic_error("The method or operation is not implemented.");
+}
+
 int ChessGame::GetRemainingTime(EColor color) const
 {
 	return m_timer.GetRemainingTime(color);

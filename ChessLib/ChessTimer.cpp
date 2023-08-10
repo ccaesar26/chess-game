@@ -3,6 +3,7 @@
 ChessTimer::ChessTimer() : m_paused(false)
 , m_isTimerRunning(false)
 , m_turn(EColor::White)
+, m_refreshRate(std::chrono::milliseconds(1))
 {
 
 }
@@ -34,6 +35,11 @@ void ChessTimer::SetTime(std::chrono::seconds time)
 	m_blackRemainingTime.store(time);
 }
 
+void ChessTimer::SetRefreshRate(std::chrono::milliseconds rate)
+{
+	m_refreshRate = rate;
+}
+
 void ChessTimer::SetNotify(std::function<void()> notifyUpdate, std::function<void()> notifyTimesUp)
 {
 	NotifyUpdateTimer = notifyUpdate;
@@ -45,10 +51,10 @@ int ChessTimer::GetRemainingTime(EColor color) const
 	switch (m_turn)
 	{
 	case EColor::White:
-		return m_whiteRemainingTime.load().count() / 1000;
+		return m_whiteRemainingTime.load().count();
 		break;
 	case EColor::Black:
-		return m_blackRemainingTime.load().count() / 1000;
+		return m_blackRemainingTime.load().count();
 		break;
 	}
 }
@@ -91,7 +97,7 @@ void ChessTimer::StartTimer()
 		auto initialTime = std::chrono::steady_clock::now();
 
 		std::unique_lock<std::mutex> lock(m_timerMutex);
-		m_timerCV.wait_for(lock, std::chrono::milliseconds(1000), [&] { return !m_isTimerRunning || m_paused; });
+		m_timerCV.wait_for(lock, std::chrono::milliseconds(m_refreshRate), [&] { return !m_isTimerRunning || m_paused; });
 
 		auto finalTime = std::chrono::steady_clock::now();
 
@@ -100,26 +106,15 @@ void ChessTimer::StartTimer()
 			m_timerCV.wait(lock, [&] { return !m_paused; });
 		}
 
-		switch (m_turn)
+		auto& remainingTime = m_turn == EColor::White ? m_whiteRemainingTime : m_blackRemainingTime;
+
+		
+		remainingTime.store(remainingTime.load() - std::chrono::duration_cast<std::chrono::milliseconds>(finalTime - initialTime));
+		if (remainingTime.load().count() <= 0)
 		{
-		case EColor::White:
-			m_whiteRemainingTime.store(m_whiteRemainingTime.load() - std::chrono::duration_cast<std::chrono::milliseconds>(finalTime - initialTime));
-			if (m_whiteRemainingTime.load().count() <= 0)
-			{
-				m_isTimerRunning = false;
-				NotifyUpdateTimer();
-				NotifyTimesUp();
-			}
-			break;
-		case EColor::Black:
-			m_blackRemainingTime.store(m_blackRemainingTime.load() - std::chrono::duration_cast<std::chrono::milliseconds>(finalTime - initialTime));
-			if (m_blackRemainingTime.load().count() <= 0)
-			{
-				m_isTimerRunning = false;
-				NotifyUpdateTimer();
-				NotifyTimesUp();
-			}
-			break;
+			m_isTimerRunning = false;
+			NotifyUpdateTimer();
+			NotifyTimesUp();
 		}
 	}
 }

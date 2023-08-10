@@ -105,15 +105,17 @@ static std::pair<PieceType, PieceColor> ToPieceFromQChar(const QChar& c)
 	return std::make_pair(type, color);
 }
 
-static QString FormatTime(int totalSeconds) 
+static QString FormatTime(int totalMilliseconds)
 {
-	int hours = totalSeconds / 3600;          // 3600 seconds in an hour
-	int minutes = (totalSeconds % 3600) / 60; // 60 seconds in a minute
-	int seconds = totalSeconds % 60;          // Remaining seconds
+	int hours = totalMilliseconds / 3600000;             // 3600000 milliseconds in an hour
+	int minutes = (totalMilliseconds % 3600000) / 60000; // 60000 milliseconds in a minute
+	int seconds = (totalMilliseconds % 60000) / 1000;    // 1000 milliseconds in a second
+	int milliseconds = totalMilliseconds % 1000;         // Remaining milliseconds
 
-	QTime time(hours, minutes, seconds);
-	return time.toString("hh:mm:ss");
+	QTime time(hours, minutes, seconds, milliseconds);
+	return time.toString("hh:mm:ss.zzz");
 }
+
 
 ChessUIQt::ChessUIQt(QWidget *parent)
     : QMainWindow(parent)

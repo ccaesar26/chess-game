@@ -4,22 +4,49 @@
 
 // Generic exception class //
 
+/**
+ * @brief Base exception class for chess-related errors.
+ *
+ * This exception class is derived from `std::logic_error` and serves as the base class for all
+ * chess-related exception classes. It provides constructors for creating exceptions with or
+ * without custom error messages.
+ */
 class ChessException : public std::logic_error
 {
 public:
+	/**
+	 * @brief Default constructor for the base exception class.
+	 *
+	 * Constructs a `ChessException` with a default error message ("Unknown exception").
+	 */
 	ChessException();
-	ChessException(const std::string&);
+
+	/**
+	 * @brief Constructor for the base exception class with a custom message.
+	 *
+	 * @param message A custom error message describing the exception.
+	 */
+	ChessException(const std::string& message);
 };
 
+/**
+ * @brief Inline constructor implementation for the default ChessException constructor.
+ */
 inline ChessException::ChessException()
 	: std::logic_error("Unknown exception")
 {
 }
 
+/**
+ * @brief Inline constructor implementation for the ChessException constructor with a custom message.
+ *
+ * @param message A custom error message describing the exception.
+ */
 inline ChessException::ChessException(const std::string& message)
 	: std::logic_error(message)
 {
 }
+
 
  // Specialized exception classes //
 
