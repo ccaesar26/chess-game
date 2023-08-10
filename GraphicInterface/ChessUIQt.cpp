@@ -1212,28 +1212,38 @@ void ChessUIQt::StartGame()
 
 QString ChessUIQt::ShowPromoteOptions()
 {
+	QInputDialog dialog;
 	QList<QString> options;
 	options.append("Rook");
 	options.append("Bishop");
 	options.append("Queen");
 	options.append("Knight");
 
-	QDialog dialog;
+	dialog.setComboBoxItems(options);
 	dialog.setModal(true);
+	dialog.setWindowFlags(dialog.windowFlags() & ~Qt::WindowCloseButtonHint); // Disable close button (X)
 
-	// Remove the window's close button
-	dialog.setWindowFlags(Qt::Window | Qt::WindowTitleHint | Qt::CustomizeWindowHint);
+	bool ok;
+	QString item = QInputDialog::getItem(this, tr("Pawn promote"),
+		tr("Promote pawn to: "), options, 0, false, &ok);
 
-	QVBoxLayout* layout = new QVBoxLayout(&dialog);
-	QComboBox* comboBox = new QComboBox;
-	comboBox->addItems(options);
-	layout->addWidget(comboBox);
-
-	bool ok = dialog.exec();
-
-	if (ok)
+	if (ok && !item.isEmpty())
 	{
-		return comboBox->currentText();
+		// TODO: Perform the desired action here.
+		return item;
+	}
+
+	// Prevent the dialog from being closed by "Cancel" button.
+	while (true)
+	{
+		QString item = QInputDialog::getItem(this, tr("Pawn promote"),
+			tr("Promote pawn to: "), options, 0, false, &ok);
+
+		if (ok && !item.isEmpty())
+		{
+			// TODO: Perform the desired action here.
+			return item;
+		}
 	}
 
 	return QString();
