@@ -4,7 +4,6 @@
 #include "IChessGameListener.h"
 
 #include "IChessGameControl.h"
-#include "IChessGameEventHandling.h"
 #include "IChessGameStorage.h"
 #include "IChessGameStatus.h"
 #include "IChessGameTimedMode.h"

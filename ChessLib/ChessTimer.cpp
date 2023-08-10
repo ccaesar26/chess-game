@@ -14,6 +14,7 @@ ChessTimer::~ChessTimer()
 
 void ChessTimer::Start()
 {
+	Stop();
 	m_timerThread = std::thread(&ChessTimer::StartTimer, this);
 }
 

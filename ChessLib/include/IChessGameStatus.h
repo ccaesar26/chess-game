@@ -13,7 +13,6 @@ public:
 	virtual EColor GetCurrentPlayer() const = 0;
 	virtual CharBoard GetBoardAtIndex(int index) const = 0;
 	virtual int GetNumberOfMoves() const = 0;
-	virtual int GetRemainingTime(EColor color) const = 0;
 
 	virtual bool IsGameOver() const = 0;
 	virtual bool IsDraw() const = 0;
@@ -22,5 +21,4 @@ public:
 	virtual bool IsWaitingForUpgrade() const = 0;
 	virtual bool IsCheckState() const = 0;
 	virtual bool IsCastlingAvailable(EColor color, ESide side) const = 0;
-	virtual bool IsPaused() const = 0;
 };

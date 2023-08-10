@@ -23,6 +23,8 @@ GameModeDialog::GameModeDialog(QWidget* parent) : QDialog(parent)
 	layout->addWidget(m_timeComboBox);
 	layout->addWidget(m_confirmButton);
 	setLayout(layout);
+
+	setWindowFlags(windowFlags() & ~Qt::WindowCloseButtonHint);
 }
 
 int GameModeDialog::getSelectedTimeInSeconds()

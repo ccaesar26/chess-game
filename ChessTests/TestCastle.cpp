@@ -51,11 +51,9 @@ TEST(TestCastle, Test_White_Can_Not_Castle_1)
 			'r', ' ', ' ', ' ', 'k', ' ', ' ', 'r'    // 7
 	};
 
-	ChessGame game(alternativeBoard, EColor::White);
 
 	CastleValues Castle = { false,false,true,true };
-
-	game.SetCastleValues(Castle);
+	ChessGame game(alternativeBoard, EColor::White, Castle);
 
 	// Tests //
 
@@ -225,11 +223,9 @@ TEST(TestCastle, Test_Black_Can_Not_Castle_1)
 			'k', ' ', ' ', ' ', ' ', ' ', ' ', ' ',   // 7
 	};
 
-	ChessGame game(alternativeBoard, EColor::Black);
 
 	CastleValues Castle = { true,true,false,false };
-
-	game.SetCastleValues(Castle);
+	ChessGame game(alternativeBoard, EColor::Black, Castle);
 
 	// Tests //
 

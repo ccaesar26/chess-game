@@ -686,7 +686,7 @@ void ChessUIQt::OnSaveInClipboardButtonClicked()
 
 void ChessUIQt::OnPauseButtonClicked()
 {
-	if (m_game->GetStatus()->IsPaused())
+	if (m_game->IsPaused())
 	{
 		m_game->Resume();
 
@@ -1201,8 +1201,8 @@ void ChessUIQt::StartGame()
 		if (gameTimeInSeconds != -1)
 		{
 			m_game->EnableTimedMode(gameTimeInSeconds);
-			m_WhiteTimer->setText(FormatTime(m_game->GetStatus()->GetRemainingTime(EColor::White)));
-			m_BlackTimer->setText(FormatTime(m_game->GetStatus()->GetRemainingTime(EColor::Black)));
+			m_WhiteTimer->setText(FormatTime(m_game->GetRemainingTime(EColor::White)));
+			m_BlackTimer->setText(FormatTime(m_game->GetRemainingTime(EColor::Black)));
 		}
 	}
 	UpdateBoard();
@@ -1210,32 +1210,31 @@ void ChessUIQt::StartGame()
 
 QString ChessUIQt::ShowPromoteOptions()
 {
-    QInputDialog dialog;
-    QList<QString> options;
-    options.append("Rook");
-    options.append("Bishop");
-    options.append("Queen");
-    options.append("Knight");
+	QList<QString> options;
+	options.append("Rook");
+	options.append("Bishop");
+	options.append("Queen");
+	options.append("Knight");
 
-    dialog.setComboBoxItems(options);
-    dialog.setModal(true);
+	QDialog dialog;
+	dialog.setModal(true);
 
-    bool ok;
-    QString item = QInputDialog::getItem(this, tr("Pawn promote"),
-        tr("Promote pawn to: "), options, 0, false, &ok);
+	// Remove the window's close button
+	dialog.setWindowFlags(Qt::Window | Qt::WindowTitleHint | Qt::CustomizeWindowHint);
 
-    if (ok && !item.isEmpty())
-    {
-        //TODO
-        return item;
-        //game.promotePawn(parseQStringToPieceType(item))
+	QVBoxLayout* layout = new QVBoxLayout(&dialog);
+	QComboBox* comboBox = new QComboBox;
+	comboBox->addItems(options);
+	layout->addWidget(comboBox);
 
-        ////TODO DELETE ME...
-        //QMessageBox notification;
-        //notification.setText("You selected " + item);
-        //notification.exec();
-    }
-    return QString();
+	bool ok = dialog.exec();
+
+	if (ok)
+	{
+		return comboBox->currentText();
+	}
+
+	return QString();
 }
 
 void ChessUIQt::UpdateMessage(const QString& message)
@@ -1429,10 +1428,10 @@ void ChessUIQt::OnClockUpdate()
 	switch (m_game->GetStatus()->GetCurrentPlayer())
 	{
 	case EColor::White:
-		timeToDisplay = FormatTime(m_game->GetStatus()->GetRemainingTime(EColor::White));
+		timeToDisplay = FormatTime(m_game->GetRemainingTime(EColor::White));
 		break;
 	case EColor::Black:
-		timeToDisplay = FormatTime(m_game->GetStatus()->GetRemainingTime(EColor::Black));
+		timeToDisplay = FormatTime(m_game->GetRemainingTime(EColor::Black));
 		break;
 	}
 
