@@ -195,7 +195,7 @@ void ChessGame::SaveConfiguration()
 
 // Virtual Implementations //
 
-bool ChessGame::LoadPGNFromFile(const std::string& fileName)
+bool ChessGame::LoadFromFile(EFormat format, const std::string& fileName)
 {
 	PGNReader reader;
 
@@ -236,12 +236,12 @@ bool ChessGame::LoadPGNFromFile(const std::string& fileName)
 	return true;
 }
 
-bool ChessGame::SavePGNFormat(const std::string& fileName) const
+bool ChessGame::SaveFormat(EFormat format, const std::string& fileName) const
 {
 	return m_PGNFormat.SaveFormat(fileName);
 }
 
-std::string ChessGame::GetPGNFormat() const
+std::string ChessGame::GetFormat(EFormat format) const 
 {
 	return m_PGNFormat.GetPGNFormat();
 }
@@ -858,6 +858,11 @@ void ChessGame::DrawOperation(EDrawOperation op)
 	default:
 		break;
 	}
+}
+
+const IChessGameStatus* ChessGame::GetStatus() const
+{
+	return this;
 }
 
 bool ChessGame::IsDraw() const

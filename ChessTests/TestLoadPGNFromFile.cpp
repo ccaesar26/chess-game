@@ -8,7 +8,7 @@ TEST(TestLoadPGNFromFile, LoadPass_1)
 {
 	ChessGame game;
 
-	bool isLoaded = game.LoadPGNFromFile(".\\TestsForLoadingPGN\\Test1Pass.pgn");
+	bool isLoaded = game.LoadFromFile(EFormat::Pgn,".\\TestsForLoadingPGN\\Test1Pass.pgn");
 	EXPECT_EQ(isLoaded, true);
 
 	std::array<std::array<char, 8>, 8> expectedBoard =
@@ -30,7 +30,7 @@ TEST(TestLoadPGNFromFile, LoadPass_2)
 {
 	ChessGame game;
 
-	bool isLoaded = game.LoadPGNFromFile(".\\TestsForLoadingPGN\\Test2Pass.pgn");
+	bool isLoaded = game.LoadFromFile(EFormat::Pgn,".\\TestsForLoadingPGN\\Test2Pass.pgn");
 	EXPECT_EQ(isLoaded, true);
 
 	std::array<std::array<char, 8>, 8> expectedBoard =
@@ -52,7 +52,7 @@ TEST(TestLoadPGNFromFile, LoadPass_3)
 {
 	ChessGame game;
 
-	bool isLoaded = game.LoadPGNFromFile(".\\TestsForLoadingPGN\\Test3Pass.pgn");
+	bool isLoaded = game.LoadFromFile(EFormat::Pgn,".\\TestsForLoadingPGN\\Test3Pass.pgn");
 	EXPECT_EQ(isLoaded, true);
 
 	std::array<std::array<char, 8>, 8> expectedBoard =
@@ -74,7 +74,7 @@ TEST(TestLoadPGNFromFile, LoadPass_4)
 {
 	ChessGame game;
 
-	bool isLoaded = game.LoadPGNFromFile(".\\TestsForLoadingPGN\\Test4Pass.pgn");
+	bool isLoaded = game.LoadFromFile(EFormat::Pgn,".\\TestsForLoadingPGN\\Test4Pass.pgn");
 	EXPECT_EQ(isLoaded, true);
 
 	std::array<std::array<char, 8>, 8> expectedBoard =
@@ -96,7 +96,7 @@ TEST(TestLoadPGNFromFile, LoadPass_5)
 {
 	ChessGame game;
 
-	bool isLoaded = game.LoadPGNFromFile(".\\TestsForLoadingPGN\\Test5Pass.pgn");
+	bool isLoaded = game.LoadFromFile(EFormat::Pgn,".\\TestsForLoadingPGN\\Test5Pass.pgn");
 	EXPECT_EQ(isLoaded, true);
 
 	std::array<std::array<char, 8>, 8> expectedBoard =
@@ -118,7 +118,7 @@ TEST(TestLoadPGNFromFile, LoadFail_1)
 {
 	ChessGame game;
 
-	bool isLoaded = game.LoadPGNFromFile(".\\TestsForLoadingPGN\\Test11Fail.pgn");
+	bool isLoaded = game.LoadFromFile(EFormat::Pgn,".\\TestsForLoadingPGN\\Test11Fail.pgn");
 	EXPECT_EQ(isLoaded, false);
 }
 
@@ -128,7 +128,7 @@ TEST(TestLoadPGNFromFile, LoadMoreGames)
 
 	// Load First Game // 
 
-	bool isLoaded = game.LoadPGNFromFile(".\\TestsForLoadingPGN\\Test1Pass.pgn");
+	bool isLoaded = game.LoadFromFile(EFormat::Pgn,".\\TestsForLoadingPGN\\Test1Pass.pgn");
 	EXPECT_EQ(isLoaded, true);
 
 	std::array<std::array<char, 8>, 8> expectedBoard =
@@ -147,14 +147,14 @@ TEST(TestLoadPGNFromFile, LoadMoreGames)
 
 	// Load Second Game // 
 
-	isLoaded = game.LoadPGNFromFile(".\\TestsForLoadingPGN\\Test11Fail.pgn");
+	isLoaded = game.LoadFromFile(EFormat::Pgn,".\\TestsForLoadingPGN\\Test11Fail.pgn");
 	EXPECT_EQ(isLoaded, false);
 
 	EXPECT_EQ(CompareCharBoardWithNormalBoard(expectedBoard, game), true);
 
 	// Load Third Game // 
 
-	isLoaded = game.LoadPGNFromFile(".\\TestsForLoadingPGN\\Test2Pass.pgn");
+	isLoaded = game.LoadFromFile(EFormat::Pgn,".\\TestsForLoadingPGN\\Test2Pass.pgn");
 	EXPECT_EQ(isLoaded, true);
 
 	expectedBoard =
@@ -173,7 +173,7 @@ TEST(TestLoadPGNFromFile, LoadMoreGames)
 
 	// Load Forth Game // 
 
-	isLoaded = game.LoadPGNFromFile(".\\TestsForLoadingPGN\\Test11Fail.pgn");
+	isLoaded = game.LoadFromFile(EFormat::Pgn,".\\TestsForLoadingPGN\\Test11Fail.pgn");
 	EXPECT_EQ(isLoaded, false);
 
 	EXPECT_EQ(CompareCharBoardWithNormalBoard(expectedBoard, game), true);

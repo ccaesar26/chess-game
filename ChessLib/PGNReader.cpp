@@ -5,7 +5,8 @@
 #include <regex>
 
 PGNReader::PGNReader()
-{}
+{
+}
 
 bool PGNReader::LoadFromFile(const std::string& fileName)
 {

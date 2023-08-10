@@ -77,7 +77,9 @@ struct ChessData
 	std::vector<IChessGameListenerWeakPtr> listeners;
 };
 
-class ChessGame : public IChessGame
+class ChessGame 
+	: public IChessGame
+	, public IChessGameStatus
 {
 public:
 
@@ -104,9 +106,9 @@ public:
 
 	// Virtual Implementations //
 
-	bool LoadPGNFromFile(const std::string& fileName) override;
-	bool SavePGNFormat(const std::string& fileName) const override;
-	std::string GetPGNFormat() const override;
+	bool LoadFromFile(EFormat format, const std::string& fileName) override;
+	bool SaveFormat(EFormat format, const std::string& fileName) const override;
+	std::string GetFormat(EFormat format) const override;
 
 	bool CheckCheckMate() const ;
 
@@ -116,6 +118,8 @@ public:
 	void UpgradePawn(EType upgradeType) override;
 
 	void DrawOperation(EDrawOperation op) override;
+
+	const IChessGameStatus* GetStatus() const override;
 
 	bool IsGameOver() const override;
 	bool IsDraw() const override;

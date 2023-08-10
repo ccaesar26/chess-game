@@ -428,7 +428,7 @@ void ChessUIQt::InitializeCapturedBoxes(QGridLayout* mainGridLayout)
 
 void ChessUIQt::LoadHistory()
 {
-	QStringList moveList = QString::fromStdString(m_game->GetPGNFormat()).split(" ");
+	QStringList moveList = QString::fromStdString(m_game->GetFormat(EFormat::Pgn)).split(" ");
 
 	QString indexString;
 	for (const QString& move : moveList) 
@@ -456,19 +456,19 @@ void ChessUIQt::OnButtonClicked(const Position& position)
 		{
 			m_grid[m_selectedCell.value().row][m_selectedCell.value().col]->setSelected(false);
 			m_selectedCell.reset();
-			UnhighlightPossibleMoves(m_game->GetPossibleMoves(position));
+			UnhighlightPossibleMoves(m_game->GetStatus()->GetPossibleMoves(position));
 		}
 		else
 		{
 			//TODO COMPLETE ME...
 			try
 			{
-				UnhighlightPossibleMoves(m_game->GetPossibleMoves(m_selectedCell.value()));
+				UnhighlightPossibleMoves(m_game->GetStatus()->GetPossibleMoves(m_selectedCell.value()));
 				m_game->MakeMove(m_selectedCell.value(), position);
 			}
 			catch (const OccupiedByOwnPieceException& e)
 			{
-				UnhighlightPossibleMoves(m_game->GetPossibleMoves(m_selectedCell.value()));
+				UnhighlightPossibleMoves(m_game->GetStatus()->GetPossibleMoves(m_selectedCell.value()));
 
 				m_grid[m_selectedCell.value().row][m_selectedCell.value().col]->setSelected(false);
 				m_selectedCell.reset();
@@ -477,13 +477,13 @@ void ChessUIQt::OnButtonClicked(const Position& position)
 				m_grid[position.row][position.col]->setSelected(true);
 
 				AppendThrowMessage("");
-				HighlightPossibleMoves(m_game->GetPossibleMoves(m_selectedCell.value()));
+				HighlightPossibleMoves(m_game->GetStatus()->GetPossibleMoves(m_selectedCell.value()));
 
 				return;
 			}
 			catch (const ChessException& e)
 			{
-				HighlightPossibleMoves(m_game->GetPossibleMoves(m_selectedCell.value()));
+				HighlightPossibleMoves(m_game->GetStatus()->GetPossibleMoves(m_selectedCell.value()));
 				AppendThrowMessage(e.what());
 				return;
 			}
@@ -500,7 +500,7 @@ void ChessUIQt::OnButtonClicked(const Position& position)
 		m_grid[position.row][position.col]->setSelected(true);
 
 		//TODO Show possible moves here
-		HighlightPossibleMoves(m_game->GetPossibleMoves(position));
+		HighlightPossibleMoves(m_game->GetStatus()->GetPossibleMoves(position));
 	}
 }
 
@@ -686,13 +686,31 @@ void ChessUIQt::OnSaveInClipboardButtonClicked()
 
 void ChessUIQt::OnPauseButtonClicked()
 {
-	if (m_game->IsPaused())
+	if (m_game->GetStatus()->IsPaused())
 	{
 		m_game->Resume();
+
+		for (int i = 0; i < 8; i++)
+		{
+			for (int j = 0; j < 8; j++)
+			{
+				// Reconnect Clicked signal to m_grid if the last history item is selected
+				connect(m_grid[i][j], &GridButton::Clicked, this, &ChessUIQt::OnButtonClicked);
+			}
+		}
 	}
 	else
 	{
 		m_game->Pause();
+
+		for (int i = 0; i < 8; i++)
+		{
+			for (int j = 0; j < 8; j++)
+			{
+				// Disconnect Clicked signal from m_grid if a history item is selected
+				disconnect(m_grid[i][j], &GridButton::Clicked, this, &ChessUIQt::OnButtonClicked);
+			}
+		}
 	}
 }
 
@@ -701,7 +719,7 @@ void ChessUIQt::OnHistoryClicked(QTableWidgetItem* item)
 	int selectedRow = m_MovesTable->currentRow();
 	int selectedCol = m_MovesTable->currentColumn();
 
-	bool isLastHistoryItem = (m_game->GetNumberOfMoves() - 1 == 1 + 2 * selectedRow + selectedCol);
+	bool isLastHistoryItem = (m_game->GetStatus()->GetNumberOfMoves() - 1 == 1 + 2 * selectedRow + selectedCol);
 
 	for (int i = 0; i < 8; i++) 
 	{
@@ -721,7 +739,7 @@ void ChessUIQt::OnHistoryClicked(QTableWidgetItem* item)
 		}
 	}
 
-	CharBoard board = m_game->GetBoardAtIndex(1 + 2 * selectedRow + selectedCol);
+	CharBoard board = m_game->GetStatus()->GetBoardAtIndex(1 + 2 * selectedRow + selectedCol);
 
 	for (int i = 0; i < 8; i++)
 	{
@@ -791,7 +809,7 @@ QString ChessUIQt::FENStringFromBoard() const
 	}
 	config[config.size() - 1] = ' ';
 
-	switch (m_game->GetCurrentPlayer())
+	switch (m_game->GetStatus()->GetCurrentPlayer())
 	{
 	case EColor::White:
 		config.append("w ");
@@ -802,22 +820,22 @@ QString ChessUIQt::FENStringFromBoard() const
 	}
 
 	bool castleFlag = false;
-	if (m_game->IsCastlingAvailable(EColor::White, ESide::Kingside))
+	if (m_game->GetStatus()->IsCastlingAvailable(EColor::White, ESide::Kingside))
 	{
 		config.append('K');
 		castleFlag = true;
 	}
-	if (m_game->IsCastlingAvailable(EColor::White, ESide::Queenside))
+	if (m_game->GetStatus()->IsCastlingAvailable(EColor::White, ESide::Queenside))
 	{
 		config.append('Q');
 		castleFlag = true;
 	}
-	if (m_game->IsCastlingAvailable(EColor::Black, ESide::Kingside))
+	if (m_game->GetStatus()->IsCastlingAvailable(EColor::Black, ESide::Kingside))
 	{
 		config.append('k');
 		castleFlag = true;
 	}
-	if (m_game->IsCastlingAvailable(EColor::Black, ESide::Queenside))
+	if (m_game->GetStatus()->IsCastlingAvailable(EColor::Black, ESide::Queenside))
 	{
 		config.append('q');
 		castleFlag = true;
@@ -922,7 +940,7 @@ void ChessUIQt::LoadFENString(QString FENString)
 QString ChessUIQt::PGNStringFromBoard() const
 {
 	QString PGNString;
-	std::string PGNFormat = m_game->GetPGNFormat();
+	std::string PGNFormat = m_game->GetFormat(EFormat::Pgn);
 
 	PGNString = QString::fromStdString(PGNFormat);
 	PGNString.append("*");
@@ -933,7 +951,7 @@ void ChessUIQt::LoadPGNString(QString& filePath)
 {
 	std::string StringFilePath = filePath.toStdString();
 
-	if (!m_game->LoadPGNFromFile(StringFilePath))
+	if (!m_game->LoadFromFile(EFormat::Pgn, StringFilePath))
 	{
 		m_MovesTable->clearContents();
 		m_MovesTable->setRowCount(0);
@@ -943,12 +961,12 @@ void ChessUIQt::LoadPGNString(QString& filePath)
 	UpdateBoard();
 	UpdateCaptures();
 
-	if (m_game->IsGameOver())
+	if (m_game->GetStatus()->IsGameOver())
 	{
 		return;
 	} 
 
-	switch (m_game->GetCurrentPlayer())
+	switch (m_game->GetStatus()->GetCurrentPlayer())
 	{
 	case EColor::Black:
 		UpdateMessage("Waiting for black player");
@@ -959,7 +977,7 @@ void ChessUIQt::LoadPGNString(QString& filePath)
 	default:
 		break;
 	}
-	if (m_game->IsCheckState())
+	if (m_game->GetStatus()->IsCheckState())
 	{
 		QString s = m_MessageLabel->text();
 		s.remove(s.size() - 1, 1);
@@ -982,9 +1000,9 @@ void ChessUIQt::UpdateBoard()
         {
             std::pair<PieceType, PieceColor> newPiece;
 
-            if (m_game->GetIPiecePtr(Position(i,j)))
+            if (m_game->GetStatus()->GetIPiecePtr(Position(i,j)))
             {
-				switch (m_game->GetIPiecePtr(Position(i, j))->GetType())
+				switch (m_game->GetStatus()->GetIPiecePtr(Position(i, j))->GetType())
 				{
 				case EType::Rook:
 					newPiece.first = PieceType::rook;
@@ -1008,7 +1026,7 @@ void ChessUIQt::UpdateBoard()
 					break;
 				}
 
-                switch (m_game->GetIPiecePtr(Position(i, j))->GetColor())
+                switch (m_game->GetStatus()->GetIPiecePtr(Position(i, j))->GetColor())
 				{
 				case EColor::Black:
 					newPiece.second = PieceColor::black;
@@ -1044,7 +1062,7 @@ void ChessUIQt::UpdateCaptures()
 		}
 	}
 
-	IPieceList capturedByWhite = m_game->GetCapturedPieces(EColor::Black);
+	IPieceList capturedByWhite = m_game->GetStatus()->GetCapturedPieces(EColor::Black);
 
 	auto it = capturedByWhite.begin();
 
@@ -1099,7 +1117,7 @@ void ChessUIQt::UpdateCaptures()
 		}
 	}
 
-	IPieceList capturedByBlack = m_game->GetCapturedPieces(EColor::White);
+	IPieceList capturedByBlack = m_game->GetStatus()->GetCapturedPieces(EColor::White);
 
 	it = capturedByBlack.begin();
 
@@ -1159,7 +1177,7 @@ void ChessUIQt::HighlightPossibleMoves(const PositionList& possibleMoves)
 {
     for (const auto& position : possibleMoves) 
     {
-        if (m_game->GetIPiecePtr(position))
+        if (m_game->GetStatus()->GetIPiecePtr(position))
         {
             m_grid[position.row][position.col]->setHighlighted(2);
         } 
@@ -1183,8 +1201,8 @@ void ChessUIQt::StartGame()
 		if (gameTimeInSeconds != -1)
 		{
 			m_game->EnableTimedMode(gameTimeInSeconds);
-			m_WhiteTimer->setText(FormatTime(m_game->GetRemainingTime(EColor::White)));
-			m_BlackTimer->setText(FormatTime(m_game->GetRemainingTime(EColor::Black)));
+			m_WhiteTimer->setText(FormatTime(m_game->GetStatus()->GetRemainingTime(EColor::White)));
+			m_BlackTimer->setText(FormatTime(m_game->GetStatus()->GetRemainingTime(EColor::Black)));
 		}
 	}
 	UpdateBoard();
@@ -1259,7 +1277,7 @@ void ChessUIQt::OnMoveMade(Position init, Position fin)
 
 	//UpdateBoard();
 
-	switch (m_game->GetCurrentPlayer())
+	switch (m_game->GetStatus()->GetCurrentPlayer())
 	{
 	case EColor::Black:
 		UpdateMessage("Waiting for black player");
@@ -1330,7 +1348,7 @@ void ChessUIQt::OnPawnUpgrade(Position pos)
 
 	m_grid[pos.row][pos.col]->setPiece(upgradePiece);
 
-	/*switch (m_game->GetCurrentPlayer())
+	/*switch (m_game->GetStatus()->GetCurrentPlayer())
 	{
 	case EColor::Black:
 		UpdateMessage("Waiting for black player");
@@ -1370,9 +1388,9 @@ void ChessUIQt::OnGameRestarted()
     mainWidget->setLayout(mainGridLayout);
     this->setCentralWidget(mainWidget);
 
-    StartGame();
+	StartGame();
 
-	switch (m_game->GetCurrentPlayer())
+	switch (m_game->GetStatus()->GetCurrentPlayer())
 	{
 	case EColor::White:
 		m_MessageLabel->setText("Waiting for white player\n");
@@ -1390,7 +1408,7 @@ void ChessUIQt::OnHistoryUpdate(std::string move)
 
 void ChessUIQt::OnClockUpdate(const QString& time)
 {
-	switch (m_game->GetCurrentPlayer())
+	switch (m_game->GetStatus()->GetCurrentPlayer())
 	{
 	case EColor::White:
 		m_WhiteTimer->setText(time);
@@ -1408,13 +1426,13 @@ void ChessUIQt::OnClockUpdate()
 		return;
 	}
 	QString timeToDisplay;
-	switch (m_game->GetCurrentPlayer())
+	switch (m_game->GetStatus()->GetCurrentPlayer())
 	{
 	case EColor::White:
-		timeToDisplay = FormatTime(m_game->GetRemainingTime(EColor::White));
+		timeToDisplay = FormatTime(m_game->GetStatus()->GetRemainingTime(EColor::White));
 		break;
 	case EColor::Black:
-		timeToDisplay = FormatTime(m_game->GetRemainingTime(EColor::Black));
+		timeToDisplay = FormatTime(m_game->GetStatus()->GetRemainingTime(EColor::Black));
 		break;
 	}
 
@@ -1430,7 +1448,7 @@ void ChessUIQt::OnTimesUp(const EGameResult& result)
 void ChessUIQt::OnTimesUp()
 {
 	EGameResult result;
-	if (m_game->IsWon(EColor::Black))
+	if (m_game->GetStatus()->IsWon(EColor::Black))
 	{
 		result = EGameResult::BlackPlayerWon;
 	}
