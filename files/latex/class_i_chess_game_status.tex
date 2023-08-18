@@ -1,0 +1,257 @@
+\doxysection{IChess\+Game\+Status Class Reference}
+\hypertarget{class_i_chess_game_status}{}\label{class_i_chess_game_status}\index{IChessGameStatus@{IChessGameStatus}}
+
+
+Interface for retrieving various status and information about a chess game.  
+
+
+
+
+{\ttfamily \#include $<$IChess\+Game\+Status.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_i_chess_game_status_a044797b30436d1dadedf1849a344b955}\label{class_i_chess_game_status_a044797b30436d1dadedf1849a344b955} 
+virtual {\bfseries \texorpdfstring{$\sim$}{\string~}\+IChess\+Game\+Status} ()=default
+\begin{DoxyCompactList}\small\item\em Virtual destructor for the interface. \end{DoxyCompactList}\item 
+virtual IPiece\+Ptr \mbox{\hyperlink{class_i_chess_game_status_a440fc3372b1d797497f501deb2685558}{Get\+IPiece\+Ptr}} (\mbox{\hyperlink{struct_position}{Position}} pos) const =0
+\begin{DoxyCompactList}\small\item\em Retrieves a smart pointer to the chess piece at the specified position. \end{DoxyCompactList}\item 
+virtual Position\+List \mbox{\hyperlink{class_i_chess_game_status_a68a3cbb253896dfc378a69087ad29a0a}{Get\+Possible\+Moves}} (\mbox{\hyperlink{struct_position}{Position}} current\+Pos) const =0
+\begin{DoxyCompactList}\small\item\em Retrieves a list of possible valid moves for the piece at the given position. \end{DoxyCompactList}\item 
+virtual IPiece\+List \mbox{\hyperlink{class_i_chess_game_status_acad1a437704f5d4f668581e465f4f6c0}{Get\+Captured\+Pieces}} (EColor color) const =0
+\begin{DoxyCompactList}\small\item\em Retrieves a list of pieces captured by the specified player\textquotesingle{}s color. \end{DoxyCompactList}\item 
+virtual EColor \mbox{\hyperlink{class_i_chess_game_status_a54445d9cde66690d29e434a2b54c6036}{Get\+Current\+Player}} () const =0
+\begin{DoxyCompactList}\small\item\em Retrieves the color of the player whose turn it is. \end{DoxyCompactList}\item 
+virtual Char\+Board \mbox{\hyperlink{class_i_chess_game_status_a35df26b7f8bf663202db9577faaa9df6}{Get\+Board\+At\+Index}} (int index) const =0
+\begin{DoxyCompactList}\small\item\em Retrieves the current configuration of the chessboard at a specific index. \end{DoxyCompactList}\item 
+virtual int \mbox{\hyperlink{class_i_chess_game_status_a020e6364991f20b68d47aacc78f30482}{Get\+Number\+Of\+Moves}} () const =0
+\begin{DoxyCompactList}\small\item\em Retrieves the number of moves made in the game so far. \end{DoxyCompactList}\item 
+virtual bool \mbox{\hyperlink{class_i_chess_game_status_a0a387780f41334d2f4a054ce23d932e7}{Is\+Game\+Over}} () const =0
+\begin{DoxyCompactList}\small\item\em Checks if the game is over. \end{DoxyCompactList}\item 
+virtual bool \mbox{\hyperlink{class_i_chess_game_status_a56c47a828bd6804c010121b976c96470}{Is\+Draw}} () const =0
+\begin{DoxyCompactList}\small\item\em Checks if the game is in a draw state. \end{DoxyCompactList}\item 
+virtual bool \mbox{\hyperlink{class_i_chess_game_status_aaf2185edbca907cf5e269255868eb562}{Is\+Waiting\+For\+Draw\+Response}} () const =0
+\begin{DoxyCompactList}\small\item\em Checks if the game is waiting for a draw response. \end{DoxyCompactList}\item 
+virtual bool \mbox{\hyperlink{class_i_chess_game_status_a09de2625c54660007a3d51ecd80e0b04}{Is\+Won}} (EColor player) const =0
+\begin{DoxyCompactList}\small\item\em Checks if a specific player has won the game. \end{DoxyCompactList}\item 
+virtual bool \mbox{\hyperlink{class_i_chess_game_status_a2f26f8aa9ae550b4a351d2c75d27e9fe}{Is\+Waiting\+For\+Upgrade}} () const =0
+\begin{DoxyCompactList}\small\item\em Checks if the game is waiting for a pawn upgrade. \end{DoxyCompactList}\item 
+virtual bool \mbox{\hyperlink{class_i_chess_game_status_a013fd0be79dd96d48831165341ac42c7}{Is\+Check\+State}} () const =0
+\begin{DoxyCompactList}\small\item\em Checks if the game is in a check state (a player\textquotesingle{}s king is under threat). \end{DoxyCompactList}\item 
+virtual bool \mbox{\hyperlink{class_i_chess_game_status_a65edbe0d93c4c790bce4a34793f4872c}{Is\+Castling\+Available}} (EColor color, ESide side) const =0
+\begin{DoxyCompactList}\small\item\em Checks if castling is available for the specified player and side. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Interface for retrieving various status and information about a chess game. 
+
+This interface provides methods to access different aspects of the current state of a chess game, including piece positions, possible moves, captured pieces, current player, board configuration, game over conditions, and more. 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_i_chess_game_status_a35df26b7f8bf663202db9577faaa9df6}\label{class_i_chess_game_status_a35df26b7f8bf663202db9577faaa9df6} 
+\index{IChessGameStatus@{IChessGameStatus}!GetBoardAtIndex@{GetBoardAtIndex}}
+\index{GetBoardAtIndex@{GetBoardAtIndex}!IChessGameStatus@{IChessGameStatus}}
+\doxysubsubsection{\texorpdfstring{GetBoardAtIndex()}{GetBoardAtIndex()}}
+{\footnotesize\ttfamily virtual Char\+Board IChess\+Game\+Status\+::\+Get\+Board\+At\+Index (\begin{DoxyParamCaption}\item[{int}]{index }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Retrieves the current configuration of the chessboard at a specific index. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em index} & The index of the configuration to retrieve. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The chessboard configuration at the specified index. 
+\end{DoxyReturn}
+\Hypertarget{class_i_chess_game_status_acad1a437704f5d4f668581e465f4f6c0}\label{class_i_chess_game_status_acad1a437704f5d4f668581e465f4f6c0} 
+\index{IChessGameStatus@{IChessGameStatus}!GetCapturedPieces@{GetCapturedPieces}}
+\index{GetCapturedPieces@{GetCapturedPieces}!IChessGameStatus@{IChessGameStatus}}
+\doxysubsubsection{\texorpdfstring{GetCapturedPieces()}{GetCapturedPieces()}}
+{\footnotesize\ttfamily virtual IPiece\+List IChess\+Game\+Status\+::\+Get\+Captured\+Pieces (\begin{DoxyParamCaption}\item[{EColor}]{color }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Retrieves a list of pieces captured by the specified player\textquotesingle{}s color. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em color} & The color of the player whose captured pieces are to be retrieved. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A list of captured pieces belonging to the specified player. 
+\end{DoxyReturn}
+\Hypertarget{class_i_chess_game_status_a54445d9cde66690d29e434a2b54c6036}\label{class_i_chess_game_status_a54445d9cde66690d29e434a2b54c6036} 
+\index{IChessGameStatus@{IChessGameStatus}!GetCurrentPlayer@{GetCurrentPlayer}}
+\index{GetCurrentPlayer@{GetCurrentPlayer}!IChessGameStatus@{IChessGameStatus}}
+\doxysubsubsection{\texorpdfstring{GetCurrentPlayer()}{GetCurrentPlayer()}}
+{\footnotesize\ttfamily virtual EColor IChess\+Game\+Status\+::\+Get\+Current\+Player (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Retrieves the color of the player whose turn it is. 
+
+\begin{DoxyReturn}{Returns}
+The color of the current player. 
+\end{DoxyReturn}
+\Hypertarget{class_i_chess_game_status_a440fc3372b1d797497f501deb2685558}\label{class_i_chess_game_status_a440fc3372b1d797497f501deb2685558} 
+\index{IChessGameStatus@{IChessGameStatus}!GetIPiecePtr@{GetIPiecePtr}}
+\index{GetIPiecePtr@{GetIPiecePtr}!IChessGameStatus@{IChessGameStatus}}
+\doxysubsubsection{\texorpdfstring{GetIPiecePtr()}{GetIPiecePtr()}}
+{\footnotesize\ttfamily virtual IPiece\+Ptr IChess\+Game\+Status\+::\+Get\+IPiece\+Ptr (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_position}{Position}}}]{pos }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Retrieves a smart pointer to the chess piece at the specified position. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em pos} & The position for which to retrieve the piece pointer. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A smart pointer to the chess piece at the given position. 
+\end{DoxyReturn}
+\Hypertarget{class_i_chess_game_status_a020e6364991f20b68d47aacc78f30482}\label{class_i_chess_game_status_a020e6364991f20b68d47aacc78f30482} 
+\index{IChessGameStatus@{IChessGameStatus}!GetNumberOfMoves@{GetNumberOfMoves}}
+\index{GetNumberOfMoves@{GetNumberOfMoves}!IChessGameStatus@{IChessGameStatus}}
+\doxysubsubsection{\texorpdfstring{GetNumberOfMoves()}{GetNumberOfMoves()}}
+{\footnotesize\ttfamily virtual int IChess\+Game\+Status\+::\+Get\+Number\+Of\+Moves (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Retrieves the number of moves made in the game so far. 
+
+\begin{DoxyReturn}{Returns}
+The total number of moves made in the game. 
+\end{DoxyReturn}
+\Hypertarget{class_i_chess_game_status_a68a3cbb253896dfc378a69087ad29a0a}\label{class_i_chess_game_status_a68a3cbb253896dfc378a69087ad29a0a} 
+\index{IChessGameStatus@{IChessGameStatus}!GetPossibleMoves@{GetPossibleMoves}}
+\index{GetPossibleMoves@{GetPossibleMoves}!IChessGameStatus@{IChessGameStatus}}
+\doxysubsubsection{\texorpdfstring{GetPossibleMoves()}{GetPossibleMoves()}}
+{\footnotesize\ttfamily virtual Position\+List IChess\+Game\+Status\+::\+Get\+Possible\+Moves (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_position}{Position}}}]{current\+Pos }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Retrieves a list of possible valid moves for the piece at the given position. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em current\+Pos} & The position of the piece for which to retrieve possible moves. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A list of positions representing possible moves for the piece. 
+\end{DoxyReturn}
+\Hypertarget{class_i_chess_game_status_a65edbe0d93c4c790bce4a34793f4872c}\label{class_i_chess_game_status_a65edbe0d93c4c790bce4a34793f4872c} 
+\index{IChessGameStatus@{IChessGameStatus}!IsCastlingAvailable@{IsCastlingAvailable}}
+\index{IsCastlingAvailable@{IsCastlingAvailable}!IChessGameStatus@{IChessGameStatus}}
+\doxysubsubsection{\texorpdfstring{IsCastlingAvailable()}{IsCastlingAvailable()}}
+{\footnotesize\ttfamily virtual bool IChess\+Game\+Status\+::\+Is\+Castling\+Available (\begin{DoxyParamCaption}\item[{EColor}]{color,  }\item[{ESide}]{side }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Checks if castling is available for the specified player and side. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em color} & The color of the player. \\
+\hline
+{\em side} & The side for which to check castling availability. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\ttfamily true} if castling is available for the specified player and side, otherwise {\ttfamily false}. 
+\end{DoxyReturn}
+\Hypertarget{class_i_chess_game_status_a013fd0be79dd96d48831165341ac42c7}\label{class_i_chess_game_status_a013fd0be79dd96d48831165341ac42c7} 
+\index{IChessGameStatus@{IChessGameStatus}!IsCheckState@{IsCheckState}}
+\index{IsCheckState@{IsCheckState}!IChessGameStatus@{IChessGameStatus}}
+\doxysubsubsection{\texorpdfstring{IsCheckState()}{IsCheckState()}}
+{\footnotesize\ttfamily virtual bool IChess\+Game\+Status\+::\+Is\+Check\+State (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Checks if the game is in a check state (a player\textquotesingle{}s king is under threat). 
+
+\begin{DoxyReturn}{Returns}
+{\ttfamily true} if the game is in a check state, otherwise {\ttfamily false}. 
+\end{DoxyReturn}
+\Hypertarget{class_i_chess_game_status_a56c47a828bd6804c010121b976c96470}\label{class_i_chess_game_status_a56c47a828bd6804c010121b976c96470} 
+\index{IChessGameStatus@{IChessGameStatus}!IsDraw@{IsDraw}}
+\index{IsDraw@{IsDraw}!IChessGameStatus@{IChessGameStatus}}
+\doxysubsubsection{\texorpdfstring{IsDraw()}{IsDraw()}}
+{\footnotesize\ttfamily virtual bool IChess\+Game\+Status\+::\+Is\+Draw (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Checks if the game is in a draw state. 
+
+\begin{DoxyReturn}{Returns}
+{\ttfamily true} if the game is in a draw state, otherwise {\ttfamily false}. 
+\end{DoxyReturn}
+\Hypertarget{class_i_chess_game_status_a0a387780f41334d2f4a054ce23d932e7}\label{class_i_chess_game_status_a0a387780f41334d2f4a054ce23d932e7} 
+\index{IChessGameStatus@{IChessGameStatus}!IsGameOver@{IsGameOver}}
+\index{IsGameOver@{IsGameOver}!IChessGameStatus@{IChessGameStatus}}
+\doxysubsubsection{\texorpdfstring{IsGameOver()}{IsGameOver()}}
+{\footnotesize\ttfamily virtual bool IChess\+Game\+Status\+::\+Is\+Game\+Over (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Checks if the game is over. 
+
+\begin{DoxyReturn}{Returns}
+{\ttfamily true} if the game is over, otherwise {\ttfamily false}. 
+\end{DoxyReturn}
+\Hypertarget{class_i_chess_game_status_aaf2185edbca907cf5e269255868eb562}\label{class_i_chess_game_status_aaf2185edbca907cf5e269255868eb562} 
+\index{IChessGameStatus@{IChessGameStatus}!IsWaitingForDrawResponse@{IsWaitingForDrawResponse}}
+\index{IsWaitingForDrawResponse@{IsWaitingForDrawResponse}!IChessGameStatus@{IChessGameStatus}}
+\doxysubsubsection{\texorpdfstring{IsWaitingForDrawResponse()}{IsWaitingForDrawResponse()}}
+{\footnotesize\ttfamily virtual bool IChess\+Game\+Status\+::\+Is\+Waiting\+For\+Draw\+Response (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Checks if the game is waiting for a draw response. 
+
+\begin{DoxyReturn}{Returns}
+{\ttfamily true} if the game is waiting for a draw response, otherwise {\ttfamily false}. 
+\end{DoxyReturn}
+\Hypertarget{class_i_chess_game_status_a2f26f8aa9ae550b4a351d2c75d27e9fe}\label{class_i_chess_game_status_a2f26f8aa9ae550b4a351d2c75d27e9fe} 
+\index{IChessGameStatus@{IChessGameStatus}!IsWaitingForUpgrade@{IsWaitingForUpgrade}}
+\index{IsWaitingForUpgrade@{IsWaitingForUpgrade}!IChessGameStatus@{IChessGameStatus}}
+\doxysubsubsection{\texorpdfstring{IsWaitingForUpgrade()}{IsWaitingForUpgrade()}}
+{\footnotesize\ttfamily virtual bool IChess\+Game\+Status\+::\+Is\+Waiting\+For\+Upgrade (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Checks if the game is waiting for a pawn upgrade. 
+
+\begin{DoxyReturn}{Returns}
+{\ttfamily true} if the game is waiting for a pawn upgrade, otherwise {\ttfamily false}. 
+\end{DoxyReturn}
+\Hypertarget{class_i_chess_game_status_a09de2625c54660007a3d51ecd80e0b04}\label{class_i_chess_game_status_a09de2625c54660007a3d51ecd80e0b04} 
+\index{IChessGameStatus@{IChessGameStatus}!IsWon@{IsWon}}
+\index{IsWon@{IsWon}!IChessGameStatus@{IChessGameStatus}}
+\doxysubsubsection{\texorpdfstring{IsWon()}{IsWon()}}
+{\footnotesize\ttfamily virtual bool IChess\+Game\+Status\+::\+Is\+Won (\begin{DoxyParamCaption}\item[{EColor}]{player }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Checks if a specific player has won the game. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em player} & The color of the player to check. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\ttfamily true} if the specified player has won, otherwise {\ttfamily false}. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/cconstandoiu/\+Documents/\+Git\+Hub/\+Chess\+Solution/\+Chess\+Lib/include/IChess\+Game\+Status.\+h\end{DoxyCompactItemize}

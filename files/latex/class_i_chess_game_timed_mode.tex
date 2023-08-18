@@ -1,0 +1,111 @@
+\doxysection{IChess\+Game\+Timed\+Mode Class Reference}
+\hypertarget{class_i_chess_game_timed_mode}{}\label{class_i_chess_game_timed_mode}\index{IChessGameTimedMode@{IChessGameTimedMode}}
+
+
+Interface for managing timed modes in a chess game.  
+
+
+
+
+{\ttfamily \#include $<$IChess\+Game\+Timed\+Mode.\+h$>$}
+
+Inheritance diagram for IChess\+Game\+Timed\+Mode\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_i_chess_game_timed_mode}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_i_chess_game_timed_mode_a63937ffb2bcac1cb8ff6541898762f45}\label{class_i_chess_game_timed_mode_a63937ffb2bcac1cb8ff6541898762f45} 
+virtual {\bfseries \texorpdfstring{$\sim$}{\string~}\+IChess\+Game\+Timed\+Mode} ()=default
+\begin{DoxyCompactList}\small\item\em Virtual destructor for the interface. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_i_chess_game_timed_mode_a0060fbbbe8237d6141fb19abae294c8f}{Enable\+Timed\+Mode}} (int seconds)=0
+\begin{DoxyCompactList}\small\item\em Enables timed mode with the specified time limit. \end{DoxyCompactList}\item 
+\Hypertarget{class_i_chess_game_timed_mode_ad47cda565c76eb50e5b41f226d59c9cd}\label{class_i_chess_game_timed_mode_ad47cda565c76eb50e5b41f226d59c9cd} 
+virtual void {\bfseries Pause} ()=0
+\begin{DoxyCompactList}\small\item\em Pauses the timed mode, suspending the countdown. \end{DoxyCompactList}\item 
+\Hypertarget{class_i_chess_game_timed_mode_a9e1a4ab17b1e3c94e5a6982bef39e80b}\label{class_i_chess_game_timed_mode_a9e1a4ab17b1e3c94e5a6982bef39e80b} 
+virtual void {\bfseries Resume} ()=0
+\begin{DoxyCompactList}\small\item\em Resumes the timed mode after it has been paused. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_i_chess_game_timed_mode_a12fca306ab8587fd597326bb5f8ea93f}{Set\+Refresh\+Rate}} (int milliseconds)=0
+\begin{DoxyCompactList}\small\item\em Sets refresh rate with the specified time rate. \end{DoxyCompactList}\item 
+virtual int \mbox{\hyperlink{class_i_chess_game_timed_mode_a6d1fad70081ad7be8585faaa4d24421b}{Get\+Remaining\+Time}} (EColor color) const =0
+\begin{DoxyCompactList}\small\item\em Retrieves the remaining time for a player\textquotesingle{}s turn. \end{DoxyCompactList}\item 
+virtual bool \mbox{\hyperlink{class_i_chess_game_timed_mode_a40c6616f232ec5b8640e60d7d3b1e0ff}{Is\+Paused}} () const =0
+\begin{DoxyCompactList}\small\item\em Checks if the timed mode is currently paused. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Interface for managing timed modes in a chess game. 
+
+This interface defines methods to enable, pause, resume, and query timed modes within a chess game. 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_i_chess_game_timed_mode_a0060fbbbe8237d6141fb19abae294c8f}\label{class_i_chess_game_timed_mode_a0060fbbbe8237d6141fb19abae294c8f} 
+\index{IChessGameTimedMode@{IChessGameTimedMode}!EnableTimedMode@{EnableTimedMode}}
+\index{EnableTimedMode@{EnableTimedMode}!IChessGameTimedMode@{IChessGameTimedMode}}
+\doxysubsubsection{\texorpdfstring{EnableTimedMode()}{EnableTimedMode()}}
+{\footnotesize\ttfamily virtual void IChess\+Game\+Timed\+Mode\+::\+Enable\+Timed\+Mode (\begin{DoxyParamCaption}\item[{int}]{seconds }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Enables timed mode with the specified time limit. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em seconds} & The time limit in seconds for each player\textquotesingle{}s turn. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_i_chess_game_timed_mode_a6d1fad70081ad7be8585faaa4d24421b}\label{class_i_chess_game_timed_mode_a6d1fad70081ad7be8585faaa4d24421b} 
+\index{IChessGameTimedMode@{IChessGameTimedMode}!GetRemainingTime@{GetRemainingTime}}
+\index{GetRemainingTime@{GetRemainingTime}!IChessGameTimedMode@{IChessGameTimedMode}}
+\doxysubsubsection{\texorpdfstring{GetRemainingTime()}{GetRemainingTime()}}
+{\footnotesize\ttfamily virtual int IChess\+Game\+Timed\+Mode\+::\+Get\+Remaining\+Time (\begin{DoxyParamCaption}\item[{EColor}]{color }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Retrieves the remaining time for a player\textquotesingle{}s turn. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em color} & The color of the player for whom to retrieve the remaining time. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The remaining time in milliseconds for the specified player\textquotesingle{}s turn. 
+\end{DoxyReturn}
+\Hypertarget{class_i_chess_game_timed_mode_a40c6616f232ec5b8640e60d7d3b1e0ff}\label{class_i_chess_game_timed_mode_a40c6616f232ec5b8640e60d7d3b1e0ff} 
+\index{IChessGameTimedMode@{IChessGameTimedMode}!IsPaused@{IsPaused}}
+\index{IsPaused@{IsPaused}!IChessGameTimedMode@{IChessGameTimedMode}}
+\doxysubsubsection{\texorpdfstring{IsPaused()}{IsPaused()}}
+{\footnotesize\ttfamily virtual bool IChess\+Game\+Timed\+Mode\+::\+Is\+Paused (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Checks if the timed mode is currently paused. 
+
+\begin{DoxyReturn}{Returns}
+{\ttfamily true} if the timed mode is paused, otherwise {\ttfamily false}. 
+\end{DoxyReturn}
+\Hypertarget{class_i_chess_game_timed_mode_a12fca306ab8587fd597326bb5f8ea93f}\label{class_i_chess_game_timed_mode_a12fca306ab8587fd597326bb5f8ea93f} 
+\index{IChessGameTimedMode@{IChessGameTimedMode}!SetRefreshRate@{SetRefreshRate}}
+\index{SetRefreshRate@{SetRefreshRate}!IChessGameTimedMode@{IChessGameTimedMode}}
+\doxysubsubsection{\texorpdfstring{SetRefreshRate()}{SetRefreshRate()}}
+{\footnotesize\ttfamily virtual void IChess\+Game\+Timed\+Mode\+::\+Set\+Refresh\+Rate (\begin{DoxyParamCaption}\item[{int}]{milliseconds }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Sets refresh rate with the specified time rate. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em milliseconds} & The time rate in milliseconds for clock\textquotesingle{}s refresh rate. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/cconstandoiu/\+Documents/\+Git\+Hub/\+Chess\+Solution/\+Chess\+Lib/include/IChess\+Game\+Timed\+Mode.\+h\end{DoxyCompactItemize}

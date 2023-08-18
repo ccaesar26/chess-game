@@ -1,0 +1,37 @@
+\doxysection{IChess\+Game\+Listener.\+h}
+\hypertarget{_i_chess_game_listener_8h_source}{}\label{_i_chess_game_listener_8h_source}\index{C:/Users/cconstandoiu/Documents/GitHub/ChessSolution/ChessLib/include/IChessGameListener.h@{C:/Users/cconstandoiu/Documents/GitHub/ChessSolution/ChessLib/include/IChessGameListener.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}IPiece.h"{}}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00013\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_i_chess_game_listener}{IChessGameListener}}}
+\DoxyCodeLine{00014\ \{}
+\DoxyCodeLine{00015\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{class_i_chess_game_listener_a371f0e4075d91ba9bd7955f56f001b69}{\string~IChessGameListener}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_i_chess_game_listener_a9ebee03cca803fde08d9a38ab5c1cc2e}{OnMoveMade}}(\mbox{\hyperlink{struct_position}{Position}}\ init,\ \mbox{\hyperlink{struct_position}{Position}}\ fin)\ =\ 0;}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_i_chess_game_listener_adc403d950722346c0aa248e19b3cca22}{OnGameOver}}(EGameResult\ result)\ =\ 0;}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_i_chess_game_listener_a536e5bbb417fc6e99501a01c323ffb8d}{OnPawnUpgrade}}(\mbox{\hyperlink{struct_position}{Position}}\ pos)\ =\ 0;}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_i_chess_game_listener_abcffc1748451db0b654c314d50d644bb}{OnCheck}}()\ =\ 0;}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_i_chess_game_listener_a50c8246a4dd110dafffc87789e4a1475}{OnGameRestarted}}()\ =\ 0;}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_i_chess_game_listener_a7338b09998ed3fc993579dd39467127c}{OnHistoryUpdate}}(std::string\ move)\ =\ 0;}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_i_chess_game_listener_a0fec95853c324b470f0fa219f69b0034}{OnClockUpdate}}()\ =\ 0;}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_i_chess_game_listener_a9e66b57af27e0d1316b4fe5233c24ede}{OnTimesUp}}()\ =\ 0;}
+\DoxyCodeLine{00069\ \};}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \textcolor{keyword}{using\ }IChessGameListenerWeakPtr\ =\ std::weak\_ptr<IChessGameListener>;}
+\DoxyCodeLine{00073\ \textcolor{keyword}{using\ }IChessGameListenerPtr\ =\ std::shared\_ptr<IChessGameListener>;}
+
+\end{DoxyCode}

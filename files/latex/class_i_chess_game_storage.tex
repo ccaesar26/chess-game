@@ -1,0 +1,100 @@
+\doxysection{IChess\+Game\+Storage Class Reference}
+\hypertarget{class_i_chess_game_storage}{}\label{class_i_chess_game_storage}\index{IChessGameStorage@{IChessGameStorage}}
+
+
+Interface for loading and saving chess game data to/from files.  
+
+
+
+
+{\ttfamily \#include $<$IChess\+Game\+Storage.\+h$>$}
+
+Inheritance diagram for IChess\+Game\+Storage\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_i_chess_game_storage}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_i_chess_game_storage_add2f67085a414af5d39b49d20241f849}\label{class_i_chess_game_storage_add2f67085a414af5d39b49d20241f849} 
+virtual {\bfseries \texorpdfstring{$\sim$}{\string~}\+IChess\+Game\+Storage} ()=default
+\begin{DoxyCompactList}\small\item\em Virtual destructor for the interface. \end{DoxyCompactList}\item 
+virtual bool \mbox{\hyperlink{class_i_chess_game_storage_a46fcfb21a3aaf0e3e9c60ee950170bf6}{Load\+From\+File}} (EFormat format, const std\+::string \&file\+Name)=0
+\begin{DoxyCompactList}\small\item\em Loads chess game data from a file in the specified format. \end{DoxyCompactList}\item 
+virtual bool \mbox{\hyperlink{class_i_chess_game_storage_a8c26c4ec587c832c42f8ab90376677c5}{Save\+Format}} (EFormat format, const std\+::string \&file\+Name) const =0
+\begin{DoxyCompactList}\small\item\em Saves chess game data to a file in the specified format. \end{DoxyCompactList}\item 
+virtual std\+::string \mbox{\hyperlink{class_i_chess_game_storage_ad4eb477ea898a4d59747b4a41e248270}{Get\+Format}} (EFormat format) const =0
+\begin{DoxyCompactList}\small\item\em Retrieves the data format as a string representation. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Interface for loading and saving chess game data to/from files. 
+
+This interface defines methods to load and save chess game data from/to files in various formats. 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_i_chess_game_storage_ad4eb477ea898a4d59747b4a41e248270}\label{class_i_chess_game_storage_ad4eb477ea898a4d59747b4a41e248270} 
+\index{IChessGameStorage@{IChessGameStorage}!GetFormat@{GetFormat}}
+\index{GetFormat@{GetFormat}!IChessGameStorage@{IChessGameStorage}}
+\doxysubsubsection{\texorpdfstring{GetFormat()}{GetFormat()}}
+{\footnotesize\ttfamily virtual std\+::string IChess\+Game\+Storage\+::\+Get\+Format (\begin{DoxyParamCaption}\item[{EFormat}]{format }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Retrieves the data format as a string representation. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em format} & The format for which to retrieve the string representation. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The string representation of the specified format. 
+\end{DoxyReturn}
+\Hypertarget{class_i_chess_game_storage_a46fcfb21a3aaf0e3e9c60ee950170bf6}\label{class_i_chess_game_storage_a46fcfb21a3aaf0e3e9c60ee950170bf6} 
+\index{IChessGameStorage@{IChessGameStorage}!LoadFromFile@{LoadFromFile}}
+\index{LoadFromFile@{LoadFromFile}!IChessGameStorage@{IChessGameStorage}}
+\doxysubsubsection{\texorpdfstring{LoadFromFile()}{LoadFromFile()}}
+{\footnotesize\ttfamily virtual bool IChess\+Game\+Storage\+::\+Load\+From\+File (\begin{DoxyParamCaption}\item[{EFormat}]{format,  }\item[{const std\+::string \&}]{file\+Name }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Loads chess game data from a file in the specified format. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em format} & The format of the file (e.\+g., PGN). \\
+\hline
+{\em file\+Name} & The name of the file to load data from. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\ttfamily true} if the loading was successful, otherwise {\ttfamily false}. 
+\end{DoxyReturn}
+\Hypertarget{class_i_chess_game_storage_a8c26c4ec587c832c42f8ab90376677c5}\label{class_i_chess_game_storage_a8c26c4ec587c832c42f8ab90376677c5} 
+\index{IChessGameStorage@{IChessGameStorage}!SaveFormat@{SaveFormat}}
+\index{SaveFormat@{SaveFormat}!IChessGameStorage@{IChessGameStorage}}
+\doxysubsubsection{\texorpdfstring{SaveFormat()}{SaveFormat()}}
+{\footnotesize\ttfamily virtual bool IChess\+Game\+Storage\+::\+Save\+Format (\begin{DoxyParamCaption}\item[{EFormat}]{format,  }\item[{const std\+::string \&}]{file\+Name }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Saves chess game data to a file in the specified format. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em format} & The format in which to save the data (e.\+g., PGN). \\
+\hline
+{\em file\+Name} & The name of the file to save data to. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\ttfamily true} if the saving was successful, otherwise {\ttfamily false}. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/cconstandoiu/\+Documents/\+Git\+Hub/\+Chess\+Solution/\+Chess\+Lib/include/IChess\+Game\+Storage.\+h\end{DoxyCompactItemize}

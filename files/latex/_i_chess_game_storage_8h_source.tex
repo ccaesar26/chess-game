@@ -1,0 +1,27 @@
+\doxysection{IChess\+Game\+Storage.\+h}
+\hypertarget{_i_chess_game_storage_8h_source}{}\label{_i_chess_game_storage_8h_source}\index{C:/Users/cconstandoiu/Documents/GitHub/ChessSolution/ChessLib/include/IChessGameStorage.h@{C:/Users/cconstandoiu/Documents/GitHub/ChessSolution/ChessLib/include/IChessGameStorage.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{keyword}{enum\ class}\ EFormat}
+\DoxyCodeLine{00006\ \{}
+\DoxyCodeLine{00007\ \ \ \ \ Pgn}
+\DoxyCodeLine{00008\ \};}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00015\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_i_chess_game_storage}{IChessGameStorage}}}
+\DoxyCodeLine{00016\ \{}
+\DoxyCodeLine{00017\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{class_i_chess_game_storage_add2f67085a414af5d39b49d20241f849}{\string~IChessGameStorage}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_i_chess_game_storage_a46fcfb21a3aaf0e3e9c60ee950170bf6}{LoadFromFile}}(EFormat\ format,\ \textcolor{keyword}{const}\ std::string\&\ fileName)\ =\ 0;}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_i_chess_game_storage_a8c26c4ec587c832c42f8ab90376677c5}{SaveFormat}}(EFormat\ format,\ \textcolor{keyword}{const}\ std::string\&\ fileName)\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keyword}{virtual}\ std::string\ \mbox{\hyperlink{class_i_chess_game_storage_ad4eb477ea898a4d59747b4a41e248270}{GetFormat}}(EFormat\ format)\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00048\ \};}
+\DoxyCodeLine{00049\ }
+
+\end{DoxyCode}

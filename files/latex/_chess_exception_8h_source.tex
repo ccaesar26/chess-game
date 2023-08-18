@@ -1,0 +1,215 @@
+\doxysection{Chess\+Exception.\+h}
+\hypertarget{_chess_exception_8h_source}{}\label{_chess_exception_8h_source}\index{C:/Users/cconstandoiu/Documents/GitHub/ChessSolution/ChessLib/include/ChessException.h@{C:/Users/cconstandoiu/Documents/GitHub/ChessSolution/ChessLib/include/ChessException.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <stdexcept>}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{comment}{//\ Generic\ exception\ class\ //}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00014\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_chess_exception}{ChessException}}\ :\ \textcolor{keyword}{public}\ std::logic\_error}
+\DoxyCodeLine{00015\ \{}
+\DoxyCodeLine{00016\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00022\ \ \ \ \ \mbox{\hyperlink{class_chess_exception_ae06a36eceb691640321564efc60d41e4}{ChessException}}();}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00029\ \ \ \ \ \mbox{\hyperlink{class_chess_exception_ae06a36eceb691640321564efc60d41e4}{ChessException}}(\textcolor{keyword}{const}\ std::string\&\ message);}
+\DoxyCodeLine{00030\ \};}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00035\ \textcolor{keyword}{inline}\ \mbox{\hyperlink{class_chess_exception_ae06a36eceb691640321564efc60d41e4}{ChessException::ChessException}}()}
+\DoxyCodeLine{00036\ \ \ \ \ :\ std::logic\_error(\textcolor{stringliteral}{"{}Unknown\ exception"{}})}
+\DoxyCodeLine{00037\ \{}
+\DoxyCodeLine{00038\ \}}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00045\ \textcolor{keyword}{inline}\ \mbox{\hyperlink{class_chess_exception_ae06a36eceb691640321564efc60d41e4}{ChessException::ChessException}}(\textcolor{keyword}{const}\ std::string\&\ message)}
+\DoxyCodeLine{00046\ \ \ \ \ :\ std::logic\_error(message)}
+\DoxyCodeLine{00047\ \{}
+\DoxyCodeLine{00048\ \}}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \ \textcolor{comment}{//\ Specialized\ exception\ classes\ //}}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \ \textcolor{comment}{//\ 1.\ \ Invalid\ move:}}
+\DoxyCodeLine{00054\ \ \textcolor{comment}{//\ \ \ \ \ a.\ \ Out\ of\ bounds}}
+\DoxyCodeLine{00055\ \ \textcolor{comment}{//\ \ \ \ \ b.\ \ Occupied\ square}}
+\DoxyCodeLine{00056\ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ i.\ \ By\ enemy\ piece}}
+\DoxyCodeLine{00057\ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ ii.\ By\ own\ piece}}
+\DoxyCodeLine{00058\ \ \textcolor{comment}{//\ \ \ \ \ c.\ \ NotInPossibleMovesException\ }}
+\DoxyCodeLine{00059\ \ \textcolor{comment}{//\ \ \ \ \ d.\ \ InitialSquareIsEmptyException}}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00068\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_invalid_move_exception}{InvalidMoveException}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_chess_exception}{ChessException}}}
+\DoxyCodeLine{00069\ \{}
+\DoxyCodeLine{00070\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00076\ \ \ \ \ \mbox{\hyperlink{class_invalid_move_exception}{InvalidMoveException}}(\textcolor{keyword}{const}\ std::string\&\ message);}
+\DoxyCodeLine{00077\ \};}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00084\ \textcolor{keyword}{inline}\ \mbox{\hyperlink{class_invalid_move_exception_a93cbd7fc2a112344589351e7584ee6d4}{InvalidMoveException::InvalidMoveException}}(\textcolor{keyword}{const}\ std::string\&\ message)}
+\DoxyCodeLine{00085\ \ \ \ \ :\ \mbox{\hyperlink{class_chess_exception}{ChessException}}(message)}
+\DoxyCodeLine{00086\ \{}
+\DoxyCodeLine{00087\ \}}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00096\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_out_of_bounds_exception}{OutOfBoundsException}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_invalid_move_exception}{InvalidMoveException}}}
+\DoxyCodeLine{00097\ \{}
+\DoxyCodeLine{00098\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00104\ \ \ \ \ \mbox{\hyperlink{class_out_of_bounds_exception}{OutOfBoundsException}}(\textcolor{keyword}{const}\ std::string\&\ message);}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00107\ \ \ \ \ \textcolor{comment}{//\ No\ additional\ members\ at\ the\ moment.}}
+\DoxyCodeLine{00108\ \};}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00115\ \textcolor{keyword}{inline}\ \mbox{\hyperlink{class_out_of_bounds_exception_a85e70599890a23b81ebe83bc2a14fe5c}{OutOfBoundsException::OutOfBoundsException}}(\textcolor{keyword}{const}\ std::string\&\ message)}
+\DoxyCodeLine{00116\ \ \ \ \ :\ \mbox{\hyperlink{class_invalid_move_exception}{InvalidMoveException}}(message)}
+\DoxyCodeLine{00117\ \{}
+\DoxyCodeLine{00118\ \}}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00127\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_occupied_square_exception}{OccupiedSquareException}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_invalid_move_exception}{InvalidMoveException}}}
+\DoxyCodeLine{00128\ \{}
+\DoxyCodeLine{00129\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00135\ \ \ \ \ \mbox{\hyperlink{class_occupied_square_exception}{OccupiedSquareException}}(\textcolor{keyword}{const}\ std::string\&\ message);}
+\DoxyCodeLine{00136\ }
+\DoxyCodeLine{00137\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00138\ \ \ \ \ \textcolor{comment}{//\ No\ additional\ members\ at\ the\ moment.}}
+\DoxyCodeLine{00139\ \};}
+\DoxyCodeLine{00140\ }
+\DoxyCodeLine{00146\ \textcolor{keyword}{inline}\ \mbox{\hyperlink{class_occupied_square_exception_a50b636067be6011c699d40298f3d9ad1}{OccupiedSquareException::OccupiedSquareException}}(\textcolor{keyword}{const}\ std::string\&\ message)}
+\DoxyCodeLine{00147\ \ \ \ \ :\ \mbox{\hyperlink{class_invalid_move_exception}{InvalidMoveException}}(message)}
+\DoxyCodeLine{00148\ \{}
+\DoxyCodeLine{00149\ \}}
+\DoxyCodeLine{00150\ }
+\DoxyCodeLine{00158\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_occupied_by_enemy_piece_exception}{OccupiedByEnemyPieceException}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_occupied_square_exception}{OccupiedSquareException}}}
+\DoxyCodeLine{00159\ \{}
+\DoxyCodeLine{00160\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00166\ \ \ \ \ \mbox{\hyperlink{class_occupied_by_enemy_piece_exception}{OccupiedByEnemyPieceException}}(\textcolor{keyword}{const}\ std::string\&\ message);}
+\DoxyCodeLine{00167\ \};}
+\DoxyCodeLine{00168\ }
+\DoxyCodeLine{00174\ \textcolor{keyword}{inline}\ \mbox{\hyperlink{class_occupied_by_enemy_piece_exception_af7dd7ee5cb0460a0d5f439687af2d378}{OccupiedByEnemyPieceException::OccupiedByEnemyPieceException}}(\textcolor{keyword}{const}\ std::string\&\ message)}
+\DoxyCodeLine{00175\ \ \ \ \ :\ \mbox{\hyperlink{class_occupied_square_exception}{OccupiedSquareException}}(message)}
+\DoxyCodeLine{00176\ \{}
+\DoxyCodeLine{00177\ \}}
+\DoxyCodeLine{00178\ }
+\DoxyCodeLine{00186\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_occupied_by_own_piece_exception}{OccupiedByOwnPieceException}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_occupied_square_exception}{OccupiedSquareException}}}
+\DoxyCodeLine{00187\ \{}
+\DoxyCodeLine{00188\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00194\ \ \ \ \ \mbox{\hyperlink{class_occupied_by_own_piece_exception}{OccupiedByOwnPieceException}}(\textcolor{keyword}{const}\ std::string\&\ message);}
+\DoxyCodeLine{00195\ \};}
+\DoxyCodeLine{00196\ }
+\DoxyCodeLine{00202\ \textcolor{keyword}{inline}\ \mbox{\hyperlink{class_occupied_by_own_piece_exception_aef48025d1afe1347e94a4d23a139a989}{OccupiedByOwnPieceException::OccupiedByOwnPieceException}}(\textcolor{keyword}{const}\ std::string\&\ message)}
+\DoxyCodeLine{00203\ \ \ \ \ :\ \mbox{\hyperlink{class_occupied_square_exception}{OccupiedSquareException}}(message)}
+\DoxyCodeLine{00204\ \{}
+\DoxyCodeLine{00205\ \}}
+\DoxyCodeLine{00206\ }
+\DoxyCodeLine{00214\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_not_in_possible_moves_exception}{NotInPossibleMovesException}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_invalid_move_exception}{InvalidMoveException}}}
+\DoxyCodeLine{00215\ \{}
+\DoxyCodeLine{00216\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00222\ \ \ \ \ \mbox{\hyperlink{class_not_in_possible_moves_exception}{NotInPossibleMovesException}}(\textcolor{keyword}{const}\ std::string\&\ message);}
+\DoxyCodeLine{00223\ }
+\DoxyCodeLine{00224\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00225\ \ \ \ \ \textcolor{comment}{//\ No\ additional\ members\ at\ the\ moment.}}
+\DoxyCodeLine{00226\ \};}
+\DoxyCodeLine{00227\ }
+\DoxyCodeLine{00233\ \textcolor{keyword}{inline}\ \mbox{\hyperlink{class_not_in_possible_moves_exception_ae7fef3c68607f9854d4dc89960d0191a}{NotInPossibleMovesException::NotInPossibleMovesException}}(\textcolor{keyword}{const}\ std::string\&\ message)}
+\DoxyCodeLine{00234\ \ \ \ \ :\ \mbox{\hyperlink{class_invalid_move_exception}{InvalidMoveException}}(message)}
+\DoxyCodeLine{00235\ \{}
+\DoxyCodeLine{00236\ \}}
+\DoxyCodeLine{00237\ }
+\DoxyCodeLine{00245\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_initial_square_is_empty_exception}{InitialSquareIsEmptyException}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_invalid_move_exception}{InvalidMoveException}}}
+\DoxyCodeLine{00246\ \{}
+\DoxyCodeLine{00247\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00253\ \ \ \ \ \mbox{\hyperlink{class_initial_square_is_empty_exception}{InitialSquareIsEmptyException}}(\textcolor{keyword}{const}\ std::string\&\ message);}
+\DoxyCodeLine{00254\ \};}
+\DoxyCodeLine{00255\ }
+\DoxyCodeLine{00261\ \textcolor{keyword}{inline}\ \mbox{\hyperlink{class_initial_square_is_empty_exception_a2978cb2e39fe27608fc757b6023a2b54}{InitialSquareIsEmptyException::InitialSquareIsEmptyException}}(\textcolor{keyword}{const}\ std::string\&\ message)}
+\DoxyCodeLine{00262\ \ \ \ \ :\ \mbox{\hyperlink{class_invalid_move_exception}{InvalidMoveException}}(message)}
+\DoxyCodeLine{00263\ \{}
+\DoxyCodeLine{00264\ \}}
+\DoxyCodeLine{00265\ }
+\DoxyCodeLine{00266\ \textcolor{comment}{//\ 2.\ \ \ Invalid\ input:}}
+\DoxyCodeLine{00267\ \textcolor{comment}{//\ \ \ \ \ \ a.\ \ Invalid\ answer}}
+\DoxyCodeLine{00268\ \textcolor{comment}{//\ \ \ \ \ \ b.\ \ Invalid\ upgrade}}
+\DoxyCodeLine{00269\ \textcolor{comment}{//\ \ \ \ \ \ c.\ \ Invalid\ position}}
+\DoxyCodeLine{00270\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ i.\ \ Invalid\ BoardPosition}}
+\DoxyCodeLine{00271\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ ii.\ Invalid\ MemoryPosition}}
+\DoxyCodeLine{00272\ }
+\DoxyCodeLine{00280\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_invalid_input_exception}{InvalidInputException}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_chess_exception}{ChessException}}}
+\DoxyCodeLine{00281\ \{}
+\DoxyCodeLine{00282\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00288\ \ \ \ \ \mbox{\hyperlink{class_invalid_input_exception}{InvalidInputException}}(\textcolor{keyword}{const}\ std::string\&\ message);}
+\DoxyCodeLine{00289\ \};}
+\DoxyCodeLine{00290\ }
+\DoxyCodeLine{00296\ \textcolor{keyword}{inline}\ \mbox{\hyperlink{class_invalid_input_exception_a18d0a014efd21e8d9caba89d759741ac}{InvalidInputException::InvalidInputException}}(\textcolor{keyword}{const}\ std::string\&\ message)}
+\DoxyCodeLine{00297\ \ \ \ \ :\ \mbox{\hyperlink{class_chess_exception}{ChessException}}(message)}
+\DoxyCodeLine{00298\ \{}
+\DoxyCodeLine{00299\ \}}
+\DoxyCodeLine{00300\ }
+\DoxyCodeLine{00308\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_invalid_answer_exception}{InvalidAnswerException}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_invalid_input_exception}{InvalidInputException}}}
+\DoxyCodeLine{00309\ \{}
+\DoxyCodeLine{00310\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00316\ \ \ \ \ \mbox{\hyperlink{class_invalid_answer_exception}{InvalidAnswerException}}(\textcolor{keyword}{const}\ std::string\&\ message);}
+\DoxyCodeLine{00317\ \};}
+\DoxyCodeLine{00318\ }
+\DoxyCodeLine{00324\ \textcolor{keyword}{inline}\ \mbox{\hyperlink{class_invalid_answer_exception_ae884b743b31af03dc638404ee9176859}{InvalidAnswerException::InvalidAnswerException}}(\textcolor{keyword}{const}\ std::string\&\ message)}
+\DoxyCodeLine{00325\ \ \ \ \ :\ \mbox{\hyperlink{class_invalid_input_exception}{InvalidInputException}}(message)}
+\DoxyCodeLine{00326\ \{}
+\DoxyCodeLine{00327\ \}}
+\DoxyCodeLine{00328\ }
+\DoxyCodeLine{00336\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_invalid_upgrade_exception}{InvalidUpgradeException}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_invalid_input_exception}{InvalidInputException}}}
+\DoxyCodeLine{00337\ \{}
+\DoxyCodeLine{00338\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00344\ \ \ \ \ \mbox{\hyperlink{class_invalid_upgrade_exception}{InvalidUpgradeException}}(\textcolor{keyword}{const}\ std::string\&\ message);}
+\DoxyCodeLine{00345\ \};}
+\DoxyCodeLine{00346\ }
+\DoxyCodeLine{00352\ \textcolor{keyword}{inline}\ \mbox{\hyperlink{class_invalid_upgrade_exception_ab80a47293fa646f4fb40909b3c3e5391}{InvalidUpgradeException::InvalidUpgradeException}}(\textcolor{keyword}{const}\ std::string\&\ message)}
+\DoxyCodeLine{00353\ \ \ \ \ :\ \mbox{\hyperlink{class_invalid_input_exception}{InvalidInputException}}(message)}
+\DoxyCodeLine{00354\ \{}
+\DoxyCodeLine{00355\ \}}
+\DoxyCodeLine{00356\ }
+\DoxyCodeLine{00364\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_invalid_position_exception}{InvalidPositionException}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_invalid_input_exception}{InvalidInputException}}}
+\DoxyCodeLine{00365\ \{}
+\DoxyCodeLine{00366\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00372\ \ \ \ \ \mbox{\hyperlink{class_invalid_position_exception}{InvalidPositionException}}(\textcolor{keyword}{const}\ std::string\&\ message);}
+\DoxyCodeLine{00373\ \};}
+\DoxyCodeLine{00374\ }
+\DoxyCodeLine{00380\ \textcolor{keyword}{inline}\ \mbox{\hyperlink{class_invalid_position_exception_ac262262a460148b35c2cc38e32b82ef8}{InvalidPositionException::InvalidPositionException}}(\textcolor{keyword}{const}\ std::string\&\ message)}
+\DoxyCodeLine{00381\ \ \ \ \ :\ \mbox{\hyperlink{class_invalid_input_exception}{InvalidInputException}}(message)}
+\DoxyCodeLine{00382\ \{}
+\DoxyCodeLine{00383\ \}}
+\DoxyCodeLine{00384\ }
+\DoxyCodeLine{00392\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_invalid_board_position_exception}{InvalidBoardPositionException}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_invalid_position_exception}{InvalidPositionException}}}
+\DoxyCodeLine{00393\ \{}
+\DoxyCodeLine{00394\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00400\ \ \ \ \ \mbox{\hyperlink{class_invalid_board_position_exception}{InvalidBoardPositionException}}(\textcolor{keyword}{const}\ std::string\&\ message);}
+\DoxyCodeLine{00401\ \};}
+\DoxyCodeLine{00402\ }
+\DoxyCodeLine{00408\ \textcolor{keyword}{inline}\ \mbox{\hyperlink{class_invalid_board_position_exception_a687ef43a15dc375a6a6598c1546bc15d}{InvalidBoardPositionException::InvalidBoardPositionException}}(\textcolor{keyword}{const}\ std::string\&\ message)}
+\DoxyCodeLine{00409\ \ \ \ \ :\ \mbox{\hyperlink{class_invalid_position_exception}{InvalidPositionException}}(message)}
+\DoxyCodeLine{00410\ \{}
+\DoxyCodeLine{00411\ \}}
+\DoxyCodeLine{00412\ }
+\DoxyCodeLine{00420\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_invalid_memory_position_exception}{InvalidMemoryPositionException}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_invalid_position_exception}{InvalidPositionException}}}
+\DoxyCodeLine{00421\ \{}
+\DoxyCodeLine{00422\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00428\ \ \ \ \ \mbox{\hyperlink{class_invalid_memory_position_exception}{InvalidMemoryPositionException}}(\textcolor{keyword}{const}\ std::string\&\ message);}
+\DoxyCodeLine{00429\ \};}
+\DoxyCodeLine{00430\ }
+\DoxyCodeLine{00436\ \textcolor{keyword}{inline}\ \mbox{\hyperlink{class_invalid_memory_position_exception_ac3dde916891ad3ba684fe09622c28c23}{InvalidMemoryPositionException::InvalidMemoryPositionException}}(\textcolor{keyword}{const}\ std::string\&\ message)}
+\DoxyCodeLine{00437\ \ \ \ \ :\ \mbox{\hyperlink{class_invalid_position_exception}{InvalidPositionException}}(message)}
+\DoxyCodeLine{00438\ \{}
+\DoxyCodeLine{00439\ \}}
+\DoxyCodeLine{00440\ }
+\DoxyCodeLine{00441\ \textcolor{comment}{//\ 3.\ \ \ Invalid\ state\ }}
+\DoxyCodeLine{00442\ }
+\DoxyCodeLine{00450\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_invalid_state_exception}{InvalidStateException}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_chess_exception}{ChessException}}}
+\DoxyCodeLine{00451\ \{}
+\DoxyCodeLine{00452\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00458\ \ \ \ \ \mbox{\hyperlink{class_invalid_state_exception}{InvalidStateException}}(\textcolor{keyword}{const}\ std::string\&\ message);}
+\DoxyCodeLine{00459\ }
+\DoxyCodeLine{00460\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00461\ \ \ \ \ \textcolor{comment}{//\ No\ additional\ members\ at\ the\ moment.}}
+\DoxyCodeLine{00462\ \};}
+\DoxyCodeLine{00463\ }
+\DoxyCodeLine{00469\ \textcolor{keyword}{inline}\ \mbox{\hyperlink{class_invalid_state_exception_a2765c2fc964a8e8b2916d4dfe9a393de}{InvalidStateException::InvalidStateException}}(\textcolor{keyword}{const}\ std::string\&\ message)}
+\DoxyCodeLine{00470\ \ \ \ \ :\ \mbox{\hyperlink{class_chess_exception}{ChessException}}(message)}
+\DoxyCodeLine{00471\ \{}
+\DoxyCodeLine{00472\ \}}
+
+\end{DoxyCode}

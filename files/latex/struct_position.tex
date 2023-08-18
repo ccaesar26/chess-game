@@ -1,0 +1,138 @@
+\doxysection{Position Struct Reference}
+\hypertarget{struct_position}{}\label{struct_position}\index{Position@{Position}}
+
+
+Represents a position on a chessboard using row and column coordinates.  
+
+
+
+
+{\ttfamily \#include $<$Position.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_position_a14f3437db764050cd40b84adcfd402b1}{Position}} (int r=0, int c=0)
+\begin{DoxyCompactList}\small\item\em Constructor for initializing the position with row and column coordinates. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{struct_position_ae7e63fb239d057b04d48f5fc5a0eb20b}{Position}} (std\+::pair$<$ int, int $>$ p)
+\begin{DoxyCompactList}\small\item\em Constructor for initializing the position with a pair of integers. \end{DoxyCompactList}\item 
+std\+::pair$<$ int, int $>$ \mbox{\hyperlink{struct_position_a4880330353f612eb565fc9225e7facb7}{To\+Pair}} ()
+\begin{DoxyCompactList}\small\item\em Converts the position to a pair of integers. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{struct_position_ae71b1aff16d8e8b091c82473ab5502d4}{operator==}} (const \mbox{\hyperlink{struct_position}{Position}} \&P) const
+\begin{DoxyCompactList}\small\item\em Overloaded equality operator for comparing positions. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{struct_position_af29e0193700713f84ff4c222fafdde95}{operator!=}} (const \mbox{\hyperlink{struct_position}{Position}} \&P) const
+\begin{DoxyCompactList}\small\item\em Overloaded inequality operator for comparing positions. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{struct_position_a224d714110152e1fca26b2437253f56a}\label{struct_position_a224d714110152e1fca26b2437253f56a} 
+int {\bfseries row}
+\begin{DoxyCompactList}\small\item\em The row coordinate of the position. \end{DoxyCompactList}\item 
+\Hypertarget{struct_position_af7a05862963df619605457252dea6682}\label{struct_position_af7a05862963df619605457252dea6682} 
+int {\bfseries col}
+\begin{DoxyCompactList}\small\item\em The column coordinate of the position. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents a position on a chessboard using row and column coordinates. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{struct_position_a14f3437db764050cd40b84adcfd402b1}\label{struct_position_a14f3437db764050cd40b84adcfd402b1} 
+\index{Position@{Position}!Position@{Position}}
+\index{Position@{Position}!Position@{Position}}
+\doxysubsubsection{\texorpdfstring{Position()}{Position()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Position\+::\+Position (\begin{DoxyParamCaption}\item[{int}]{r = {\ttfamily 0},  }\item[{int}]{c = {\ttfamily 0} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Constructor for initializing the position with row and column coordinates. 
+
+Inline constructor implementation for initializing position with row and column coordinates.
+
+
+\begin{DoxyParams}{Parameters}
+{\em r} & The row coordinate (default is 0). \\
+\hline
+{\em c} & The column coordinate (default is 0). \\
+\hline
+\end{DoxyParams}
+\Hypertarget{struct_position_ae7e63fb239d057b04d48f5fc5a0eb20b}\label{struct_position_ae7e63fb239d057b04d48f5fc5a0eb20b} 
+\index{Position@{Position}!Position@{Position}}
+\index{Position@{Position}!Position@{Position}}
+\doxysubsubsection{\texorpdfstring{Position()}{Position()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Position\+::\+Position (\begin{DoxyParamCaption}\item[{std\+::pair$<$ int, int $>$}]{p }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Constructor for initializing the position with a pair of integers. 
+
+Inline constructor implementation for initializing position with a pair of integers.
+
+
+\begin{DoxyParams}{Parameters}
+{\em p} & A pair of integers representing row and column coordinates. \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{struct_position_af29e0193700713f84ff4c222fafdde95}\label{struct_position_af29e0193700713f84ff4c222fafdde95} 
+\index{Position@{Position}!operator"!=@{operator"!=}}
+\index{operator"!=@{operator"!=}!Position@{Position}}
+\doxysubsubsection{\texorpdfstring{operator"!=()}{operator!=()}}
+{\footnotesize\ttfamily bool Position\+::operator!= (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_position}{Position}} \&}]{P }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Overloaded inequality operator for comparing positions. 
+
+Inline method implementation of the inequality operator for comparing positions.
+
+
+\begin{DoxyParams}{Parameters}
+{\em P} & The position to compare with. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\ttfamily true} if the positions are not equal, otherwise {\ttfamily false}. 
+\end{DoxyReturn}
+\Hypertarget{struct_position_ae71b1aff16d8e8b091c82473ab5502d4}\label{struct_position_ae71b1aff16d8e8b091c82473ab5502d4} 
+\index{Position@{Position}!operator==@{operator==}}
+\index{operator==@{operator==}!Position@{Position}}
+\doxysubsubsection{\texorpdfstring{operator==()}{operator==()}}
+{\footnotesize\ttfamily bool Position\+::operator== (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_position}{Position}} \&}]{P }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Overloaded equality operator for comparing positions. 
+
+Inline method implementation of the equality operator for comparing positions.
+
+
+\begin{DoxyParams}{Parameters}
+{\em P} & The position to compare with. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\ttfamily true} if the positions are equal, otherwise {\ttfamily false}. 
+\end{DoxyReturn}
+\Hypertarget{struct_position_a4880330353f612eb565fc9225e7facb7}\label{struct_position_a4880330353f612eb565fc9225e7facb7} 
+\index{Position@{Position}!ToPair@{ToPair}}
+\index{ToPair@{ToPair}!Position@{Position}}
+\doxysubsubsection{\texorpdfstring{ToPair()}{ToPair()}}
+{\footnotesize\ttfamily std\+::pair$<$ int, int $>$ Position\+::\+To\+Pair (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Converts the position to a pair of integers. 
+
+Inline method implementation to convert the position to a pair of integers.
+
+\begin{DoxyReturn}{Returns}
+A pair of integers representing row and column coordinates. 
+\end{DoxyReturn}
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/cconstandoiu/\+Documents/\+Git\+Hub/\+Chess\+Solution/\+Chess\+Lib/include/Position.\+h\end{DoxyCompactItemize}

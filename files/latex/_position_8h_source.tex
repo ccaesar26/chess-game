@@ -1,0 +1,56 @@
+\doxysection{Position.\+h}
+\hypertarget{_position_8h_source}{}\label{_position_8h_source}\index{C:/Users/cconstandoiu/Documents/GitHub/ChessSolution/ChessLib/include/Position.h@{C:/Users/cconstandoiu/Documents/GitHub/ChessSolution/ChessLib/include/Position.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <utility>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_position}{Position}}}
+\DoxyCodeLine{00010\ \{}
+\DoxyCodeLine{00011\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_position_a224d714110152e1fca26b2437253f56a}{row}};\ }
+\DoxyCodeLine{00012\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_position_af7a05862963df619605457252dea6682}{col}};\ }
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00020\ \ \ \ \ \mbox{\hyperlink{struct_position}{Position}}(\textcolor{keywordtype}{int}\ r\ =\ 0,\ \textcolor{keywordtype}{int}\ c\ =\ 0);}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00027\ \ \ \ \ \mbox{\hyperlink{struct_position}{Position}}(std::pair<int,\ int>\ p);}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00034\ \ \ \ \ std::pair<int,\ int>\ \mbox{\hyperlink{struct_position_a4880330353f612eb565fc9225e7facb7}{ToPair}}();}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_position_ae71b1aff16d8e8b091c82473ab5502d4}{operator==}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_position}{Position}}\&\ P)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_position_af29e0193700713f84ff4c222fafdde95}{operator!=}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_position}{Position}}\&\ P)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00051\ \};}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00056\ \textcolor{keyword}{inline}\ \mbox{\hyperlink{struct_position_a14f3437db764050cd40b84adcfd402b1}{Position::Position}}(\textcolor{keywordtype}{int}\ r,\ \textcolor{keywordtype}{int}\ c)}
+\DoxyCodeLine{00057\ \ \ \ \ :\ row(r)}
+\DoxyCodeLine{00058\ \ \ \ \ ,\ col(c)}
+\DoxyCodeLine{00059\ \{}
+\DoxyCodeLine{00060\ \}}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00065\ \textcolor{keyword}{inline}\ \mbox{\hyperlink{struct_position_a14f3437db764050cd40b84adcfd402b1}{Position::Position}}(std::pair<int,\ int>\ p)}
+\DoxyCodeLine{00066\ \ \ \ \ :\ row(p.first)}
+\DoxyCodeLine{00067\ \ \ \ \ ,\ col(p.second)}
+\DoxyCodeLine{00068\ \{}
+\DoxyCodeLine{00069\ \}}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00074\ \textcolor{keyword}{inline}\ std::pair<int,\ int>\ \mbox{\hyperlink{struct_position_a4880330353f612eb565fc9225e7facb7}{Position::ToPair}}()}
+\DoxyCodeLine{00075\ \{}
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keywordflow}{return}\ std::make\_pair(\mbox{\hyperlink{struct_position_a224d714110152e1fca26b2437253f56a}{row}},\ \mbox{\hyperlink{struct_position_af7a05862963df619605457252dea6682}{col}});}
+\DoxyCodeLine{00077\ \}}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00082\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_position_ae71b1aff16d8e8b091c82473ab5502d4}{Position::operator==}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_position}{Position}}\&\ P)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00083\ \textcolor{keyword}{}\{}
+\DoxyCodeLine{00084\ \ \ \ \ \textcolor{keywordflow}{return}\ (\mbox{\hyperlink{struct_position_a224d714110152e1fca26b2437253f56a}{row}}\ ==\ P.\mbox{\hyperlink{struct_position_a224d714110152e1fca26b2437253f56a}{row}}\ \&\&\ \mbox{\hyperlink{struct_position_af7a05862963df619605457252dea6682}{col}}\ ==\ P.\mbox{\hyperlink{struct_position_af7a05862963df619605457252dea6682}{col}});}
+\DoxyCodeLine{00085\ \}}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00090\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_position_af29e0193700713f84ff4c222fafdde95}{Position::operator!=}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_position}{Position}}\&\ P)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00091\ \textcolor{keyword}{}\{}
+\DoxyCodeLine{00092\ \ \ \ \ \textcolor{keywordflow}{return}\ (\mbox{\hyperlink{struct_position_a224d714110152e1fca26b2437253f56a}{row}}\ !=\ P.\mbox{\hyperlink{struct_position_a224d714110152e1fca26b2437253f56a}{row}}\ ||\ \mbox{\hyperlink{struct_position_af7a05862963df619605457252dea6682}{col}}\ !=\ P.\mbox{\hyperlink{struct_position_af7a05862963df619605457252dea6682}{col}});}
+\DoxyCodeLine{00093\ \}}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ \textcolor{keyword}{using\ }PositionList\ =\ std::vector<Position>;}
+
+\end{DoxyCode}

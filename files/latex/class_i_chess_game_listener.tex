@@ -1,0 +1,112 @@
+\doxysection{IChess\+Game\+Listener Class Reference}
+\hypertarget{class_i_chess_game_listener}{}\label{class_i_chess_game_listener}\index{IChessGameListener@{IChessGameListener}}
+
+
+Interface for receiving chess game-\/related events and updates.  
+
+
+
+
+{\ttfamily \#include $<$IChess\+Game\+Listener.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_i_chess_game_listener_a371f0e4075d91ba9bd7955f56f001b69}\label{class_i_chess_game_listener_a371f0e4075d91ba9bd7955f56f001b69} 
+virtual {\bfseries \texorpdfstring{$\sim$}{\string~}\+IChess\+Game\+Listener} ()=default
+\begin{DoxyCompactList}\small\item\em Virtual destructor for the interface. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_i_chess_game_listener_a9ebee03cca803fde08d9a38ab5c1cc2e}{On\+Move\+Made}} (\mbox{\hyperlink{struct_position}{Position}} init, \mbox{\hyperlink{struct_position}{Position}} fin)=0
+\begin{DoxyCompactList}\small\item\em Called when a move is made on the chessboard. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_i_chess_game_listener_adc403d950722346c0aa248e19b3cca22}{On\+Game\+Over}} (EGame\+Result result)=0
+\begin{DoxyCompactList}\small\item\em Called when the chess game is over. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_i_chess_game_listener_a536e5bbb417fc6e99501a01c323ffb8d}{On\+Pawn\+Upgrade}} (\mbox{\hyperlink{struct_position}{Position}} pos)=0
+\begin{DoxyCompactList}\small\item\em Called when a pawn is eligible for upgrade. \end{DoxyCompactList}\item 
+\Hypertarget{class_i_chess_game_listener_abcffc1748451db0b654c314d50d644bb}\label{class_i_chess_game_listener_abcffc1748451db0b654c314d50d644bb} 
+virtual void {\bfseries On\+Check} ()=0
+\begin{DoxyCompactList}\small\item\em Called when a player\textquotesingle{}s king is in check. \end{DoxyCompactList}\item 
+\Hypertarget{class_i_chess_game_listener_a50c8246a4dd110dafffc87789e4a1475}\label{class_i_chess_game_listener_a50c8246a4dd110dafffc87789e4a1475} 
+virtual void {\bfseries On\+Game\+Restarted} ()=0
+\begin{DoxyCompactList}\small\item\em Called when the chess game is restarted. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_i_chess_game_listener_a7338b09998ed3fc993579dd39467127c}{On\+History\+Update}} (std\+::string move)=0
+\begin{DoxyCompactList}\small\item\em Called when the move history is updated. \end{DoxyCompactList}\item 
+\Hypertarget{class_i_chess_game_listener_a0fec95853c324b470f0fa219f69b0034}\label{class_i_chess_game_listener_a0fec95853c324b470f0fa219f69b0034} 
+virtual void {\bfseries On\+Clock\+Update} ()=0
+\begin{DoxyCompactList}\small\item\em Called when the game clock\textquotesingle{}s time is updated. \end{DoxyCompactList}\item 
+\Hypertarget{class_i_chess_game_listener_a9e66b57af27e0d1316b4fe5233c24ede}\label{class_i_chess_game_listener_a9e66b57af27e0d1316b4fe5233c24ede} 
+virtual void {\bfseries On\+Times\+Up} ()=0
+\begin{DoxyCompactList}\small\item\em Called when a player\textquotesingle{}s time has run out. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Interface for receiving chess game-\/related events and updates. 
+
+This interface defines methods that listeners can implement to receive notifications about various events and updates during a chess game. 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_i_chess_game_listener_adc403d950722346c0aa248e19b3cca22}\label{class_i_chess_game_listener_adc403d950722346c0aa248e19b3cca22} 
+\index{IChessGameListener@{IChessGameListener}!OnGameOver@{OnGameOver}}
+\index{OnGameOver@{OnGameOver}!IChessGameListener@{IChessGameListener}}
+\doxysubsubsection{\texorpdfstring{OnGameOver()}{OnGameOver()}}
+{\footnotesize\ttfamily virtual void IChess\+Game\+Listener\+::\+On\+Game\+Over (\begin{DoxyParamCaption}\item[{EGame\+Result}]{result }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Called when the chess game is over. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em result} & The result of the game (e.\+g., win, draw, or loss). \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_i_chess_game_listener_a7338b09998ed3fc993579dd39467127c}\label{class_i_chess_game_listener_a7338b09998ed3fc993579dd39467127c} 
+\index{IChessGameListener@{IChessGameListener}!OnHistoryUpdate@{OnHistoryUpdate}}
+\index{OnHistoryUpdate@{OnHistoryUpdate}!IChessGameListener@{IChessGameListener}}
+\doxysubsubsection{\texorpdfstring{OnHistoryUpdate()}{OnHistoryUpdate()}}
+{\footnotesize\ttfamily virtual void IChess\+Game\+Listener\+::\+On\+History\+Update (\begin{DoxyParamCaption}\item[{std\+::string}]{move }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Called when the move history is updated. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em move} & The updated move that is added to the history. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_i_chess_game_listener_a9ebee03cca803fde08d9a38ab5c1cc2e}\label{class_i_chess_game_listener_a9ebee03cca803fde08d9a38ab5c1cc2e} 
+\index{IChessGameListener@{IChessGameListener}!OnMoveMade@{OnMoveMade}}
+\index{OnMoveMade@{OnMoveMade}!IChessGameListener@{IChessGameListener}}
+\doxysubsubsection{\texorpdfstring{OnMoveMade()}{OnMoveMade()}}
+{\footnotesize\ttfamily virtual void IChess\+Game\+Listener\+::\+On\+Move\+Made (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_position}{Position}}}]{init,  }\item[{\mbox{\hyperlink{struct_position}{Position}}}]{fin }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Called when a move is made on the chessboard. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em init} & The initial position of the piece that is moved. \\
+\hline
+{\em fin} & The final position of the piece after the move. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_i_chess_game_listener_a536e5bbb417fc6e99501a01c323ffb8d}\label{class_i_chess_game_listener_a536e5bbb417fc6e99501a01c323ffb8d} 
+\index{IChessGameListener@{IChessGameListener}!OnPawnUpgrade@{OnPawnUpgrade}}
+\index{OnPawnUpgrade@{OnPawnUpgrade}!IChessGameListener@{IChessGameListener}}
+\doxysubsubsection{\texorpdfstring{OnPawnUpgrade()}{OnPawnUpgrade()}}
+{\footnotesize\ttfamily virtual void IChess\+Game\+Listener\+::\+On\+Pawn\+Upgrade (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_position}{Position}}}]{pos }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Called when a pawn is eligible for upgrade. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em pos} & The position of the pawn that can be upgraded. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/cconstandoiu/\+Documents/\+Git\+Hub/\+Chess\+Solution/\+Chess\+Lib/include/IChess\+Game\+Listener.\+h\end{DoxyCompactItemize}

@@ -1,0 +1,126 @@
+\doxysection{IChess\+Game\+Control Class Reference}
+\hypertarget{class_i_chess_game_control}{}\label{class_i_chess_game_control}\index{IChessGameControl@{IChessGameControl}}
+
+
+Interface for controlling chess game operations.  
+
+
+
+
+{\ttfamily \#include $<$IChess\+Game\+Control.\+h$>$}
+
+Inheritance diagram for IChess\+Game\+Control\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_i_chess_game_control}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_i_chess_game_control_aac54af2d01e81cbb96618df17193b427}\label{class_i_chess_game_control_aac54af2d01e81cbb96618df17193b427} 
+virtual {\bfseries \texorpdfstring{$\sim$}{\string~}\+IChess\+Game\+Control} ()=default
+\begin{DoxyCompactList}\small\item\em Virtual destructor for the interface. \end{DoxyCompactList}\item 
+\Hypertarget{class_i_chess_game_control_ae9b0d43b372d9a332c8b9ee7e0e31bf4}\label{class_i_chess_game_control_ae9b0d43b372d9a332c8b9ee7e0e31bf4} 
+virtual void {\bfseries Reset\+Game} ()=0
+\begin{DoxyCompactList}\small\item\em Resets the chess game to its initial state. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_i_chess_game_control_a6162c57b5c5a89147635929102542ac8}{Restore\+Game}} (const Char\+Board \&input\+Config, EColor turn=EColor\+::\+White, Castle\+Values castle=\{ true, true, true, true \})=0
+\begin{DoxyCompactList}\small\item\em Restores the game state based on the provided configuration. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_i_chess_game_control_a5e8fa80dd84792be34250326adbf4f8c}{Make\+Move}} (\mbox{\hyperlink{struct_position}{Position}} initial\+Pos, \mbox{\hyperlink{struct_position}{Position}} final\+Pos, bool Enable\+Notification=true, EType upgrade\+Type=EType\+::\+Pawn)=0
+\begin{DoxyCompactList}\small\item\em Makes a chess move from the initial position to the final position. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_i_chess_game_control_a992de715abf8edc36b7eacb0ffaf3d29}{Upgrade\+Pawn}} (EType upgrade\+Type)=0
+\begin{DoxyCompactList}\small\item\em Upgrades a pawn to a specified piece type. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_i_chess_game_control_a5f7bea4c7c1878dca4e2740b7b126465}{Draw\+Operation}} (EDraw\+Operation op)=0
+\begin{DoxyCompactList}\small\item\em Performs a drawing operation on the chessboard. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Interface for controlling chess game operations. 
+
+This interface defines methods to manage a chess game, including resetting the game, restoring game state, making moves, upgrading pawns, and performing various drawing operations. 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_i_chess_game_control_a5f7bea4c7c1878dca4e2740b7b126465}\label{class_i_chess_game_control_a5f7bea4c7c1878dca4e2740b7b126465} 
+\index{IChessGameControl@{IChessGameControl}!DrawOperation@{DrawOperation}}
+\index{DrawOperation@{DrawOperation}!IChessGameControl@{IChessGameControl}}
+\doxysubsubsection{\texorpdfstring{DrawOperation()}{DrawOperation()}}
+{\footnotesize\ttfamily virtual void IChess\+Game\+Control\+::\+Draw\+Operation (\begin{DoxyParamCaption}\item[{EDraw\+Operation}]{op }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Performs a drawing operation on the chessboard. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em op} & The drawing operation to perform. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_i_chess_game_control_a5e8fa80dd84792be34250326adbf4f8c}\label{class_i_chess_game_control_a5e8fa80dd84792be34250326adbf4f8c} 
+\index{IChessGameControl@{IChessGameControl}!MakeMove@{MakeMove}}
+\index{MakeMove@{MakeMove}!IChessGameControl@{IChessGameControl}}
+\doxysubsubsection{\texorpdfstring{MakeMove()}{MakeMove()}}
+{\footnotesize\ttfamily virtual void IChess\+Game\+Control\+::\+Make\+Move (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_position}{Position}}}]{initial\+Pos,  }\item[{\mbox{\hyperlink{struct_position}{Position}}}]{final\+Pos,  }\item[{bool}]{Enable\+Notification = {\ttfamily true},  }\item[{EType}]{upgrade\+Type = {\ttfamily EType\+:\+:Pawn} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Makes a chess move from the initial position to the final position. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em initial\+Pos} & The starting position of the piece to move. \\
+\hline
+{\em final\+Pos} & The destination position for the piece. \\
+\hline
+{\em Enable\+Notification} & Flag to enable or disable move notifications (default is true). \\
+\hline
+{\em upgrade\+Type} & The type to which a pawn is upgraded upon reaching the opposite end (default is Pawn). \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em \doxylink{class_out_of_bounds_exception}{Out\+Of\+Bounds\+Exception}} & If the initial or final position is not a valid position on the chessboard. \\
+\hline
+{\em \doxylink{class_occupied_by_own_piece_exception}{Occupied\+By\+Own\+Piece\+Exception}} & If the final square is occupied by the player\textquotesingle{}s own piece. \\
+\hline
+{\em \doxylink{class_not_in_possible_moves_exception}{Not\+In\+Possible\+Moves\+Exception}} & If the specified move is not among the possible valid moves for the piece. \\
+\hline
+\end{DoxyExceptions}
+\Hypertarget{class_i_chess_game_control_a6162c57b5c5a89147635929102542ac8}\label{class_i_chess_game_control_a6162c57b5c5a89147635929102542ac8} 
+\index{IChessGameControl@{IChessGameControl}!RestoreGame@{RestoreGame}}
+\index{RestoreGame@{RestoreGame}!IChessGameControl@{IChessGameControl}}
+\doxysubsubsection{\texorpdfstring{RestoreGame()}{RestoreGame()}}
+{\footnotesize\ttfamily virtual void IChess\+Game\+Control\+::\+Restore\+Game (\begin{DoxyParamCaption}\item[{const Char\+Board \&}]{input\+Config,  }\item[{EColor}]{turn = {\ttfamily EColor\+:\+:White},  }\item[{Castle\+Values}]{castle = {\ttfamily \{~true,~true,~true,~true~\}} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Restores the game state based on the provided configuration. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em input\+Config} & The configuration of the chessboard. \\
+\hline
+{\em turn} & The color of the player whose turn it is (default is White). \\
+\hline
+{\em castle} & Castle values indicating whether castling is allowed for each player (default is \{true, true, true, true\}). \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_i_chess_game_control_a992de715abf8edc36b7eacb0ffaf3d29}\label{class_i_chess_game_control_a992de715abf8edc36b7eacb0ffaf3d29} 
+\index{IChessGameControl@{IChessGameControl}!UpgradePawn@{UpgradePawn}}
+\index{UpgradePawn@{UpgradePawn}!IChessGameControl@{IChessGameControl}}
+\doxysubsubsection{\texorpdfstring{UpgradePawn()}{UpgradePawn()}}
+{\footnotesize\ttfamily virtual void IChess\+Game\+Control\+::\+Upgrade\+Pawn (\begin{DoxyParamCaption}\item[{EType}]{upgrade\+Type }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Upgrades a pawn to a specified piece type. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em upgrade\+Type} & The type to which the pawn will be upgraded. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/cconstandoiu/\+Documents/\+Git\+Hub/\+Chess\+Solution/\+Chess\+Lib/include/IChess\+Game\+Control.\+h\end{DoxyCompactItemize}

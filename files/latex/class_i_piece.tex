@@ -1,0 +1,60 @@
+\doxysection{IPiece Class Reference}
+\hypertarget{class_i_piece}{}\label{class_i_piece}\index{IPiece@{IPiece}}
+
+
+Interface for representing a chess piece.  
+
+
+
+
+{\ttfamily \#include $<$IPiece.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_i_piece_a59d0789487cc116f135a9110d805fe3f}\label{class_i_piece_a59d0789487cc116f135a9110d805fe3f} 
+virtual {\bfseries \texorpdfstring{$\sim$}{\string~}\+IPiece} ()=default
+\begin{DoxyCompactList}\small\item\em Virtual destructor for the interface. \end{DoxyCompactList}\item 
+virtual EColor \mbox{\hyperlink{class_i_piece_a241ac98a4cc8f67cd80232a5429c1883}{Get\+Color}} () const =0
+\begin{DoxyCompactList}\small\item\em Retrieves the color of the chess piece. \end{DoxyCompactList}\item 
+virtual EType \mbox{\hyperlink{class_i_piece_a14a18ec658edfcac872eb279f672b172}{Get\+Type}} () const =0
+\begin{DoxyCompactList}\small\item\em Retrieves the type of the chess piece. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Interface for representing a chess piece. 
+
+This interface defines methods to retrieve information about a chess piece, such as its color and type. 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_i_piece_a241ac98a4cc8f67cd80232a5429c1883}\label{class_i_piece_a241ac98a4cc8f67cd80232a5429c1883} 
+\index{IPiece@{IPiece}!GetColor@{GetColor}}
+\index{GetColor@{GetColor}!IPiece@{IPiece}}
+\doxysubsubsection{\texorpdfstring{GetColor()}{GetColor()}}
+{\footnotesize\ttfamily virtual EColor IPiece\+::\+Get\+Color (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Retrieves the color of the chess piece. 
+
+\begin{DoxyReturn}{Returns}
+The color of the chess piece (White or Black). 
+\end{DoxyReturn}
+\Hypertarget{class_i_piece_a14a18ec658edfcac872eb279f672b172}\label{class_i_piece_a14a18ec658edfcac872eb279f672b172} 
+\index{IPiece@{IPiece}!GetType@{GetType}}
+\index{GetType@{GetType}!IPiece@{IPiece}}
+\doxysubsubsection{\texorpdfstring{GetType()}{GetType()}}
+{\footnotesize\ttfamily virtual EType IPiece\+::\+Get\+Type (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Retrieves the type of the chess piece. 
+
+\begin{DoxyReturn}{Returns}
+The type of the chess piece (e.\+g., King, Queen, Pawn, etc.). 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/cconstandoiu/\+Documents/\+Git\+Hub/\+Chess\+Solution/\+Chess\+Lib/include/IPiece.\+h\end{DoxyCompactItemize}

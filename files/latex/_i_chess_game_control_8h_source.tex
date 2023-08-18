@@ -1,0 +1,32 @@
+\doxysection{IChess\+Game\+Control.\+h}
+\hypertarget{_i_chess_game_control_8h_source}{}\label{_i_chess_game_control_8h_source}\index{C:/Users/cconstandoiu/Documents/GitHub/ChessSolution/ChessLib/include/IChessGameControl.h@{C:/Users/cconstandoiu/Documents/GitHub/ChessSolution/ChessLib/include/IChessGameControl.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}Enums.h"{}}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}Position.h"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}IPiece.h"{}}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <array>}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{using\ }CastleValues\ =\ std::array<std::array<bool,\ 2>,\ 2>;}
+\DoxyCodeLine{00010\ \textcolor{keyword}{using\ }CharBoard\ =\ std::array<std::array<char,\ 8>,\ 8>;}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00018\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_i_chess_game_control}{IChessGameControl}}}
+\DoxyCodeLine{00019\ \{}
+\DoxyCodeLine{00020\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{class_i_chess_game_control_aac54af2d01e81cbb96618df17193b427}{\string~IChessGameControl}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_i_chess_game_control_ae9b0d43b372d9a332c8b9ee7e0e31bf4}{ResetGame}}()\ =\ 0;}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_i_chess_game_control_a6162c57b5c5a89147635929102542ac8}{RestoreGame}}(\textcolor{keyword}{const}\ CharBoard\&\ inputConfig,\ EColor\ turn\ =\ EColor::White,\ CastleValues\ castle\ =\ \{\ \textcolor{keyword}{true},\ \textcolor{keyword}{true},\ \textcolor{keyword}{true},\ \textcolor{keyword}{true}\ \})\ =\ 0;}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_i_chess_game_control_a5e8fa80dd84792be34250326adbf4f8c}{MakeMove}}(\mbox{\hyperlink{struct_position}{Position}}\ initialPos,\ \mbox{\hyperlink{struct_position}{Position}}\ finalPos,\ \textcolor{keywordtype}{bool}\ EnableNotification\ =\ \textcolor{keyword}{true},\ EType\ upgradeType\ =\ EType::Pawn)\ =\ 0;}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_i_chess_game_control_a992de715abf8edc36b7eacb0ffaf3d29}{UpgradePawn}}(EType\ upgradeType)\ =\ 0;}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_i_chess_game_control_a5f7bea4c7c1878dca4e2740b7b126465}{DrawOperation}}(EDrawOperation\ op)\ =\ 0;}
+\DoxyCodeLine{00066\ \};}
+
+\end{DoxyCode}

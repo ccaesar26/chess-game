@@ -1,0 +1,41 @@
+\doxysection{IChess\+Game\+Status.\+h}
+\hypertarget{_i_chess_game_status_8h_source}{}\label{_i_chess_game_status_8h_source}\index{C:/Users/cconstandoiu/Documents/GitHub/ChessSolution/ChessLib/include/IChessGameStatus.h@{C:/Users/cconstandoiu/Documents/GitHub/ChessSolution/ChessLib/include/IChessGameStatus.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}Enums.h"{}}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00012\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_i_chess_game_status}{IChessGameStatus}}}
+\DoxyCodeLine{00013\ \{}
+\DoxyCodeLine{00014\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{class_i_chess_game_status_a044797b30436d1dadedf1849a344b955}{\string~IChessGameStatus}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keyword}{virtual}\ IPiecePtr\ \mbox{\hyperlink{class_i_chess_game_status_a440fc3372b1d797497f501deb2685558}{GetIPiecePtr}}(\mbox{\hyperlink{struct_position}{Position}}\ pos)\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keyword}{virtual}\ PositionList\ \mbox{\hyperlink{class_i_chess_game_status_a68a3cbb253896dfc378a69087ad29a0a}{GetPossibleMoves}}(\mbox{\hyperlink{struct_position}{Position}}\ currentPos)\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keyword}{virtual}\ IPieceList\ \mbox{\hyperlink{class_i_chess_game_status_acad1a437704f5d4f668581e465f4f6c0}{GetCapturedPieces}}(EColor\ color)\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keyword}{virtual}\ EColor\ \mbox{\hyperlink{class_i_chess_game_status_a54445d9cde66690d29e434a2b54c6036}{GetCurrentPlayer}}()\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{keyword}{virtual}\ CharBoard\ \mbox{\hyperlink{class_i_chess_game_status_a35df26b7f8bf663202db9577faaa9df6}{GetBoardAtIndex}}(\textcolor{keywordtype}{int}\ index)\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_i_chess_game_status_a020e6364991f20b68d47aacc78f30482}{GetNumberOfMoves}}()\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_i_chess_game_status_a0a387780f41334d2f4a054ce23d932e7}{IsGameOver}}()\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_i_chess_game_status_a56c47a828bd6804c010121b976c96470}{IsDraw}}()\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_i_chess_game_status_aaf2185edbca907cf5e269255868eb562}{IsWaitingForDrawResponse}}()\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00093\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_i_chess_game_status_a09de2625c54660007a3d51ecd80e0b04}{IsWon}}(EColor\ player)\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00100\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_i_chess_game_status_a2f26f8aa9ae550b4a351d2c75d27e9fe}{IsWaitingForUpgrade}}()\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00107\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_i_chess_game_status_a013fd0be79dd96d48831165341ac42c7}{IsCheckState}}()\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00108\ }
+\DoxyCodeLine{00116\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_i_chess_game_status_a65edbe0d93c4c790bce4a34793f4872c}{IsCastlingAvailable}}(EColor\ color,\ ESide\ side)\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00117\ \};}
+
+\end{DoxyCode}

@@ -1,0 +1,146 @@
+\doxysection{IChess\+Game Class Reference}
+\hypertarget{class_i_chess_game}{}\label{class_i_chess_game}\index{IChessGame@{IChessGame}}
+
+
+Interface for a chess game.  
+
+
+
+
+{\ttfamily \#include $<$IChess\+Game.\+h$>$}
+
+Inheritance diagram for IChess\+Game\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_i_chess_game}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_i_chess_game_a315efe3e5714149933346636c4222bfa}\label{class_i_chess_game_a315efe3e5714149933346636c4222bfa} 
+virtual {\bfseries \texorpdfstring{$\sim$}{\string~}\+IChess\+Game} ()=default
+\begin{DoxyCompactList}\small\item\em Virtual destructor for the \doxylink{class_i_chess_game}{IChess\+Game} interface. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_i_chess_game_a14344d1daba60341c17d52498c80517c}{Add\+Listener}} (IChess\+Game\+Listener\+Ptr listener)=0
+\begin{DoxyCompactList}\small\item\em Adds a listener to receive game events. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_i_chess_game_a37a0da04ead32a97bc0fd1defbd9107b}{Remove\+Listener}} (\mbox{\hyperlink{class_i_chess_game_listener}{IChess\+Game\+Listener}} \texorpdfstring{$\ast$}{*}listener)=0
+\begin{DoxyCompactList}\small\item\em Removes a listener from receiving game events. \end{DoxyCompactList}\item 
+virtual const \mbox{\hyperlink{class_i_chess_game_status}{IChess\+Game\+Status}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{class_i_chess_game_a4e720e759efdb2cda55e46174409d30e}{Get\+Status}} () const =0
+\begin{DoxyCompactList}\small\item\em Gets the current status of the chess game. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_i_chess_game_control}{IChess\+Game\+Control}}}
+\begin{DoxyCompactItemize}
+\item 
+virtual {\bfseries \texorpdfstring{$\sim$}{\string~}\+IChess\+Game\+Control} ()=default
+\begin{DoxyCompactList}\small\item\em Virtual destructor for the interface. \end{DoxyCompactList}\item 
+virtual void {\bfseries Reset\+Game} ()=0
+\begin{DoxyCompactList}\small\item\em Resets the chess game to its initial state. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_i_chess_game_control_a6162c57b5c5a89147635929102542ac8}{Restore\+Game}} (const Char\+Board \&input\+Config, EColor turn=EColor\+::\+White, Castle\+Values castle=\{ true, true, true, true \})=0
+\begin{DoxyCompactList}\small\item\em Restores the game state based on the provided configuration. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_i_chess_game_control_a5e8fa80dd84792be34250326adbf4f8c}{Make\+Move}} (\mbox{\hyperlink{struct_position}{Position}} initial\+Pos, \mbox{\hyperlink{struct_position}{Position}} final\+Pos, bool Enable\+Notification=true, EType upgrade\+Type=EType\+::\+Pawn)=0
+\begin{DoxyCompactList}\small\item\em Makes a chess move from the initial position to the final position. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_i_chess_game_control_a992de715abf8edc36b7eacb0ffaf3d29}{Upgrade\+Pawn}} (EType upgrade\+Type)=0
+\begin{DoxyCompactList}\small\item\em Upgrades a pawn to a specified piece type. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_i_chess_game_control_a5f7bea4c7c1878dca4e2740b7b126465}{Draw\+Operation}} (EDraw\+Operation op)=0
+\begin{DoxyCompactList}\small\item\em Performs a drawing operation on the chessboard. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_i_chess_game_storage}{IChess\+Game\+Storage}}}
+\begin{DoxyCompactItemize}
+\item 
+virtual {\bfseries \texorpdfstring{$\sim$}{\string~}\+IChess\+Game\+Storage} ()=default
+\begin{DoxyCompactList}\small\item\em Virtual destructor for the interface. \end{DoxyCompactList}\item 
+virtual bool \mbox{\hyperlink{class_i_chess_game_storage_a46fcfb21a3aaf0e3e9c60ee950170bf6}{Load\+From\+File}} (EFormat format, const std\+::string \&file\+Name)=0
+\begin{DoxyCompactList}\small\item\em Loads chess game data from a file in the specified format. \end{DoxyCompactList}\item 
+virtual bool \mbox{\hyperlink{class_i_chess_game_storage_a8c26c4ec587c832c42f8ab90376677c5}{Save\+Format}} (EFormat format, const std\+::string \&file\+Name) const =0
+\begin{DoxyCompactList}\small\item\em Saves chess game data to a file in the specified format. \end{DoxyCompactList}\item 
+virtual std\+::string \mbox{\hyperlink{class_i_chess_game_storage_ad4eb477ea898a4d59747b4a41e248270}{Get\+Format}} (EFormat format) const =0
+\begin{DoxyCompactList}\small\item\em Retrieves the data format as a string representation. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_i_chess_game_timed_mode}{IChess\+Game\+Timed\+Mode}}}
+\begin{DoxyCompactItemize}
+\item 
+virtual {\bfseries \texorpdfstring{$\sim$}{\string~}\+IChess\+Game\+Timed\+Mode} ()=default
+\begin{DoxyCompactList}\small\item\em Virtual destructor for the interface. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_i_chess_game_timed_mode_a0060fbbbe8237d6141fb19abae294c8f}{Enable\+Timed\+Mode}} (int seconds)=0
+\begin{DoxyCompactList}\small\item\em Enables timed mode with the specified time limit. \end{DoxyCompactList}\item 
+virtual void {\bfseries Pause} ()=0
+\begin{DoxyCompactList}\small\item\em Pauses the timed mode, suspending the countdown. \end{DoxyCompactList}\item 
+virtual void {\bfseries Resume} ()=0
+\begin{DoxyCompactList}\small\item\em Resumes the timed mode after it has been paused. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_i_chess_game_timed_mode_a12fca306ab8587fd597326bb5f8ea93f}{Set\+Refresh\+Rate}} (int milliseconds)=0
+\begin{DoxyCompactList}\small\item\em Sets refresh rate with the specified time rate. \end{DoxyCompactList}\item 
+virtual int \mbox{\hyperlink{class_i_chess_game_timed_mode_a6d1fad70081ad7be8585faaa4d24421b}{Get\+Remaining\+Time}} (EColor color) const =0
+\begin{DoxyCompactList}\small\item\em Retrieves the remaining time for a player\textquotesingle{}s turn. \end{DoxyCompactList}\item 
+virtual bool \mbox{\hyperlink{class_i_chess_game_timed_mode_a40c6616f232ec5b8640e60d7d3b1e0ff}{Is\+Paused}} () const =0
+\begin{DoxyCompactList}\small\item\em Checks if the timed mode is currently paused. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static IChess\+Game\+Ptr \mbox{\hyperlink{class_i_chess_game_a117a4d4bc3ce3372a0d7351245f74ada}{Create\+Game}} ()
+\begin{DoxyCompactList}\small\item\em Creates a new instance of a chess game. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Interface for a chess game. 
+
+This interface defines methods to control a chess game, manage its storage, and handle timed modes. It also provides methods for adding and removing listeners for game events. 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_i_chess_game_a14344d1daba60341c17d52498c80517c}\label{class_i_chess_game_a14344d1daba60341c17d52498c80517c} 
+\index{IChessGame@{IChessGame}!AddListener@{AddListener}}
+\index{AddListener@{AddListener}!IChessGame@{IChessGame}}
+\doxysubsubsection{\texorpdfstring{AddListener()}{AddListener()}}
+{\footnotesize\ttfamily virtual void IChess\+Game\+::\+Add\+Listener (\begin{DoxyParamCaption}\item[{IChess\+Game\+Listener\+Ptr}]{listener }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Adds a listener to receive game events. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em listener} & The listener to be added. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_i_chess_game_a117a4d4bc3ce3372a0d7351245f74ada}\label{class_i_chess_game_a117a4d4bc3ce3372a0d7351245f74ada} 
+\index{IChessGame@{IChessGame}!CreateGame@{CreateGame}}
+\index{CreateGame@{CreateGame}!IChessGame@{IChessGame}}
+\doxysubsubsection{\texorpdfstring{CreateGame()}{CreateGame()}}
+{\footnotesize\ttfamily static IChess\+Game\+Ptr IChess\+Game\+::\+Create\+Game (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Creates a new instance of a chess game. 
+
+\begin{DoxyReturn}{Returns}
+A shared pointer to the created game instance. 
+\end{DoxyReturn}
+\Hypertarget{class_i_chess_game_a4e720e759efdb2cda55e46174409d30e}\label{class_i_chess_game_a4e720e759efdb2cda55e46174409d30e} 
+\index{IChessGame@{IChessGame}!GetStatus@{GetStatus}}
+\index{GetStatus@{GetStatus}!IChessGame@{IChessGame}}
+\doxysubsubsection{\texorpdfstring{GetStatus()}{GetStatus()}}
+{\footnotesize\ttfamily virtual const \mbox{\hyperlink{class_i_chess_game_status}{IChess\+Game\+Status}} \texorpdfstring{$\ast$}{*} IChess\+Game\+::\+Get\+Status (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Gets the current status of the chess game. 
+
+\begin{DoxyReturn}{Returns}
+A pointer to the current game status. 
+\end{DoxyReturn}
+\Hypertarget{class_i_chess_game_a37a0da04ead32a97bc0fd1defbd9107b}\label{class_i_chess_game_a37a0da04ead32a97bc0fd1defbd9107b} 
+\index{IChessGame@{IChessGame}!RemoveListener@{RemoveListener}}
+\index{RemoveListener@{RemoveListener}!IChessGame@{IChessGame}}
+\doxysubsubsection{\texorpdfstring{RemoveListener()}{RemoveListener()}}
+{\footnotesize\ttfamily virtual void IChess\+Game\+::\+Remove\+Listener (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_i_chess_game_listener}{IChess\+Game\+Listener}} \texorpdfstring{$\ast$}{*}}]{listener }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Removes a listener from receiving game events. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em listener} & The listener to be removed. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/cconstandoiu/\+Documents/\+Git\+Hub/\+Chess\+Solution/\+Chess\+Lib/include/IChess\+Game.\+h\end{DoxyCompactItemize}
